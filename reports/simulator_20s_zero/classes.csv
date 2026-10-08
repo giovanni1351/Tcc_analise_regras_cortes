@@ -1,0 +1,129 @@
+﻿split,label,events,hits,recall,regra
+teste,Ball out of play,457,425,0.9299781181619255,20s / zeros 0
+teste,Clearance,102,96,0.9411764705882353,20s / zeros 0
+teste,Corner,71,69,0.971830985915493,20s / zeros 0
+teste,Direct free-kick,31,30,0.967741935483871,20s / zeros 0
+teste,Foul,139,134,0.9640287769784173,20s / zeros 0
+teste,Goal,18,18,1.0,20s / zeros 0
+teste,Indirect free-kick,94,86,0.9148936170212766,20s / zeros 0
+teste,Kick-off,31,22,0.7096774193548387,20s / zeros 0
+teste,Offside,26,25,0.9615384615384616,20s / zeros 0
+teste,Penalty,1,1,1.0,20s / zeros 0
+teste,Red card,1,1,1.0,20s / zeros 0
+teste,Shots off target,47,46,0.9787234042553191,20s / zeros 0
+teste,Shots on target,91,83,0.9120879120879121,20s / zeros 0
+teste,Substitution,37,35,0.9459459459459459,20s / zeros 0
+teste,Throw-in,288,260,0.9027777777777778,20s / zeros 0
+teste,Yellow card,27,27,1.0,20s / zeros 0
+treino,Ball out of play,937,899,0.959445037353255,20s / zeros 0
+treino,Clearance,232,225,0.9698275862068966,20s / zeros 0
+treino,Corner,154,154,1.0,20s / zeros 0
+treino,Direct free-kick,62,61,0.9838709677419355,20s / zeros 0
+treino,Foul,301,294,0.9767441860465116,20s / zeros 0
+treino,Goal,42,42,1.0,20s / zeros 0
+treino,Indirect free-kick,209,202,0.9665071770334929,20s / zeros 0
+treino,Kick-off,68,51,0.75,20s / zeros 0
+treino,Offside,35,35,1.0,20s / zeros 0
+treino,Penalty,4,4,1.0,20s / zeros 0
+treino,Red card,2,2,1.0,20s / zeros 0
+treino,Shots off target,131,122,0.9312977099236641,20s / zeros 0
+treino,Shots on target,178,171,0.9606741573033708,20s / zeros 0
+treino,Substitution,70,67,0.9571428571428572,20s / zeros 0
+treino,Throw-in,545,524,0.9614678899082569,20s / zeros 0
+treino,Yellow card,47,47,1.0,20s / zeros 0
+teste,Ball out of play,457,419,0.9168490153172867,12s / zeros 0
+teste,Clearance,102,96,0.9411764705882353,12s / zeros 0
+teste,Corner,71,69,0.971830985915493,12s / zeros 0
+teste,Direct free-kick,31,30,0.967741935483871,12s / zeros 0
+teste,Foul,139,130,0.935251798561151,12s / zeros 0
+teste,Goal,18,17,0.9444444444444444,12s / zeros 0
+teste,Indirect free-kick,94,86,0.9148936170212766,12s / zeros 0
+teste,Kick-off,31,21,0.6774193548387096,12s / zeros 0
+teste,Offside,26,25,0.9615384615384616,12s / zeros 0
+teste,Penalty,1,1,1.0,12s / zeros 0
+teste,Red card,1,1,1.0,12s / zeros 0
+teste,Shots off target,47,45,0.9574468085106383,12s / zeros 0
+teste,Shots on target,91,83,0.9120879120879121,12s / zeros 0
+teste,Substitution,37,35,0.9459459459459459,12s / zeros 0
+teste,Throw-in,288,255,0.8854166666666666,12s / zeros 0
+teste,Yellow card,27,26,0.9629629629629629,12s / zeros 0
+treino,Ball out of play,937,884,0.9434364994663821,12s / zeros 0
+treino,Clearance,232,217,0.9353448275862069,12s / zeros 0
+treino,Corner,154,150,0.974025974025974,12s / zeros 0
+treino,Direct free-kick,62,60,0.967741935483871,12s / zeros 0
+treino,Foul,301,288,0.9568106312292359,12s / zeros 0
+treino,Goal,42,42,1.0,12s / zeros 0
+treino,Indirect free-kick,209,191,0.9138755980861244,12s / zeros 0
+treino,Kick-off,68,47,0.6911764705882353,12s / zeros 0
+treino,Offside,35,34,0.9714285714285714,12s / zeros 0
+treino,Penalty,4,4,1.0,12s / zeros 0
+treino,Red card,2,2,1.0,12s / zeros 0
+treino,Shots off target,131,118,0.9007633587786259,12s / zeros 0
+treino,Shots on target,178,164,0.9213483146067416,12s / zeros 0
+treino,Substitution,70,62,0.8857142857142857,12s / zeros 0
+treino,Throw-in,545,514,0.9431192660550459,12s / zeros 0
+treino,Yellow card,47,46,0.9787234042553191,12s / zeros 0
+teste,Ball out of play,457,393,0.8599562363238512,8s / zeros 0
+teste,Clearance,102,84,0.8235294117647058,8s / zeros 0
+teste,Corner,71,68,0.9577464788732394,8s / zeros 0
+teste,Direct free-kick,31,30,0.967741935483871,8s / zeros 0
+teste,Foul,139,127,0.9136690647482014,8s / zeros 0
+teste,Goal,18,17,0.9444444444444444,8s / zeros 0
+teste,Indirect free-kick,94,83,0.8829787234042553,8s / zeros 0
+teste,Kick-off,31,19,0.6129032258064516,8s / zeros 0
+teste,Offside,26,25,0.9615384615384616,8s / zeros 0
+teste,Penalty,1,1,1.0,8s / zeros 0
+teste,Red card,1,1,1.0,8s / zeros 0
+teste,Shots off target,47,43,0.9148936170212766,8s / zeros 0
+teste,Shots on target,91,80,0.8791208791208791,8s / zeros 0
+teste,Substitution,37,33,0.8918918918918919,8s / zeros 0
+teste,Throw-in,288,233,0.8090277777777778,8s / zeros 0
+teste,Yellow card,27,25,0.9259259259259259,8s / zeros 0
+treino,Ball out of play,937,839,0.8954108858057631,8s / zeros 0
+treino,Clearance,232,200,0.8620689655172413,8s / zeros 0
+treino,Corner,154,149,0.9675324675324676,8s / zeros 0
+treino,Direct free-kick,62,58,0.9354838709677419,8s / zeros 0
+treino,Foul,301,276,0.9169435215946844,8s / zeros 0
+treino,Goal,42,42,1.0,8s / zeros 0
+treino,Indirect free-kick,209,181,0.8660287081339713,8s / zeros 0
+treino,Kick-off,68,41,0.6029411764705882,8s / zeros 0
+treino,Offside,35,33,0.9428571428571428,8s / zeros 0
+treino,Penalty,4,4,1.0,8s / zeros 0
+treino,Red card,2,1,0.5,8s / zeros 0
+treino,Shots off target,131,110,0.8396946564885496,8s / zeros 0
+treino,Shots on target,178,155,0.8707865168539326,8s / zeros 0
+treino,Substitution,70,59,0.8428571428571429,8s / zeros 0
+treino,Throw-in,545,485,0.8899082568807339,8s / zeros 0
+treino,Yellow card,47,45,0.9574468085106383,8s / zeros 0
+teste,Ball out of play,457,396,0.8665207877461707,12s / zeros 50%
+teste,Clearance,102,81,0.7941176470588235,12s / zeros 50%
+teste,Corner,71,67,0.9436619718309859,12s / zeros 50%
+teste,Direct free-kick,31,29,0.9354838709677419,12s / zeros 50%
+teste,Foul,139,124,0.8920863309352518,12s / zeros 50%
+teste,Goal,18,17,0.9444444444444444,12s / zeros 50%
+teste,Indirect free-kick,94,81,0.8617021276595744,12s / zeros 50%
+teste,Kick-off,31,21,0.6774193548387096,12s / zeros 50%
+teste,Offside,26,25,0.9615384615384616,12s / zeros 50%
+teste,Penalty,1,1,1.0,12s / zeros 50%
+teste,Red card,1,1,1.0,12s / zeros 50%
+teste,Shots off target,47,41,0.8723404255319149,12s / zeros 50%
+teste,Shots on target,91,74,0.8131868131868132,12s / zeros 50%
+teste,Substitution,37,34,0.918918918918919,12s / zeros 50%
+teste,Throw-in,288,244,0.8472222222222222,12s / zeros 50%
+teste,Yellow card,27,26,0.9629629629629629,12s / zeros 50%
+treino,Ball out of play,937,847,0.9039487726787621,12s / zeros 50%
+treino,Clearance,232,196,0.8448275862068966,12s / zeros 50%
+treino,Corner,154,144,0.935064935064935,12s / zeros 50%
+treino,Direct free-kick,62,59,0.9516129032258065,12s / zeros 50%
+treino,Foul,301,282,0.9368770764119602,12s / zeros 50%
+treino,Goal,42,40,0.9523809523809523,12s / zeros 50%
+treino,Indirect free-kick,209,179,0.8564593301435407,12s / zeros 50%
+treino,Kick-off,68,35,0.5147058823529411,12s / zeros 50%
+treino,Offside,35,31,0.8857142857142857,12s / zeros 50%
+treino,Penalty,4,4,1.0,12s / zeros 50%
+treino,Red card,2,2,1.0,12s / zeros 50%
+treino,Shots off target,131,106,0.8091603053435115,12s / zeros 50%
+treino,Shots on target,178,144,0.8089887640449438,12s / zeros 50%
+treino,Substitution,70,61,0.8714285714285714,12s / zeros 50%
+treino,Throw-in,545,500,0.9174311926605505,12s / zeros 50%
+treino,Yellow card,47,46,0.9787234042553191,12s / zeros 50%

@@ -1,0 +1,35 @@
+# Videos, em qualquer pasta (incluindo extensoes em maiusculas)
+/videos/
+*.[mM][pP]4
+*.[mM][kK][vV]
+*.[aA][vV][iI]
+*.[mM][oO][vV]
+*.[wW][eE][bB][mM]
+*.[mM]4[vV]
+*.[mM][pP][eE][gG]
+*.[mM][pP][gG]
+*.[wW][mM][vV]
+*.[fF][lL][vV]
+*.[tT][sS]
+*.[mM][tT][sS]
+*.[mM]2[tT][sS]
+*.3[gG][pP]
+*.3[gG]2
+*.[oO][gG][vV]
+*.[vV][oO][bB]
+
+# Ambiente Python e caches recriaveis
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.dashboard_cache/
+
+# Arquivos temporarios de execucao e testes
+*.log
+/tests/tmp*/
+~$*
