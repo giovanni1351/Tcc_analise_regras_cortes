@@ -12,6 +12,7 @@ class SimulatorTests(unittest.TestCase):
             'scene_id': [1, 2, 3, 4, 5], 'start_sec': [0, 30, 35, 70, 95],
             'duration_sec': [30, 5, 4, 4, 4], 'size': [10, 5, 5, 2, 5],
             'zero_fraction': [0, 1, 1, 1, 1], 'previous_players': [0, 8, 8, 8, 2],
+            'mean': [10, 0, 0, 0, 0],
         })
         self.events = pd.DataFrame({'label': ['Goal', 'Corner', 'Corner'], 'time_sec': [10, 60, 90]})
         self.proposals = pd.DataFrame({'start_sec': [10], 'end_sec': [60], 'duration_sec': [50]})

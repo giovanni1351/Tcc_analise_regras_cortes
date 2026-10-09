@@ -82,8 +82,10 @@ def simulator_timeline(record, proposals, labels, config, show_cuts=True):
         base=features.start_sec, y=['Cenas']*len(features), orientation='h',
         marker=dict(color=colors, line=dict(color='white', width=1)), showlegend=False,
         customdata=np.column_stack([features.scene_id, features.start_sec, features.duration_sec]),
+        hovertext=features['mean'].map(lambda value: f'{value:.1f}' if pd.notna(value) else 'Sem amostras'),
         hovertemplate='Cena %{customdata[0]}<br>Início / corte: %{customdata[1]:.2f}s'
-                      '<br>Duração: %{customdata[2]:.2f}s<extra></extra>'), row=2, col=1)
+                      '<br>Duração: %{customdata[2]:.2f}s'
+                      '<br>Média de jogadores na cena (YOLO): %{hovertext}<extra></extra>'), row=2, col=1)
     if show_cuts:
         cuts = features.loc[features.start_sec.gt(0), 'start_sec']
         x = [v for t in cuts for v in (t, t, None)]
