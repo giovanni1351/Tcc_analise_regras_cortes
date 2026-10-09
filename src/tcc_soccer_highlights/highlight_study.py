@@ -43,19 +43,30 @@ def scene_features(data):
     return s
 
 
-def intervals(features, duration, short=8, zero=.8, cluster=1, preceding=False, use_zero=True):
+def qualifying_scenes(features, duration, short=8, zero=.8, cluster=1, preceding=False, use_zero=True):
+    """Máscara das cenas que efetivamente geram propostas, na ordem original."""
     mask = features.duration_sec.le(short) & features['size'].ge(3)
     if use_zero:
         mask &= features.zero_fraction.ge(zero)
     if preceding:
         mask &= features.previous_players.ge(6)
-    anchors = np.sort(features.loc[mask & features.start_sec.lt(duration), 'start_sec'].to_numpy(float))
+    mask &= features.start_sec.lt(duration)
+    anchors = np.sort(features.loc[mask, 'start_sec'].to_numpy(float))
     if cluster > 1:
         counts = np.searchsorted(anchors, anchors+10, side='right')-np.searchsorted(anchors, anchors-10)
         anchors = anchors[counts >= cluster]
+    return mask & features.start_sec.isin(anchors)
+
+
+def intervals(features, duration, short=8, zero=.8, cluster=1, preceding=False, use_zero=True,
+              before=20, after=25):
+    if not np.isfinite(before) or not np.isfinite(after) or before < 0 or after < 0 or before + after <= 0:
+        raise ValueError('Os tempos antes e depois devem ser não negativos e somar mais de zero.')
+    mask = qualifying_scenes(features, duration, short, zero, cluster, preceding, use_zero)
+    anchors = np.sort(features.loc[mask, 'start_sec'].to_numpy(float))
     merged = []
     for a in anchors:
-        lo, hi = max(0., a-20), min(duration, a+25)
+        lo, hi = max(0., a-before), min(duration, a+after)
         if merged and lo <= merged[-1][1]:
             merged[-1][1] = max(merged[-1][1], hi)
         else:

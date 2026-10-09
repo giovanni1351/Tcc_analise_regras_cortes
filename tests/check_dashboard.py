@@ -15,3 +15,18 @@ for mode in ['Comparar vídeos','Eventos, cortes e YOLO','Simulador de regras','
 timed_run(lambda: app.sidebar.radio[0].set_value('Simulador de regras').run(),'Simulador / retorno')
 for value in [8,10,12,8]:
     timed_run(lambda: app.slider[0].set_value(value).run(),f'Cena máxima {value}s')
+timed_run(lambda: app.multiselect(key='simulator_events').set_value(['Goal', 'Corner']).run(),
+          'Simulador / gols e escanteios')
+timed_run(lambda: app.multiselect(key='simulator_events').set_value([]).run(),
+          'Simulador / nenhum evento')
+timed_run(lambda: app.number_input(key='simulator_before').set_value(5).run(),
+          'Simulador / 5 segundos antes')
+timed_run(lambda: app.number_input(key='simulator_after').set_value(10).run(),
+          'Simulador / 10 segundos depois')
+timed_run(lambda: app.number_input(key='simulator_before').set_value(0).run(),
+          'Simulador / somente depois')
+timed_run(lambda: app.number_input(key='simulator_after').set_value(0).run(),
+          'Simulador / intervalo vazio')
+assert any('Defina um tempo maior que zero' in warning.value for warning in app.warning)
+timed_run(lambda: app.number_input(key='simulator_before').set_value(20).run(),
+          'Simulador / recuperar intervalo válido')
