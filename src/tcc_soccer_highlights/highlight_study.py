@@ -95,8 +95,9 @@ def evaluate(records, config):
     return pd.DataFrame(rows), pd.DataFrame(clips, columns=['video_id','game','split','start_sec','end_sec','duration_sec','reason'])
 
 
-def scores(evaluation, clips, records, split):
-    e = evaluation[evaluation.split.eq(split) & evaluation.label.isin(TARGETS)]
+def scores(evaluation, clips, records, split, labels=None):
+    labels = TARGETS if labels is None else labels
+    e = evaluation[evaluation.split.eq(split) & evaluation.label.isin(labels)]
     total = sum(r['duration'] for r in records.values() if r['split'] == split)
     c = clips[clips.split.eq(split)]
     hits, n = int(e.hits.sum()), int(e.events.sum())
@@ -104,12 +105,12 @@ def scores(evaluation, clips, records, split):
     relevant = 0
     for key, proposals in c.groupby('video_id'):
         ev = records[key]['events']
-        times = np.sort(ev.loc[ev.label.isin(TARGETS), 'time_sec'].to_numpy(float))
+        times = np.sort(ev.loc[ev.label.isin(labels), 'time_sec'].to_numpy(float))
         counts = np.searchsorted(times, proposals.end_sec.to_numpy(), side='right')-np.searchsorted(times, proposals.start_sec.to_numpy())
         relevant += int((counts > 0).sum())
     return dict(split=split, hits=hits, events=n, recall=hits/n if n else np.nan,
                 coverage=c.duration_sec.sum()/total if total else np.nan,
-                proposal_precision=relevant/len(c) if len(c) else np.nan, proposals=len(c))
+                proposal_precision=relevant/len(c) if len(c) and len(labels) else np.nan, proposals=len(c))
 
 
 def study(items):

@@ -23,11 +23,13 @@ def cached_resolution(_items, token, config):
 
 
 @st.cache_data(show_spinner=False, max_entries=128)
-def cached_simulation(_records, token, short, zero, cluster, preceding, before=20, after=25):
+def cached_simulation(_records, token, short, zero, cluster, preceding, before=20, after=25, labels=None):
     evaluation, clips = evaluate(_records, dict(short=short, zero=zero, cluster=cluster, preceding=preceding,
                                                before=before, after=after))
-    summary = pd.DataFrame([scores(evaluation, clips, _records, s) for s in ['treino', 'teste']])
+    summary = pd.DataFrame([scores(evaluation, clips, _records, s, labels=labels) for s in ['treino', 'teste']])
     summary['reducao_temporal'] = 1-summary.coverage
+    if labels is not None:
+        evaluation = evaluation[evaluation.label.isin(labels)]
     grouped = evaluation.groupby(['split', 'label'])[['events', 'hits']].sum().reset_index()
     grouped['recall'] = grouped.hits/grouped.events
     return summary, grouped, clips, clips.to_csv(index=False).encode('utf-8-sig')
@@ -126,7 +128,9 @@ def render(mode, items, token):
     result=cached_study(items, token)
     q=result['quality']
     cols=st.columns(4)
-    for col,(label,value) in zip(cols,[('Partidas únicas',q.game.nunique()),('Tempos únicos',len(q)),('Eventos',int(q.events.sum())),('Horas com YOLO',f'{q.covered_sec.sum()/3600:.1f}')]): col.metric(label,value)
+    event_total = cols[2].empty()
+    for col,(label,value) in zip(cols,[('Partidas únicas',q.game.nunique()),('Tempos únicos',len(q)),('Eventos',int(q.events.sum())),('Horas com YOLO',f'{q.covered_sec.sum()/3600:.1f}')]):
+        (event_total if label == 'Eventos' else col).metric(label,value)
     st.caption('Maior resolução disponível por partida/tempo. Zero jogadores é indício de câmera fora do domínio do YOLO (close/replay), não confirmação automática de replay.')
     if mode == 'Eventos, cortes e YOLO':
         tabs=st.tabs(['Antes e depois','Perfil temporal','Incerteza e controles','Resolução e amostra'])
@@ -183,15 +187,19 @@ def render(mode, items, token):
         if before + after == 0:
             st.warning('Defina um tempo maior que zero em pelo menos um dos lados para gerar intervalos de análise.')
             return
-        summary, grouped, clips, csv_bytes = cached_simulation(result['records'], token, short, zero, cluster, preceding,
-                                                              before, after)
-        st.dataframe(summary,hide_index=True,use_container_width=True)
-        st.caption('Recall: instante de evento-alvo dentro do intervalo. Cobertura: união dos trechos / duração. Precisão: propostas com ao menos um alvo. Economia monetária depende da estratégia de envio.')
         labels = sorted({label for record in result['records'].values() for label in record['events'].label.dropna()})
-        selected_labels = st.multiselect('Tipos de eventos exibidos', labels, default=[x for x in TARGETS if x in labels],
+        selected_labels = st.multiselect('Tipos de eventos da análise', labels, default=[x for x in TARGETS if x in labels],
             format_func=lambda x: EVENT_NAMES.get(x, x), key='simulator_events')
-        st.caption('O filtro altera os eventos do gráfico, a comparação por tipo e a tabela abaixo. '
-                   'Os trechos continuam sendo gerados pela regra; as métricas gerais acima usam os eventos-alvo do estudo.')
+        st.caption('A seleção define os eventos usados nas contagens, no recall, na precisão e nos gráficos. '
+                   'A regra continua definindo os trechos e sua cobertura temporal.')
+        summary, grouped, clips, csv_bytes = cached_simulation(result['records'], token, short, zero, cluster, preceding,
+                                                              before, after, labels=tuple(sorted(selected_labels)))
+        event_total.metric('Eventos selecionados', int(summary.events.sum()))
+        st.dataframe(summary,hide_index=True,use_container_width=True)
+        st.caption('Resultados por conjunto, considerando apenas os tipos selecionados. '
+                   'Recall = eventos selecionados capturados / total de eventos selecionados. '
+                   'Precisão = propostas com ao menos um evento selecionado / total de propostas. '
+                   'Cobertura = união dos trechos / duração. Recall sem eventos é indefinido (campo vazio).')
         filtered = grouped[grouped.label.isin(selected_labels)].copy()
         if len(filtered):
             filtered['evento'] = filtered.label.map(lambda x: EVENT_NAMES.get(x,x))
@@ -211,11 +219,12 @@ def render(mode, items, token):
                 + f'Cada cena aprovada captura {before} s antes e {after} s depois de seu início; trechos sobrepostos são unidos.')
         show_cuts = st.checkbox('Mostrar linhas dos cortes de câmera', value=True)
         timeline, scenes, events = simulator_timeline(r, proposals, selected_labels, config_now, show_cuts)
-        cols = st.columns(4)
+        cols = st.columns(5)
         cols[0].metric('Cenas que acionam a regra', int(scenes.selected.sum()))
         cols[1].metric('Trechos selecionados', len(proposals))
         cols[2].metric('Tempo selecionado', f'{proposals.duration_sec.sum()/60:.1f} min')
         cols[3].metric('Eventos filtrados capturados', f'{int(events.captured.sum())} / {len(events)}')
+        cols[4].metric('Recall no vídeo', f'{events.captured.mean():.1%}' if len(events) else '—')
         st.plotly_chart(timeline,use_container_width=True)
         st.caption('Cada ponto representa uma cena: 100% significa que todas as amostras YOLO ficaram sem jogadores; '
                    '0% significa que nenhuma ficou sem jogadores. Azul indica cenas que acionam a regra. '

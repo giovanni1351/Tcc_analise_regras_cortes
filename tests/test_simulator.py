@@ -3,7 +3,7 @@ import unittest
 import pandas as pd
 
 from tcc_soccer_highlights.highlight_study import evaluate, intervals, qualifying_scenes
-from tcc_soccer_highlights.study_dashboard import event_coverage, simulator_timeline
+from tcc_soccer_highlights.study_dashboard import cached_simulation, event_coverage, simulator_timeline
 
 
 class SimulatorTests(unittest.TestCase):
@@ -55,6 +55,35 @@ class SimulatorTests(unittest.TestCase):
         self.assertTrue(events.empty)
         self.assertFalse(any(t.name == 'Corte de câmera' for t in fig.data))
         fig.to_json()
+
+    def test_filter_recalculates_summary_and_cache_without_changing_clips(self):
+        records = {'v': dict(features=self.features, events=self.events, duration=100,
+                             game='g', split='teste')}
+        cached_simulation.clear()
+        def run(labels):
+            summary, grouped, clips, csv = cached_simulation(records, 'filter-test', 8, .8, 2, True,
+                                                            labels=labels)
+            return summary.set_index('split').loc['teste'], grouped, clips, csv
+        goals, _, original, original_csv = run(('Goal',))
+        corners, grouped, clips, csv = run(('Corner',))
+        both, _, _, _ = run(('Goal', 'Corner'))
+        empty, empty_grouped, _, _ = run(())
+        absent, _, _, _ = run(('Penalty',))
+        self.assertEqual((goals.events, goals.hits, goals.recall), (1, 1, 1))
+        self.assertEqual((corners.events, corners.hits, corners.recall), (2, 1, .5))
+        self.assertAlmostEqual(both.recall, 2/3)
+        self.assertEqual(corners.proposal_precision, 1)
+        self.assertEqual(absent.proposal_precision, 0)
+        self.assertTrue(pd.isna(absent.recall))
+        self.assertEqual((empty.events, empty.hits), (0, 0))
+        self.assertTrue(pd.isna(empty.recall))
+        self.assertTrue(pd.isna(empty.proposal_precision))
+        self.assertTrue(empty_grouped.empty)
+        self.assertEqual(grouped.label.tolist(), ['Corner'])
+        self.assertEqual(goals.coverage, corners.coverage)
+        pd.testing.assert_frame_equal(original, clips)
+        self.assertEqual(original_csv, csv)
+        cached_simulation.clear()
 
 
 if __name__ == '__main__':

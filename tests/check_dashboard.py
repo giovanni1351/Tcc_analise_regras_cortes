@@ -19,6 +19,10 @@ timed_run(lambda: app.multiselect(key='simulator_events').set_value(['Goal', 'Co
           'Simulador / gols e escanteios')
 timed_run(lambda: app.multiselect(key='simulator_events').set_value([]).run(),
           'Simulador / nenhum evento')
+summary = app.dataframe[0].value
+assert summary.events.eq(0).all()
+assert summary.hits.eq(0).all()
+assert summary.recall.isna().all()
 timed_run(lambda: app.number_input(key='simulator_before').set_value(5).run(),
           'Simulador / 5 segundos antes')
 timed_run(lambda: app.number_input(key='simulator_after').set_value(10).run(),
