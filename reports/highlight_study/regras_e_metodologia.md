@@ -4,7 +4,7 @@
 
 Estudo exploratório para pré-seleção de melhores momentos e redução do contexto enviado a uma LLM.
 
-Fotografia: 2026-10-07T20:05:44. Foram lidos 51 arquivos completos. A análise principal usa 35 tempos únicos de 18 partidas, com 3896 eventos e 27.10 horas cobertas pelo YOLO.
+Fotografia: 2026-10-07T21:12:46. Foram lidos 63 arquivos completos. A análise principal usa 43 tempos únicos de 22 partidas, com 4675 eventos e 33.10 horas cobertas pelo YOLO.
 
 Hipótese: a edição televisiva após certos eventos apresenta mais mudanças de cena, planos curtos e poucas detecções de jogadores. A hipótese é testada; nenhuma correlação é presumida.
 
@@ -48,13 +48,13 @@ difference = média depois - média da referência. pre: 30 s anteriores; contro
 
 ## O que os dados sustentam
 
-cortes por 30 s: diferença 1.347, IC95% [0.749, 1.964]; aumento com intervalo acima de zero, em 13 partidas com controle.
+cortes por 30 s: diferença 1.302, IC95% [0.813, 1.785]; aumento com intervalo acima de zero, em 17 partidas com controle.
 
-média de jogadores detectados: diferença -0.992, IC95% [-3.342, 1.797]; diferença com intervalo incluindo zero, em 13 partidas com controle.
+média de jogadores detectados: diferença -1.256, IC95% [-3.124, 0.971]; diferença com intervalo incluindo zero, em 17 partidas com controle.
 
-cenas curtas com baixa detecção por 30 s: diferença 0.663, IC95% [0.186, 1.013]; aumento com intervalo acima de zero, em 13 partidas com controle.
+cenas curtas com baixa detecção por 30 s: diferença 0.651, IC95% [0.267, 0.944]; aumento com intervalo acima de zero, em 17 partidas com controle.
 
-fração de zero detecções: diferença 0.065, IC95% [-0.110, 0.208]; diferença com intervalo incluindo zero, em 13 partidas com controle.
+fração de zero detecções: diferença 0.093, IC95% [-0.046, 0.205]; diferença com intervalo incluindo zero, em 17 partidas com controle.
 
 A afirmação “sempre depois de um evento” deve ser substituída pelas taxas medidas por classe. A ausência do padrão não é evidência de ausência de um melhor momento. Saídas de bola, faltas e substituições também podem causar closes e cortes.
 
@@ -92,17 +92,17 @@ Mesmos tempos, anotações e limiares; nenhuma recalibração por resolução. R
 
 ## Vale a pena usar 720p?
 
-Comparação com 16 tempos pareados de 16 partidas. Média por partida: jogadores 224p=9.11, 720p=9.42; fração de zeros 224p=23.0%, 720p=23.2%. Diferença 720p-224p em zeros=0.002, IC95% [-0.000, 0.004].
+Comparação com 20 tempos pareados de 20 partidas. Média por partida: jogadores 224p=9.00, 720p=9.31; fração de zeros 224p=23.2%, 720p=23.3%. Diferença 720p-224p em zeros=0.001, IC95% [-0.002, 0.004].
 
 Quando 720p detecta pelo menos seis jogadores, 224p produz zero em média em 0.0% dos timestamps. Esse é um indicador operacional de zeros possivelmente causados pela qualidade, não uma taxa de erro comprovada.
 
-O processamento completo do pipeline em 720p levou mediana de 3.20 vezes o tempo de 224p; o arquivo ocupou 5.13 vezes o tamanho. Os tempos incluem leitura, YOLO, TransNet e escrita de Excel: não isolam o custo de inferência nem controlam temperatura/GPU/processos concorrentes.
+O processamento completo do pipeline em 720p levou mediana de 3.20 vezes o tempo de 224p; o arquivo ocupou 5.16 vezes o tamanho. Os tempos incluem leitura, YOLO, TransNet e escrita de Excel: não isolam o custo de inferência nem controlam temperatura/GPU/processos concorrentes.
 
-No TransNet, houve em média 243.7 cortes por tempo em 224p e 243.3 em 720p. Em média, 99.85% dos cortes 224p têm ao menos um corte 720p a até 0,5 s. É concordância entre versões, não precisão contra cortes anotados; não exige correspondência um a um.
+No TransNet, houve em média 239.7 cortes por tempo em 224p e 239.4 em 720p. Em média, 99.86% dos cortes 224p têm ao menos um corte 720p a até 0,5 s. É concordância entre versões, não precisão contra cortes anotados; não exige correspondência um a um.
 
 No código local, o TransNet recebe frames RGB redimensionados para 48×27. O YOLO usa LetterBox e tamanho de inferência definido por imgsz (padrão instalado 640); model.predict não fixa imgsz no pipeline. O peso pode sobrescrever o padrão. Portanto, o YOLO também redimensiona: 720p preserva mais informação antes desse passo, mas não significa processar todos os pixels originais.
 
-Com a mesma regra, 224p recuperou 155/191 eventos-alvo e 720p recuperou 155/191. Neste recorte, o ganho de contagem em 720p não trouxe ganho de recall para o filtro. Manter 224p é uma escolha inicial mais econômica para este objetivo; fixar resolução, imgsz e confiança na calibração.
+Com a mesma regra, 224p recuperou 188/233 eventos-alvo e 720p recuperou 186/233. Neste recorte, o ganho de contagem em 720p não trouxe ganho de recall para o filtro. Manter 224p é uma escolha inicial mais econômica para este objetivo; fixar resolução, imgsz e confiança na calibração.
 
 Isso não valida 224p para detectar a bola, identidade dos jogadores ou detalhes da jogada: essas tarefas não foram avaliadas. Se a LLM precisar de detalhes, recuperar frames em maior resolução somente dos trechos selecionados. A comparação inclui apenas os tempos em que ambas as versões já terminaram.
 
@@ -136,9 +136,9 @@ Limiar escolhido somente no treino entre 18 combinações. Se recall >=90% for a
 
 5. Enviar à LLM uma seleção de frames da ação anterior, da mudança visual e do contexto posterior. Solicitar tipo de evento, relevância e justificativa visual. Fixar orçamento de frames por trecho e medir perdas antes de descartar material.
 
-treino: recall 83.4% (266/319), cobertura 80.6%, redução temporal 19.4%, precisão de propostas 38.2% (427 propostas).
+treino: recall 82.6% (304/368), cobertura 79.3%, redução temporal 20.7%, precisão de propostas 36.0% (528 propostas).
 
-teste: recall 82.8% (111/134), cobertura 75.4%, redução temporal 24.6%, precisão de propostas 33.1% (248 propostas).
+teste: recall 83.6% (138/165), cobertura 76.2%, redução temporal 23.8%, precisão de propostas 32.4% (296 propostas).
 
 ## Como escolher o compromisso para produção
 
