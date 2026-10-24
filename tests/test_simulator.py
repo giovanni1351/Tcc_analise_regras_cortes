@@ -87,5 +87,35 @@ class SimulatorTests(unittest.TestCase):
         cached_simulation.clear()
 
 
+    def test_all_matches_row_uses_combined_counts_and_duration(self):
+        second_features = pd.concat([self.features, self.features.assign(start_sec=self.features.start_sec + 100)],
+                                    ignore_index=True)
+        records = {
+            'train': dict(features=self.features, events=pd.DataFrame({'label': ['Goal'], 'time_sec': [10]}),
+                          duration=100, game='train', split='treino'),
+            'test': dict(features=second_features,
+                         events=pd.DataFrame({'label': ['Goal'] * 3, 'time_sec': [20, 80, 180]}),
+                         duration=400, game='test', split='teste'),
+        }
+        cached_simulation.clear()
+        summary, grouped, clips, _ = cached_simulation(records, 'all-matches', 8, .8, 2, True, labels=('Goal',))
+        self.assertEqual(summary.split.tolist(), ['treino', 'teste', 'Todas as partidas'])
+        combined = summary.iloc[-1]
+        self.assertEqual((combined.events, combined.hits, combined.proposals), (4, 2, 3))
+        self.assertAlmostEqual(combined.recall, .5)
+        self.assertAlmostEqual(combined.coverage, .3)
+        self.assertAlmostEqual(combined.reducao_temporal, .7)
+        self.assertAlmostEqual(combined.proposal_precision, 2/3)
+        self.assertEqual(len(clips), 3)
+        self.assertEqual(set(grouped.split), {'treino', 'teste'})
+        empty, _, _, _ = cached_simulation(records, 'all-matches', 8, .8, 2, True, labels=())
+        combined = empty.iloc[-1]
+        self.assertEqual((combined.events, combined.hits), (0, 0))
+        self.assertTrue(pd.isna(combined.recall))
+        self.assertTrue(pd.isna(combined.proposal_precision))
+        self.assertAlmostEqual(combined.coverage, .3)
+        cached_simulation.clear()
+
+
 if __name__ == '__main__':
     unittest.main()

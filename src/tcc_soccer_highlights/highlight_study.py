@@ -43,26 +43,49 @@ def scene_features(data):
     return s
 
 
-def qualifying_scenes(features, duration, short=8, zero=.8, cluster=1, preceding=False, use_zero=True):
+def qualifying_scenes(features, duration, short=8, zero=.8, cluster=1, preceding=False, use_zero=True,
+                      rule='zero', min_previous=6., drop_fraction=.65):
     """Máscara das cenas que efetivamente geram propostas, na ordem original."""
-    mask = features.duration_sec.le(short) & features['size'].ge(3)
+    if rule == 'context':
+        if not np.isfinite(min_previous) or min_previous <= 0 or not 0 <= drop_fraction <= 1:
+            raise ValueError('O mínimo anterior deve ser positivo e a queda deve estar entre 0 e 100%.')
+        mask = (features.duration_sec.le(short) & features['size'].ge(3) & features.start_sec.lt(duration)
+                & features.previous_players.ge(min_previous)
+                & features['mean'].le(features.previous_players * (1 - drop_fraction)))
+        anchors = np.sort(features.loc[mask, 'start_sec'].to_numpy(float))
+        if cluster > 1:
+            counts = np.searchsorted(anchors, anchors + 10, side='right') - np.searchsorted(anchors, anchors - 10)
+            anchors = anchors[counts >= cluster]
+        return mask & features.start_sec.isin(anchors)
+    if rule != 'zero':
+        raise ValueError(f'Regra desconhecida: {rule}')
+    mask = qualifying_mask(*(features[column].to_numpy(float) for column in
+                            ['start_sec', 'duration_sec', 'size', 'zero_fraction', 'previous_players']),
+                           duration, short, zero, cluster, preceding, use_zero)
+    return pd.Series(mask, index=features.index)
+
+
+def qualifying_mask(starts, lengths, sizes, zeros, previous, duration,
+                    short=8, zero=.8, cluster=1, preceding=False, use_zero=True):
+    """Núcleo NumPy compartilhado pelo simulador e pela busca de parâmetros."""
+    mask = (lengths <= short) & (sizes >= 3) & (starts < duration)
     if use_zero:
-        mask &= features.zero_fraction.ge(zero)
+        mask &= zeros >= zero
     if preceding:
-        mask &= features.previous_players.ge(6)
-    mask &= features.start_sec.lt(duration)
-    anchors = np.sort(features.loc[mask, 'start_sec'].to_numpy(float))
+        mask &= previous >= 6
+    anchors = np.sort(starts[mask])
     if cluster > 1:
         counts = np.searchsorted(anchors, anchors+10, side='right')-np.searchsorted(anchors, anchors-10)
         anchors = anchors[counts >= cluster]
-    return mask & features.start_sec.isin(anchors)
+    return mask & np.isin(starts, anchors)
 
 
 def intervals(features, duration, short=8, zero=.8, cluster=1, preceding=False, use_zero=True,
-              before=20, after=25):
+              before=20, after=25, rule='zero', min_previous=6., drop_fraction=.65):
     if not np.isfinite(before) or not np.isfinite(after) or before < 0 or after < 0 or before + after <= 0:
         raise ValueError('Os tempos antes e depois devem ser não negativos e somar mais de zero.')
-    mask = qualifying_scenes(features, duration, short, zero, cluster, preceding, use_zero)
+    mask = qualifying_scenes(features, duration, short, zero, cluster, preceding, use_zero,
+                            rule, min_previous, drop_fraction)
     anchors = np.sort(features.loc[mask, 'start_sec'].to_numpy(float))
     merged = []
     for a in anchors:
@@ -74,39 +97,52 @@ def intervals(features, duration, short=8, zero=.8, cluster=1, preceding=False, 
     return merged
 
 
-def evaluate(records, config):
+def validate_event_delta(event_delta):
+    if not np.isfinite(event_delta) or event_delta < 0:
+        raise ValueError('O delta dos eventos deve ser finito e não negativo.')
+    return float(event_delta)
+
+
+def evaluate(records, config, event_delta=0.):
+    event_delta = validate_event_delta(event_delta)
     rows, clips = [], []
     for key, r in records.items():
         spans = intervals(r['features'], r['duration'], **config)
         selected = sum(b-a for a, b in spans)
         bounds = np.asarray(spans, dtype=float).reshape(-1, 2)
         for i, (a, b) in enumerate(spans):
+            reason = ('Queda relativa de jogadores após campo aberto' if config.get('rule') == 'context'
+                      else 'Sequência de cenas curtas / evidência YOLO')
             clips.append(dict(video_id=key, game=r['game'], split=r['split'], start_sec=a, end_sec=b,
-                              duration_sec=b-a, reason='Sequência de cenas curtas / evidência YOLO'))
+                              duration_sec=b-a, reason=reason))
         for label, events in r['events'].groupby('label'):
             times = events.time_sec.to_numpy(float)
             if len(bounds):
-                idx = np.searchsorted(bounds[:, 0], times, side='right')-1
-                hit = int(((idx >= 0) & (times <= bounds[np.maximum(idx, 0), 1])).sum())
+                idx = np.searchsorted(bounds[:, 0], times + event_delta, side='right')-1
+                hit = int(((idx >= 0) & (times - event_delta <= bounds[np.maximum(idx, 0), 1])).sum())
             else:
                 hit = 0
             rows.append(dict(video_id=key, game=r['game'], split=r['split'], label=label,
                              events=len(events), hits=hit, selected_sec=selected, total_sec=r['duration']))
-    return pd.DataFrame(rows), pd.DataFrame(clips, columns=['video_id','game','split','start_sec','end_sec','duration_sec','reason'])
+    return pd.DataFrame(rows, columns=['video_id','game','split','label','events','hits','selected_sec','total_sec']), pd.DataFrame(clips, columns=['video_id','game','split','start_sec','end_sec','duration_sec','reason'])
 
 
-def scores(evaluation, clips, records, split, labels=None):
+def scores(evaluation, clips, records, split, labels=None, event_delta=0.):
+    """Métricas do conjunto informado; split=None reúne todas as partidas."""
+    event_delta = validate_event_delta(event_delta)
     labels = TARGETS if labels is None else labels
-    e = evaluation[evaluation.split.eq(split) & evaluation.label.isin(labels)]
-    total = sum(r['duration'] for r in records.values() if r['split'] == split)
-    c = clips[clips.split.eq(split)]
+    e = evaluation if split is None else evaluation[evaluation.split.eq(split)]
+    e = e[e.label.isin(labels)]
+    total = sum(r['duration'] for r in records.values() if split is None or r['split'] == split)
+    c = clips if split is None else clips[clips.split.eq(split)]
     hits, n = int(e.hits.sum()), int(e.events.sum())
     # Precisão de propostas: conter ao menos um evento-alvo, sem chamar isso precisão por frame.
     relevant = 0
     for key, proposals in c.groupby('video_id'):
         ev = records[key]['events']
         times = np.sort(ev.loc[ev.label.isin(labels), 'time_sec'].to_numpy(float))
-        counts = np.searchsorted(times, proposals.end_sec.to_numpy(), side='right')-np.searchsorted(times, proposals.start_sec.to_numpy())
+        counts = (np.searchsorted(times - event_delta, proposals.end_sec.to_numpy(), side='right')
+                  - np.searchsorted(times + event_delta, proposals.start_sec.to_numpy()))
         relevant += int((counts > 0).sum())
     return dict(split=split, hits=hits, events=n, recall=hits/n if n else np.nan,
                 coverage=c.duration_sec.sum()/total if total else np.nan,

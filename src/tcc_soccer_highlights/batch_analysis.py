@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import re
 import sys
 import time
@@ -17,6 +18,7 @@ import pandas as pd
 
 VIDEO_EXTENSIONS = {".mkv", ".mp4", ".avi", ".mov", ".webm"}
 EXPECTED_CLASSES = ("player", "ball", "referee", "goalkeeper")
+LOG = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -86,6 +88,9 @@ def run_transnet(video_path: Path, fps: float, threshold: float, device: str) ->
     from transnetv2_pytorch import TransNetV2
 
     cap = cv2.VideoCapture(str(video_path))
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    LOG.info("TransNetV2: lendo os frames de %s", video_path.name)
+    last_report = time.monotonic()
     tiny_frames = []
     while True:
         ok, frame = cap.read()
@@ -93,20 +98,26 @@ def run_transnet(video_path: Path, fps: float, threshold: float, device: str) ->
             break
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         tiny_frames.append(cv2.resize(rgb, (48, 27), interpolation=cv2.INTER_AREA))
+        if time.monotonic() - last_report >= 10:
+            LOG.info("TransNetV2: leitura %.1f%% (%d/%d frames)",
+                     100 * len(tiny_frames) / total_frames if total_frames else 0., len(tiny_frames), total_frames)
+            last_report = time.monotonic()
     cap.release()
     if not tiny_frames:
         return pd.DataFrame(columns=["scene_id", "start_frame", "end_frame", "start_sec", "end_sec", "duration_sec"])
-    model = TransNetV2()
+    model = TransNetV2(device=device)
     tensor = torch.from_numpy(np.asarray(tiny_frames, dtype=np.uint8))
     if device == "cuda":
         model, tensor = model.cuda(), tensor.cuda()
-    prediction, _ = model.predict_frames(tensor, quiet=True)
+    LOG.info("TransNetV2: detectando cortes em %d frames; acompanhe a barra abaixo", len(tiny_frames))
+    prediction, _ = model.predict_frames(tensor, quiet=False)
     scenes = model.predictions_to_scenes_with_data(prediction.detach().cpu().numpy(), fps=fps, threshold=threshold)
     rows = []
     for scene in scenes:
         start, end = int(scene["start_frame"]), int(scene["end_frame"])
         rows.append({"scene_id": int(scene["shot_id"]), "start_frame": start, "end_frame": end,
                      "start_sec": start / fps, "end_sec": end / fps, "duration_sec": (end - start + 1) / fps})
+    LOG.info("TransNetV2: concluído (%d cenas)", len(rows))
     return pd.DataFrame(rows)
 
 
@@ -137,8 +148,15 @@ def run_yolo(video_path: Path, model, fps: float, stride: int, max_seconds: floa
     batch_frames: list[np.ndarray] = []
     batch_indices: list[int] = []
     max_frame = int(max_seconds * fps) if max_seconds else None
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if max_frame is not None:
+        total_frames = min(total_frames, max_frame + 1)
+    LOG.info("YOLO: iniciando %s (stride %d, lote %d)", video_path.name, stride, batch_size)
+    started = time.monotonic()
+    last_report = started - 10
 
     def process_batch() -> None:
+        nonlocal last_report
         if not batch_frames:
             return
         results = model.predict(batch_frames, verbose=False, batch=len(batch_frames))
@@ -154,6 +172,14 @@ def run_yolo(video_path: Path, model, fps: float, stride: int, max_seconds: floa
             rows.append({"frame": sampled_frame, "time_sec": sampled_frame / fps,
                          **{f"{name}_count": counts[name] for name in EXPECTED_CLASSES},
                          "ball_conf_max": ball_conf, "detection_count": sum(counts.values())})
+        now = time.monotonic()
+        if now - last_report >= 10:
+            processed = batch_indices[-1] + 1
+            fraction = min(1., processed / total_frames) if total_frames else 0.
+            remaining = (now - started) * (1 - fraction) / fraction if fraction else 0.
+            LOG.info("YOLO: %.1f%% — %d amostras — tempo restante estimado %.1f min",
+                     100 * fraction, len(rows), remaining / 60)
+            last_report = now
         batch_frames.clear()
         batch_indices.clear()
 
@@ -171,6 +197,7 @@ def run_yolo(video_path: Path, model, fps: float, stride: int, max_seconds: floa
         frame_idx += 1
     process_batch()
     cap.release()
+    LOG.info("YOLO: concluído (%d amostras em %.1f s)", len(rows), time.monotonic() - started)
     return pd.DataFrame(rows, columns=columns)
 
 
@@ -242,6 +269,41 @@ def write_excel(path: Path, metadata: dict, samples: pd.DataFrame, scenes: pd.Da
             sheet.auto_filter.ref = sheet.dimensions
 
 
+def analyze_video(info: VideoInfo, args, model, device: str) -> Path:
+    """Analisa um vídeo; publica o XLSX localmente só depois de terminar a escrita."""
+    relative = info.path.relative_to(args.videos_root).with_suffix("")
+    output = args.output_root / relative.parent / f"{relative.name}_analysis.xlsx"
+    started = time.time()
+    metadata = video_metadata(info, args.videos_root)
+    if args.max_seconds:
+        metadata["analyzed_duration_sec"] = min(args.max_seconds, metadata["duration_sec"])
+    scenes = pd.DataFrame() if args.skip_transnet else run_transnet(info.path, metadata["fps"], args.transnet_threshold, device)
+    if args.max_seconds and not scenes.empty:
+        scenes = scenes[scenes["start_sec"] <= args.max_seconds].copy()
+        scenes["end_sec"] = scenes["end_sec"].clip(upper=args.max_seconds)
+        scenes["duration_sec"] = scenes["end_sec"] - scenes["start_sec"]
+    events = load_events(info.game_dir / "Labels-v2.json", info.half, args.max_seconds or metadata["duration_sec"])
+    detections = run_yolo(info.path, model, metadata["fps"], args.stride,
+                          args.max_seconds, args.batch_size)
+    LOG.info("Preparando tabelas e eventos: %s", info.path.name)
+    samples = enrich_samples(detections, scenes, events, args.event_window)
+    windows = make_event_windows(samples, events, args.event_window)
+    scene_summary = make_scene_summary(samples, scenes, events)
+    metadata.update({"yolo_model": str(args.model or "não executado"), "yolo_stride": args.stride,
+                     "yolo_batch_size": args.batch_size, "transnet_executed": not args.skip_transnet,
+                     "event_window_sec": args.event_window,
+                     "processing_seconds": time.time() - started, "status": "ok"})
+    temporary = output.with_name(output.stem + ".partial.xlsx")
+    try:
+        LOG.info("Gravando XLSX: %s", output)
+        write_excel(temporary, metadata, samples, scenes, events, windows, scene_summary)
+        temporary.replace(output)
+        LOG.info("XLSX concluído: %s", output)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return output
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--videos-root", type=Path, default=Path("videos"))
@@ -279,27 +341,10 @@ def main() -> int:
         if args.skip_existing and output.exists():
             print(f"[{index}/{len(videos)}] existente: {output}")
             continue
-        started = time.time()
         print(f"[{index}/{len(videos)}] processando: {info.path}", flush=True)
         try:
-            metadata = video_metadata(info, args.videos_root)
-            if args.max_seconds:
-                metadata["analyzed_duration_sec"] = min(args.max_seconds, metadata["duration_sec"])
-            scenes = pd.DataFrame() if args.skip_transnet else run_transnet(info.path, metadata["fps"], args.transnet_threshold, device)
-            if args.max_seconds and not scenes.empty:
-                scenes = scenes[scenes["start_sec"] <= args.max_seconds].copy()
-                scenes["end_sec"] = scenes["end_sec"].clip(upper=args.max_seconds)
-                scenes["duration_sec"] = scenes["end_sec"] - scenes["start_sec"]
-            events = load_events(info.game_dir / "Labels-v2.json", info.half, args.max_seconds or metadata["duration_sec"])
-            samples = enrich_samples(run_yolo(info.path, model, metadata["fps"], args.stride,
-                                               args.max_seconds, args.batch_size), scenes, events, args.event_window)
-            windows = make_event_windows(samples, events, args.event_window)
-            scene_summary = make_scene_summary(samples, scenes, events)
-            metadata.update({"yolo_model": str(args.model or "não executado"), "yolo_stride": args.stride,
-                             "yolo_batch_size": args.batch_size, "transnet_executed": not args.skip_transnet,
-                             "event_window_sec": args.event_window,
-                             "processing_seconds": time.time() - started, "status": "ok"})
-            write_excel(output, metadata, samples, scenes, events, windows, scene_summary)
+            analyze_video(info, args, model, device)
+            metadata = pd.read_excel(output, sheet_name="metadata").iloc[0].to_dict()
             manifest.append({**metadata, "excel_path": str(output.resolve())})
         except Exception as exc:
             print(f"ERRO em {info.path}: {exc}", file=sys.stderr)

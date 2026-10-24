@@ -33,3 +33,7 @@ __pycache__/
 *.log
 /tests/tmp*/
 ~$*
+
+# Downloads temporários, checkpoints e índice Git isolado do pipeline
+.pipeline_state/
+*.partial.xlsx
