@@ -1,0 +1,1410 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{seweryn2026survey}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=764425eec60ef915ec10c62d27c998b5}{%
+           family={Seweryn},
+           familyi={S\bibinitperiod},
+           given={Karolina},
+           giveni={K\bibinitperiod}}}%
+        {{hash=d1ef17c15b57bdc7e70d367233fe7799}{%
+           family={Wróblewska},
+           familyi={W\bibinitperiod},
+           given={Anna},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a3bc7119ac139fed7b848fabf141c96b}{%
+           family={{Ł}ukasik},
+           familyi={Ł\bibinitperiod},
+           given={Szymon},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM New York, NY}%
+      }
+      \strng{namehash}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{fullhash}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{fullhashraw}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{bibnamehash}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{authorbibnamehash}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{authornamehash}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{authorfullhash}{d2189e045af1d7bc5cb486f7d9214893}
+      \strng{authorfullhashraw}{d2189e045af1d7bc5cb486f7d9214893}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Transactions on Intelligent Systems and Technology}
+      \field{number}{2}
+      \field{title}{Survey of Action Recognition, Spotting, and Spatio-Temporal Localization in Soccer—Current Trends and Research Perspectives}
+      \field{volume}{17}
+      \field{year}{2026}
+      \field{pages}{1\bibrangedash 37}
+      \range{pages}{37}
+    \endentry
+    \entry{morelli2023fifa}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=8f31b4ccd2d5fa2db9db3753359ab1cf}{%
+           family={Morelli},
+           familyi={M\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Estadão}%
+      }
+      \strng{namehash}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{fullhash}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{fullhashraw}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{bibnamehash}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{authorbibnamehash}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{authornamehash}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{authorfullhash}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \strng{authorfullhashraw}{8f31b4ccd2d5fa2db9db3753359ab1cf}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Fifa entende que torcedor não consegue mais ficar 90 minutos diante de uma TV para ver futebol}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://www.estadao.com.br/esportes/robson-morelli/fifa-entende-que-torcedor-nao-consegue-mais-ficar-90-minutos-diante-de-uma-tv-para-ver-futebol/
+      \endverb
+      \verb{url}
+      \verb https://www.estadao.com.br/esportes/robson-morelli/fifa-entende-que-torcedor-nao-consegue-mais-ficar-90-minutos-diante-de-uma-tv-para-ver-futebol/
+      \endverb
+    \endentry
+    \entry{bleier2021survey}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=8802d4dfc55de564fa50698f2ce78837}{%
+           family={Bleier},
+           familyi={B\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {InsideHook}%
+      }
+      \strng{namehash}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{fullhash}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{fullhashraw}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{bibnamehash}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{authorbibnamehash}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{authornamehash}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{authorfullhash}{8802d4dfc55de564fa50698f2ce78837}
+      \strng{authorfullhashraw}{8802d4dfc55de564fa50698f2ce78837}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Survey: Young Sports Fans Prefer Watching Highlights to Full Games}
+      \field{year}{2021}
+      \verb{urlraw}
+      \verb https://www.insidehook.com/sports/young-sports-fans-prefer-highlights-full-games
+      \endverb
+      \verb{url}
+      \verb https://www.insidehook.com/sports/young-sports-fans-prefer-highlights-full-games
+      \endverb
+    \endentry
+    \entry{deloitte2023sports}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=370c2482dacb3fffbd4043cfca5674fe}{%
+           family={Deloitte},
+           familyi={D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Deloitte Insights}%
+      }
+      \strng{namehash}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{fullhash}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{fullhashraw}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{bibnamehash}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{authorbibnamehash}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{authornamehash}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{authorfullhash}{370c2482dacb3fffbd4043cfca5674fe}
+      \strng{authorfullhashraw}{370c2482dacb3fffbd4043cfca5674fe}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{2023 sports fan insights: The beginning of the immersive sports era}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://www.deloitte.com/us/en/insights/industry/sports/immersive-sports-fandom.html
+      \endverb
+      \verb{url}
+      \verb https://www.deloitte.com/us/en/insights/industry/sports/immersive-sports-fandom.html
+      \endverb
+    \endentry
+    \entry{akan2023use}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=1d7b2f11c15d2c559f05a6a5fa3cbd5e}{%
+           family={Akan},
+           familyi={A\bibinitperiod},
+           given={Sara},
+           giveni={S\bibinitperiod}}}%
+        {{hash=0d7fb9ee026fb2cc3236ee1136c7233e}{%
+           family={Varl{ı}},
+           familyi={V\bibinitperiod},
+           given={Songül},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{fullhash}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{fullhashraw}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{bibnamehash}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{authorbibnamehash}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{authornamehash}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{authorfullhash}{98963b79fdc9a244fd2b46e388f08ef6}
+      \strng{authorfullhashraw}{98963b79fdc9a244fd2b46e388f08ef6}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Multimedia Systems}
+      \field{number}{3}
+      \field{title}{Use of deep learning in soccer videos analysis: survey}
+      \field{volume}{29}
+      \field{year}{2023}
+      \field{pages}{897\bibrangedash 915}
+      \range{pages}{19}
+    \endentry
+    \entry{xu2025deep}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=ebe87161fff38c40d0bf84a35cba7349}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Hao},
+           giveni={H\bibinitperiod}}}%
+        {{hash=b283256843ceb87564d1723821587ea7}{%
+           family={Baniya},
+           familyi={B\bibinitperiod},
+           given={Arbind\bibnamedelima Agrahari},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=0fe5483b56c9738c8ae880ea1474c3df}{%
+           family={Well},
+           familyi={W\bibinitperiod},
+           given={Sam},
+           giveni={S\bibinitperiod}}}%
+        {{hash=db9cb0b2d5c3d7361a0af815f51539aa}{%
+           family={Bouadjenek},
+           familyi={B\bibinitperiod},
+           given={Mohamed\bibnamedelima Reda},
+           giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=ad43b8622a5ea214d2f8e564677618a5}{%
+           family={Dazeley},
+           familyi={D\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=9e1a5eec5828986aa95209f003508e07}{%
+           family={Aryal},
+           familyi={A\bibinitperiod},
+           given={Sunil},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0e4118cb79edf732fdc90e421004f201}
+      \strng{fullhash}{86b9b62e07ed8ef2a146ff1f166690aa}
+      \strng{fullhashraw}{86b9b62e07ed8ef2a146ff1f166690aa}
+      \strng{bibnamehash}{86b9b62e07ed8ef2a146ff1f166690aa}
+      \strng{authorbibnamehash}{86b9b62e07ed8ef2a146ff1f166690aa}
+      \strng{authornamehash}{0e4118cb79edf732fdc90e421004f201}
+      \strng{authorfullhash}{86b9b62e07ed8ef2a146ff1f166690aa}
+      \strng{authorfullhashraw}{86b9b62e07ed8ef2a146ff1f166690aa}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2505.03991}
+      \field{title}{Deep Learning for Sports Video Event Detection: Tasks, Datasets, Methods, and Challenges}
+      \field{year}{2025}
+    \endentry
+    \entry{yin2024survey}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=71e0580e3f774b7d0496807106a8e47c}{%
+           family={Yin},
+           familyi={Y\bibinitperiod},
+           given={Hongwei},
+           giveni={H\bibinitperiod}}}%
+        {{hash=870ebbd4ef4d4ec4b13b971c2cef4cac}{%
+           family={Sinnott},
+           familyi={S\bibinitperiod},
+           given={Richard\bibnamedelima O},
+           giveni={R\bibinitperiod\bibinitdelim O\bibinitperiod}}}%
+        {{hash=b2941a2dc9d524ebc835c651bf659186}{%
+           family={Jayaputera},
+           familyi={J\bibinitperiod},
+           given={Glenn\bibnamedelima T},
+           giveni={G\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{82afd6e766e04daf013310512adbc7d3}
+      \strng{fullhash}{82afd6e766e04daf013310512adbc7d3}
+      \strng{fullhashraw}{82afd6e766e04daf013310512adbc7d3}
+      \strng{bibnamehash}{82afd6e766e04daf013310512adbc7d3}
+      \strng{authorbibnamehash}{82afd6e766e04daf013310512adbc7d3}
+      \strng{authornamehash}{82afd6e766e04daf013310512adbc7d3}
+      \strng{authorfullhash}{82afd6e766e04daf013310512adbc7d3}
+      \strng{authorfullhashraw}{82afd6e766e04daf013310512adbc7d3}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial intelligence review}
+      \field{number}{11}
+      \field{title}{A survey of video-based human action recognition in team sports}
+      \field{volume}{57}
+      \field{year}{2024}
+      \field{pages}{293}
+      \range{pages}{1}
+    \endentry
+    \entry{majeed2025real}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=12ed8703ff42810547cb54a8d0c32bd4}{%
+           family={Majeed},
+           familyi={M\bibinitperiod},
+           given={Fahad},
+           giveni={F\bibinitperiod}}}%
+        {{hash=6d9d9599be323361c7527bd1e56a840a}{%
+           family={Nazir},
+           familyi={N\bibinitperiod},
+           given={Maria},
+           giveni={M\bibinitperiod}}}%
+        {{hash=21130615946bd071fe7c65cf4c104b2d}{%
+           family={Swart},
+           familyi={S\bibinitperiod},
+           given={Kamilla},
+           giveni={K\bibinitperiod}}}%
+        {{hash=7b4b687276bbdccc52504bde86ce0928}{%
+           family={Agus},
+           familyi={A\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=17081b8f3d79ade472d26b16e2b9913a}{%
+           family={Schneider},
+           familyi={S\bibinitperiod},
+           given={Jens},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Nature Publishing Group UK London}%
+      }
+      \strng{namehash}{48d635f7747e98b9e1f2995088140df2}
+      \strng{fullhash}{fa43fe89c678875a49306134efe47d7e}
+      \strng{fullhashraw}{fa43fe89c678875a49306134efe47d7e}
+      \strng{bibnamehash}{fa43fe89c678875a49306134efe47d7e}
+      \strng{authorbibnamehash}{fa43fe89c678875a49306134efe47d7e}
+      \strng{authornamehash}{48d635f7747e98b9e1f2995088140df2}
+      \strng{authorfullhash}{fa43fe89c678875a49306134efe47d7e}
+      \strng{authorfullhashraw}{fa43fe89c678875a49306134efe47d7e}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Reports}
+      \field{number}{1}
+      \field{title}{Real-time analysis of soccer ball--player interactions using graph convolutional networks for enhanced game insights}
+      \field{volume}{15}
+      \field{year}{2025}
+      \field{pages}{21859}
+      \range{pages}{1}
+    \endentry
+    \entry{karimi2021soccer}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=45d7f5bc029e054828e27a3e300e7c32}{%
+           family={Karimi},
+           familyi={K\bibinitperiod},
+           given={Ali},
+           giveni={A\bibinitperiod}}}%
+        {{hash=de357e8721d2dcfb557fb845c3811814}{%
+           family={Toosi},
+           familyi={T\bibinitperiod},
+           given={Ramin},
+           giveni={R\bibinitperiod}}}%
+        {{hash=1238504f36790102ee5fac467feaa806}{%
+           family={Akhaee},
+           familyi={A\bibinitperiod},
+           given={Mohammad\bibnamedelima Ali},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{fullhash}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{fullhashraw}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{bibnamehash}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{authorbibnamehash}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{authornamehash}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{authorfullhash}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \strng{authorfullhashraw}{4e02976e88b9bf0b75b6ff3af8328b50}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2102.04331}
+      \field{title}{Soccer event detection using deep learning}
+      \field{year}{2021}
+    \endentry
+    \entry{chaganti2024advanced}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=57249ac26948bb9b587998484b05fb69}{%
+           family={Chaganti},
+           familyi={C\bibinitperiod},
+           given={Venkatarami\bibnamedelima Reddy},
+           giveni={V\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=9609fecaf2eb8f4eb1ec950f37fce319}{%
+           family={Mann},
+           familyi={M\bibinitperiod},
+           given={Mukesh},
+           giveni={M\bibinitperiod}}}%
+        {{hash=16ddee07d446b339864d3c7c9c08f8d6}{%
+           family={Badoni},
+           familyi={B\bibinitperiod},
+           given={Rakesh\bibnamedelima P.},
+           giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=45aa9ea13f0541aef7faf4b8c19800d8}{%
+           family={Mandyam},
+           familyi={M\bibinitperiod},
+           given={Sai\bibnamedelima Bhavesh},
+           giveni={S\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{e2880ac0f0765d73cf1d078959bb5ead}
+      \strng{fullhash}{e76be7f0654251c02f3d2387a6a15839}
+      \strng{fullhashraw}{e76be7f0654251c02f3d2387a6a15839}
+      \strng{bibnamehash}{e76be7f0654251c02f3d2387a6a15839}
+      \strng{authorbibnamehash}{e76be7f0654251c02f3d2387a6a15839}
+      \strng{authornamehash}{e2880ac0f0765d73cf1d078959bb5ead}
+      \strng{authorfullhash}{e76be7f0654251c02f3d2387a6a15839}
+      \strng{authorfullhashraw}{e76be7f0654251c02f3d2387a6a15839}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2025 International Conference on Artificial intelligence and Emerging Technologies (ICAIET)}
+      \field{title}{Advanced Computer Vision Techniques for Football Match Analysis: Detection, Team Assignment, and Player Tracking}
+      \field{year}{2025}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ICAIET65052.2025.11211437
+      \endverb
+      \keyw{YOLO;Computer vision;Accuracy;Tracking;Dynamics;Estimation;Optical variables measurement;Trajectory;Optical flow;Sports;Computer Vision;Football Analytics;YOLOv5;K-means Clustering;Optical Flow;Perspective Transformation;Sports Performance}
+    \endentry
+    \entry{deliege2021soccernet}{inproceedings}{}{}
+      \name{author}{9}{}{%
+        {{hash=622a042f1db1fcb3aefec9c0dcec1ad1}{%
+           family={Deliege},
+           familyi={D\bibinitperiod},
+           given={Adrien},
+           giveni={A\bibinitperiod}}}%
+        {{hash=5458844a83eb175691bf3c10fcb1a063}{%
+           family={Cioppa},
+           familyi={C\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0f1a6c8f425dac38d7090ce836818842}{%
+           family={Giancola},
+           familyi={G\bibinitperiod},
+           given={Silvio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=e05acdc6d881d5c7de97de7af23ba463}{%
+           family={Seikavandi},
+           familyi={S\bibinitperiod},
+           given={Meisam\bibnamedelima J},
+           giveni={M\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=c74ab499ea75e03df2f6fdda09b9b1dc}{%
+           family={Dueholm},
+           familyi={D\bibinitperiod},
+           given={Jacob\bibnamedelima V},
+           giveni={J\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=a62a0df58d6908409f38bb65a14c4fca}{%
+           family={Nasrollahi},
+           familyi={N\bibinitperiod},
+           given={Kamal},
+           giveni={K\bibinitperiod}}}%
+        {{hash=6e340bd126f740dfedce8191fbd2eb36}{%
+           family={Ghanem},
+           familyi={G\bibinitperiod},
+           given={Bernard},
+           giveni={B\bibinitperiod}}}%
+        {{hash=13bab869a6231c2e4e4c5a51a8120dbb}{%
+           family={Moeslund},
+           familyi={M\bibinitperiod},
+           given={Thomas\bibnamedelima B},
+           giveni={T\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=1dfaaa268487e9be3305bb3836754387}{%
+           family={Van\bibnamedelima Droogenbroeck},
+           familyi={V\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={Marc},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{75529411cb7f3998e7e4721c9e4b88de}
+      \strng{fullhash}{7054b81bd98448e0bb1720ca6c6d32e4}
+      \strng{fullhashraw}{7054b81bd98448e0bb1720ca6c6d32e4}
+      \strng{bibnamehash}{75529411cb7f3998e7e4721c9e4b88de}
+      \strng{authorbibnamehash}{75529411cb7f3998e7e4721c9e4b88de}
+      \strng{authornamehash}{75529411cb7f3998e7e4721c9e4b88de}
+      \strng{authorfullhash}{7054b81bd98448e0bb1720ca6c6d32e4}
+      \strng{authorfullhashraw}{7054b81bd98448e0bb1720ca6c6d32e4}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE/CVF conference on computer vision and pattern recognition}
+      \field{title}{Soccernet-v2: A dataset and benchmarks for holistic understanding of broadcast soccer videos}
+      \field{year}{2021}
+      \field{pages}{4508\bibrangedash 4519}
+      \range{pages}{12}
+    \endentry
+    \entry{giancola2018soccernet}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=0f1a6c8f425dac38d7090ce836818842}{%
+           family={Giancola},
+           familyi={G\bibinitperiod},
+           given={Silvio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=d0dc309eb626092ec05c305e4c113dff}{%
+           family={Amine},
+           familyi={A\bibinitperiod},
+           given={Mohieddine},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ad9915150305f71960c26c28447ca850}{%
+           family={Dghaily},
+           familyi={D\bibinitperiod},
+           given={Tarek},
+           giveni={T\bibinitperiod}}}%
+        {{hash=6e340bd126f740dfedce8191fbd2eb36}{%
+           family={Ghanem},
+           familyi={G\bibinitperiod},
+           given={Bernard},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{ff5066d81f51c4191d9994c94e15ca4b}
+      \strng{fullhash}{c625aa5c26970c511d49f11c97c92e7e}
+      \strng{fullhashraw}{c625aa5c26970c511d49f11c97c92e7e}
+      \strng{bibnamehash}{c625aa5c26970c511d49f11c97c92e7e}
+      \strng{authorbibnamehash}{c625aa5c26970c511d49f11c97c92e7e}
+      \strng{authornamehash}{ff5066d81f51c4191d9994c94e15ca4b}
+      \strng{authorfullhash}{c625aa5c26970c511d49f11c97c92e7e}
+      \strng{authorfullhashraw}{c625aa5c26970c511d49f11c97c92e7e}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE conference on computer vision and pattern recognition workshops}
+      \field{title}{Soccernet: A scalable dataset for action spotting in soccer videos}
+      \field{year}{2018}
+      \field{pages}{1711\bibrangedash 1721}
+      \range{pages}{11}
+    \endentry
+    \entry{cioppa2020context}{inproceedings}{}{}
+      \name{author}{7}{}{%
+        {{hash=5458844a83eb175691bf3c10fcb1a063}{%
+           family={Cioppa},
+           familyi={C\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+        {{hash=622a042f1db1fcb3aefec9c0dcec1ad1}{%
+           family={Deliege},
+           familyi={D\bibinitperiod},
+           given={Adrien},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0f1a6c8f425dac38d7090ce836818842}{%
+           family={Giancola},
+           familyi={G\bibinitperiod},
+           given={Silvio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=6e340bd126f740dfedce8191fbd2eb36}{%
+           family={Ghanem},
+           familyi={G\bibinitperiod},
+           given={Bernard},
+           giveni={B\bibinitperiod}}}%
+        {{hash=2655ba2c9e3e309ca2f6578f0a9dce49}{%
+           family={Droogenbroeck},
+           familyi={D\bibinitperiod},
+           given={Marc\bibnamedelima Van},
+           giveni={M\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=8a6f95fb8cf7f124fcc284305d72a038}{%
+           family={Gade},
+           familyi={G\bibinitperiod},
+           given={Rikke},
+           giveni={R\bibinitperiod}}}%
+        {{hash=13bab869a6231c2e4e4c5a51a8120dbb}{%
+           family={Moeslund},
+           familyi={M\bibinitperiod},
+           given={Thomas\bibnamedelima B},
+           giveni={T\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{e45711fd5a19c00194885f50ca3e70de}
+      \strng{fullhash}{2620d5fcec18d53afd6b779a7933e327}
+      \strng{fullhashraw}{2620d5fcec18d53afd6b779a7933e327}
+      \strng{bibnamehash}{e45711fd5a19c00194885f50ca3e70de}
+      \strng{authorbibnamehash}{e45711fd5a19c00194885f50ca3e70de}
+      \strng{authornamehash}{e45711fd5a19c00194885f50ca3e70de}
+      \strng{authorfullhash}{2620d5fcec18d53afd6b779a7933e327}
+      \strng{authorfullhashraw}{2620d5fcec18d53afd6b779a7933e327}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE/CVF conference on computer vision and pattern recognition}
+      \field{title}{A context-aware loss function for action spotting in soccer videos}
+      \field{year}{2020}
+      \field{pages}{13126\bibrangedash 13136}
+      \range{pages}{11}
+    \endentry
+    \entry{zhou2021feature}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=35b53a5f450cc6a8ce8bce633606e1de}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Xin},
+           giveni={X\bibinitperiod}}}%
+        {{hash=8d43fb359b1e745fdfa9ebac30b3fa4e}{%
+           family={Kang},
+           familyi={K\bibinitperiod},
+           given={Le},
+           giveni={L\bibinitperiod}}}%
+        {{hash=a9ac04a1c9090b3358c13acb726c8b9c}{%
+           family={Cheng},
+           familyi={C\bibinitperiod},
+           given={Zhiyu},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=101adcbfbe9cc794dfb0ead47d1b4aa4}{%
+           family={He},
+           familyi={H\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod}}}%
+        {{hash=e094f296b2396151eea81ca93e8b0b16}{%
+           family={Xin},
+           familyi={X\bibinitperiod},
+           given={Jingyu},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{c64d0db3398e585a854343c51abc2289}
+      \strng{fullhash}{443ac9e0a9a237922c81fdbcbb88b267}
+      \strng{fullhashraw}{443ac9e0a9a237922c81fdbcbb88b267}
+      \strng{bibnamehash}{443ac9e0a9a237922c81fdbcbb88b267}
+      \strng{authorbibnamehash}{443ac9e0a9a237922c81fdbcbb88b267}
+      \strng{authornamehash}{c64d0db3398e585a854343c51abc2289}
+      \strng{authorfullhash}{443ac9e0a9a237922c81fdbcbb88b267}
+      \strng{authorfullhashraw}{443ac9e0a9a237922c81fdbcbb88b267}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2106.14447}
+      \field{title}{Feature combination meets attention: Baidu soccer embeddings and transformer based temporal detection}
+      \field{year}{2021}
+    \endentry
+    \entry{giancola2025deep}{incollection}{}{}
+      \name{author}{4}{}{%
+        {{hash=0f1a6c8f425dac38d7090ce836818842}{%
+           family={Giancola},
+           familyi={G\bibinitperiod},
+           given={Silvio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=5458844a83eb175691bf3c10fcb1a063}{%
+           family={Cioppa},
+           familyi={C\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+        {{hash=6e340bd126f740dfedce8191fbd2eb36}{%
+           family={Ghanem},
+           familyi={G\bibinitperiod},
+           given={Bernard},
+           giveni={B\bibinitperiod}}}%
+        {{hash=1dfaaa268487e9be3305bb3836754387}{%
+           family={Van\bibnamedelima Droogenbroeck},
+           familyi={V\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={Marc},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {World Scientific}%
+      }
+      \strng{namehash}{ca6e6eb36d842a823a05d1a9e7166543}
+      \strng{fullhash}{f1e2be18465fd439f616bbc16c821ccf}
+      \strng{fullhashraw}{f1e2be18465fd439f616bbc16c821ccf}
+      \strng{bibnamehash}{f1e2be18465fd439f616bbc16c821ccf}
+      \strng{authorbibnamehash}{f1e2be18465fd439f616bbc16c821ccf}
+      \strng{authornamehash}{ca6e6eb36d842a823a05d1a9e7166543}
+      \strng{authorfullhash}{f1e2be18465fd439f616bbc16c821ccf}
+      \strng{authorfullhashraw}{f1e2be18465fd439f616bbc16c821ccf}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Pattern Recognition and Computer Vision in the New AI Era}
+      \field{title}{Deep learning for action spotting in association football videos}
+      \field{year}{2025}
+      \field{pages}{427\bibrangedash 459}
+      \range{pages}{33}
+    \endentry
+    \entry{giancola2022soccernet}{inproceedings}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{10}{}{%
+        {{hash=0f1a6c8f425dac38d7090ce836818842}{%
+           family={Giancola},
+           familyi={G\bibinitperiod},
+           given={Silvio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=5458844a83eb175691bf3c10fcb1a063}{%
+           family={Cioppa},
+           familyi={C\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a707655e65616f2a78613a8885ebc646}{%
+           family={Deliège},
+           familyi={D\bibinitperiod},
+           given={Adrien},
+           giveni={A\bibinitperiod}}}%
+        {{hash=e192587815908d3a8c7d537edda9f6ee}{%
+           family={Magera},
+           familyi={M\bibinitperiod},
+           given={Floriane},
+           giveni={F\bibinitperiod}}}%
+        {{hash=cdc1ae0f964265cbac74442dd886637d}{%
+           family={Somers},
+           familyi={S\bibinitperiod},
+           given={Vladimir},
+           giveni={V\bibinitperiod}}}%
+        {{hash=8d43fb359b1e745fdfa9ebac30b3fa4e}{%
+           family={Kang},
+           familyi={K\bibinitperiod},
+           given={Le},
+           giveni={L\bibinitperiod}}}%
+        {{hash=35b53a5f450cc6a8ce8bce633606e1de}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Xin},
+           giveni={X\bibinitperiod}}}%
+        {{hash=ec2c2e96fbddae3a2f3232b6dc990afa}{%
+           family={Barnich},
+           familyi={B\bibinitperiod},
+           given={Olivier},
+           giveni={O\bibinitperiod}}}%
+        {{hash=089846ba695bac69588ffd00d948ae36}{%
+           family={De\bibnamedelima Vleeschouwer},
+           familyi={D\bibinitperiod\bibinitdelim V\bibinitperiod},
+           given={Christophe},
+           giveni={C\bibinitperiod}}}%
+        {{hash=a8f4774fb7f40d7bca42099c3ffcc3f8}{%
+           family={Alahi},
+           familyi={A\bibinitperiod},
+           given={Alexandre},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{b33f6251fc6b049ec3e5bdba25532cdc}
+      \strng{fullhash}{b9b1ad3b6d3cf441603dcbb1dbca392a}
+      \strng{fullhashraw}{b9b1ad3b6d3cf441603dcbb1dbca392a}
+      \strng{bibnamehash}{b33f6251fc6b049ec3e5bdba25532cdc}
+      \strng{authorbibnamehash}{b33f6251fc6b049ec3e5bdba25532cdc}
+      \strng{authornamehash}{b33f6251fc6b049ec3e5bdba25532cdc}
+      \strng{authorfullhash}{b9b1ad3b6d3cf441603dcbb1dbca392a}
+      \strng{authorfullhashraw}{b9b1ad3b6d3cf441603dcbb1dbca392a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 5th International ACM Workshop on Multimedia Content Analysis in Sports}
+      \field{title}{SoccerNet 2022 challenges results}
+      \field{year}{2022}
+      \field{pages}{75\bibrangedash 86}
+      \range{pages}{12}
+    \endentry
+    \entry{cioppa2024soccernet}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{10}{}{%
+        {{hash=5458844a83eb175691bf3c10fcb1a063}{%
+           family={Cioppa},
+           familyi={C\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0f1a6c8f425dac38d7090ce836818842}{%
+           family={Giancola},
+           familyi={G\bibinitperiod},
+           given={Silvio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=cdc1ae0f964265cbac74442dd886637d}{%
+           family={Somers},
+           familyi={S\bibinitperiod},
+           given={Vladimir},
+           giveni={V\bibinitperiod}}}%
+        {{hash=e192587815908d3a8c7d537edda9f6ee}{%
+           family={Magera},
+           familyi={M\bibinitperiod},
+           given={Floriane},
+           giveni={F\bibinitperiod}}}%
+        {{hash=35b53a5f450cc6a8ce8bce633606e1de}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Xin},
+           giveni={X\bibinitperiod}}}%
+        {{hash=dbd139ae8c3098d6a100111723761715}{%
+           family={Mkhallati},
+           familyi={M\bibinitperiod},
+           given={Hassan},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a707655e65616f2a78613a8885ebc646}{%
+           family={Deliège},
+           familyi={D\bibinitperiod},
+           given={Adrien},
+           giveni={A\bibinitperiod}}}%
+        {{hash=21c7f94feaef22e3982d9616466dc5ee}{%
+           family={Held},
+           familyi={H\bibinitperiod},
+           given={Jan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=5f439bfdfe984764ba47ad7ead5ef197}{%
+           family={Hinojosa},
+           familyi={H\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=8ff1b27b626b306ffc28c5ceccea7c97}{%
+           family={Mansourian},
+           familyi={M\bibinitperiod},
+           given={Amir\bibnamedelima M},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{fa5328f7dbfb1536b738038ad8d481f9}
+      \strng{fullhash}{adc0b443e8d501ebeb267d8837800c59}
+      \strng{fullhashraw}{adc0b443e8d501ebeb267d8837800c59}
+      \strng{bibnamehash}{fa5328f7dbfb1536b738038ad8d481f9}
+      \strng{authorbibnamehash}{fa5328f7dbfb1536b738038ad8d481f9}
+      \strng{authornamehash}{fa5328f7dbfb1536b738038ad8d481f9}
+      \strng{authorfullhash}{adc0b443e8d501ebeb267d8837800c59}
+      \strng{authorfullhashraw}{adc0b443e8d501ebeb267d8837800c59}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Sports Engineering}
+      \field{number}{2}
+      \field{title}{SoccerNet 2023 challenges results}
+      \field{volume}{27}
+      \field{year}{2024}
+      \field{pages}{24}
+      \range{pages}{1}
+    \endentry
+    \entry{liu2009automatic}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=c3c72b33338b8ef6c1fca8b2abc557ac}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jia},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0803a3dbe2d31276aaf8da3e2c481447}{%
+           family={Tong},
+           familyi={T\bibinitperiod},
+           given={Xiaofeng},
+           giveni={X\bibinitperiod}}}%
+        {{hash=5bf985f08097fdceb261dcc570d12b90}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Wenlong},
+           giveni={W\bibinitperiod}}}%
+        {{hash=ad1506e9f10da2cad4389eac16751647}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Tao},
+           giveni={T\bibinitperiod}}}%
+        {{hash=157308ca64a73c59ce1b023f6f588e89}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Yimin},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=6cd5bccb48b115486612ae31c240fa15}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Hongqi},
+           giveni={H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{89785e366c374e04dd946fbea6a8da2f}
+      \strng{fullhash}{15f021cfa827e0c0efd78f30d5ade490}
+      \strng{fullhashraw}{15f021cfa827e0c0efd78f30d5ade490}
+      \strng{bibnamehash}{15f021cfa827e0c0efd78f30d5ade490}
+      \strng{authorbibnamehash}{15f021cfa827e0c0efd78f30d5ade490}
+      \strng{authornamehash}{89785e366c374e04dd946fbea6a8da2f}
+      \strng{authorfullhash}{15f021cfa827e0c0efd78f30d5ade490}
+      \strng{authorfullhashraw}{15f021cfa827e0c0efd78f30d5ade490}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Pattern recognition letters}
+      \field{number}{2}
+      \field{title}{Automatic player detection, labeling and tracking in broadcast soccer video}
+      \field{volume}{30}
+      \field{year}{2009}
+      \field{pages}{103\bibrangedash 113}
+      \range{pages}{11}
+    \endentry
+    \entry{redmon2016you}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=99bced2e56a5253f3fe98a5f04e6d9b2}{%
+           family={Redmon},
+           familyi={R\bibinitperiod},
+           given={Joseph},
+           giveni={J\bibinitperiod}}}%
+        {{hash=05ca9f19da9ecbd2def4e5514f8043c8}{%
+           family={Divvala},
+           familyi={D\bibinitperiod},
+           given={Santosh},
+           giveni={S\bibinitperiod}}}%
+        {{hash=bd5dadbe57bedc5957c19a3154c4d424}{%
+           family={Girshick},
+           familyi={G\bibinitperiod},
+           given={Ross},
+           giveni={R\bibinitperiod}}}%
+        {{hash=396c6ddedb6f986906fc3e4994d19974}{%
+           family={Farhadi},
+           familyi={F\bibinitperiod},
+           given={Ali},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{fceadd5e0c88bc623c502d7999f124d7}
+      \strng{fullhash}{b5530443e433a4da53dbe3cf155225b4}
+      \strng{fullhashraw}{b5530443e433a4da53dbe3cf155225b4}
+      \strng{bibnamehash}{b5530443e433a4da53dbe3cf155225b4}
+      \strng{authorbibnamehash}{b5530443e433a4da53dbe3cf155225b4}
+      \strng{authornamehash}{fceadd5e0c88bc623c502d7999f124d7}
+      \strng{authorfullhash}{b5530443e433a4da53dbe3cf155225b4}
+      \strng{authorfullhashraw}{b5530443e433a4da53dbe3cf155225b4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE conference on computer vision and pattern recognition}
+      \field{title}{You only look once: Unified, real-time object detection}
+      \field{year}{2016}
+      \field{pages}{779\bibrangedash 788}
+      \range{pages}{10}
+    \endentry
+    \entry{dedgaonkar2025real}{inproceedings}{}{}
+      \name{author}{6}{}{%
+        {{hash=fe7d7d138fe9aedb629dcd8c4ed1caa2}{%
+           family={Dedgaonkar},
+           familyi={D\bibinitperiod},
+           given={Suruchi},
+           giveni={S\bibinitperiod}}}%
+        {{hash=86143b723fcb147cf5f729395ab8ed8f}{%
+           family={Futane},
+           familyi={F\bibinitperiod},
+           given={Pravin},
+           giveni={P\bibinitperiod}}}%
+        {{hash=017a2be5cb671d9fbceb003c94de2eeb}{%
+           family={Bhimanpallewar},
+           familyi={B\bibinitperiod},
+           given={Ratnamala},
+           giveni={R\bibinitperiod}}}%
+        {{hash=80f31c28eb7c73eaa5a82383edef9ecd}{%
+           family={Dedgaonkar},
+           familyi={D\bibinitperiod},
+           given={Pratham},
+           giveni={P\bibinitperiod}}}%
+        {{hash=5409d3849303ea0f2e975a1926aa78b4}{%
+           family={Deokule},
+           familyi={D\bibinitperiod},
+           given={Arjun},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8b8ca305fa36c34211595f3237c421ec}{%
+           family={Dhadge},
+           familyi={D\bibinitperiod},
+           given={Amodini},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{40053e7d8c9bac4236cbdc3d66580a19}
+      \strng{fullhash}{3a93c7fa192ac79bbb73ad7632480bb8}
+      \strng{fullhashraw}{3a93c7fa192ac79bbb73ad7632480bb8}
+      \strng{bibnamehash}{3a93c7fa192ac79bbb73ad7632480bb8}
+      \strng{authorbibnamehash}{3a93c7fa192ac79bbb73ad7632480bb8}
+      \strng{authornamehash}{40053e7d8c9bac4236cbdc3d66580a19}
+      \strng{authorfullhash}{3a93c7fa192ac79bbb73ad7632480bb8}
+      \strng{authorfullhashraw}{3a93c7fa192ac79bbb73ad7632480bb8}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2025 International Conference on Intelligent Systems and Computational Networks (ICISCN)}
+      \field{title}{Real-Time Football Analysis System using YOLO and OpenCV}
+      \field{year}{2025}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+    \endentry
+    \entry{darapaneni2022detecting}{article}{}{}
+      \name{author}{8}{}{%
+        {{hash=7161860f0393eabe0e7c73d4403d97eb}{%
+           family={Darapaneni},
+           familyi={D\bibinitperiod},
+           given={Narayana},
+           giveni={N\bibinitperiod}}}%
+        {{hash=7a01333f7a8882a1544ea42b848a85a9}{%
+           family={Kumar},
+           familyi={K\bibinitperiod},
+           given={Prashant},
+           giveni={P\bibinitperiod}}}%
+        {{hash=d8b3ee51ec14abe5ddc15348bd9cedb0}{%
+           family={Malhotra},
+           familyi={M\bibinitperiod},
+           given={Nikhil},
+           giveni={N\bibinitperiod}}}%
+        {{hash=f130240c5e15b94a7712a1abca67ca05}{%
+           family={Sundaramurthy},
+           familyi={S\bibinitperiod},
+           given={Vigneswaran},
+           giveni={V\bibinitperiod}}}%
+        {{hash=3b0b4c09951ca86354a2f581c6566edc}{%
+           family={Thakur},
+           familyi={T\bibinitperiod},
+           given={Abhaya},
+           giveni={A\bibinitperiod}}}%
+        {{hash=e90bb0c8c9773a27efdfbc5e44a2114b}{%
+           family={Chauhan},
+           familyi={C\bibinitperiod},
+           given={Shivam},
+           giveni={S\bibinitperiod}}}%
+        {{hash=33828e9f54fe7b16084cb94d089d2ee0}{%
+           family={Thangeda},
+           familyi={T\bibinitperiod},
+           given={Krishna\bibnamedelima Chaitanya},
+           giveni={K\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=2159397cdb758c6172a52bcb2003cbd6}{%
+           family={Paduri},
+           familyi={P\bibinitperiod},
+           given={Anwesh\bibnamedelima Reddy},
+           giveni={A\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{c57cd2f14319e64a09457aa2055929ae}
+      \strng{fullhash}{6fd1b74fa21695b015757b7581bf519b}
+      \strng{fullhashraw}{6fd1b74fa21695b015757b7581bf519b}
+      \strng{bibnamehash}{c57cd2f14319e64a09457aa2055929ae}
+      \strng{authorbibnamehash}{c57cd2f14319e64a09457aa2055929ae}
+      \strng{authornamehash}{c57cd2f14319e64a09457aa2055929ae}
+      \strng{authorfullhash}{6fd1b74fa21695b015757b7581bf519b}
+      \strng{authorfullhashraw}{6fd1b74fa21695b015757b7581bf519b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2204.02573}
+      \field{title}{Detecting key soccer match events to create highlights using computer vision}
+      \field{year}{2022}
+    \endentry
+    \entry{vidal2022automatic}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=466670788cbf352743d222e8c21d534d}{%
+           family={Vidal-Codina},
+           familyi={V\bibinithyphendelim C\bibinitperiod},
+           given={Ferran},
+           giveni={F\bibinitperiod}}}%
+        {{hash=e5b51690758e7c5affa3adf31e747b75}{%
+           family={Evans},
+           familyi={E\bibinitperiod},
+           given={Nicolas},
+           giveni={N\bibinitperiod}}}%
+        {{hash=59c034bda82452c18c57f64b0449d65c}{%
+           family={El\bibnamedelima Fakir},
+           familyi={E\bibinitperiod\bibinitdelim F\bibinitperiod},
+           given={Bahaeddine},
+           giveni={B\bibinitperiod}}}%
+        {{hash=2df96a524a453daa22bb62d9d8c211db}{%
+           family={Billingham},
+           familyi={B\bibinitperiod},
+           given={Johsan},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{8edf5896c0fe32596a511e42f10ec7f8}
+      \strng{fullhash}{9cbc2baff950f77f2327d9ceb900ee80}
+      \strng{fullhashraw}{9cbc2baff950f77f2327d9ceb900ee80}
+      \strng{bibnamehash}{9cbc2baff950f77f2327d9ceb900ee80}
+      \strng{authorbibnamehash}{9cbc2baff950f77f2327d9ceb900ee80}
+      \strng{authornamehash}{8edf5896c0fe32596a511e42f10ec7f8}
+      \strng{authorfullhash}{9cbc2baff950f77f2327d9ceb900ee80}
+      \strng{authorfullhashraw}{9cbc2baff950f77f2327d9ceb900ee80}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Sports Engineering}
+      \field{number}{1}
+      \field{title}{Automatic event detection in football using tracking data}
+      \field{volume}{25}
+      \field{year}{2022}
+      \field{pages}{18}
+      \range{pages}{1}
+    \endentry
+    \entry{indahsari2025implementation}{inproceedings}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{3}{}{%
+        {{hash=f5a505e1ce89fb63c09a114954d152bd}{%
+           family={Indahsari},
+           familyi={I\bibinitperiod},
+           given={Ayu\bibnamedelima Nur},
+           giveni={A\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=33d9a95add1f28967e75dd932a16aa3a}{%
+           family={Setiyani},
+           familyi={S\bibinitperiod},
+           given={Lila},
+           giveni={L\bibinitperiod}}}%
+        {{hash=a11faeeedd674812266108fb7dab8352}{%
+           family={Wati},
+           familyi={W\bibinitperiod},
+           given={Devi\bibnamedelima Fajar},
+           giveni={D\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{fullhash}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{fullhashraw}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{bibnamehash}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{authorbibnamehash}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{authornamehash}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{authorfullhash}{eb7075c8df7eb896f754fe5cd9930e10}
+      \strng{authorfullhashraw}{eb7075c8df7eb896f754fe5cd9930e10}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2025 Tenth International Conference on Informatics and Computing (ICIC)}
+      \field{title}{Implementation of YOLOv11 for Automatic Offside Detection in Football}
+      \field{year}{2025}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+    \endentry
+    \entry{bez2021multimodal}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=c19499e44338401301192bb0b30d76cc}{%
+           family={Bez},
+           familyi={B\bibinitperiod},
+           given={Carolina\bibnamedelima L},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=cbae12055561a1d506e98132d02654a0}{%
+           family={Souza\bibnamedelima Filho},
+           familyi={S\bibinitperiod\bibinitdelim F\bibinitperiod},
+           given={João\bibnamedelima BO},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=3461570bd2176af23468faef252b5e05}{%
+           family={Vasconcelos},
+           familyi={V\bibinitperiod},
+           given={Luiz\bibnamedelima GLBM},
+           giveni={L\bibinitperiod\bibinitdelim G\bibinitperiod},
+           prefix={de},
+           prefixi={d\bibinitperiod}}}%
+        {{hash=b0f8cb4dd6427e593e6b2b05d7b88604}{%
+           family={Frensch},
+           familyi={F\bibinitperiod},
+           given={Thiago},
+           giveni={T\bibinitperiod}}}%
+        {{hash=e2d66730cb151eef9a7646388bb6d643}{%
+           family={Silva},
+           familyi={S\bibinitperiod},
+           given={Eduardo\bibnamedelima AB},
+           giveni={E\bibinitperiod\bibinitdelim A\bibinitperiod},
+           prefix={da},
+           prefixi={d\bibinitperiod}}}%
+        {{hash=95aaf141d71f5e22acc646c5a2f162fc}{%
+           family={Netto},
+           familyi={N\bibinitperiod},
+           given={Sergio\bibnamedelima L},
+           giveni={S\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{38476be64c06243b1a1562f927b1c702}
+      \strng{fullhash}{4c4a349157f84a7151a7f2edb3a7390b}
+      \strng{fullhashraw}{4c4a349157f84a7151a7f2edb3a7390b}
+      \strng{bibnamehash}{4c4a349157f84a7151a7f2edb3a7390b}
+      \strng{authorbibnamehash}{4c4a349157f84a7151a7f2edb3a7390b}
+      \strng{authornamehash}{38476be64c06243b1a1562f927b1c702}
+      \strng{authorfullhash}{4c4a349157f84a7151a7f2edb3a7390b}
+      \strng{authorfullhashraw}{4c4a349157f84a7151a7f2edb3a7390b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Information Sciences}
+      \field{title}{Multimodal soccer highlight identification using a sparse subset of frames integrating long-term sliding windows}
+      \field{volume}{578}
+      \field{year}{2021}
+      \field{pages}{702\bibrangedash 724}
+      \range{pages}{23}
+    \endentry
+    \entry{soucek2024transnet}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=625b9ea290cc05a4d61768da0837d4a6}{%
+           family={Soucek},
+           familyi={S\bibinitperiod},
+           given={Tomás},
+           giveni={T\bibinitperiod}}}%
+        {{hash=29088cf28bc74637b1924e4deff9b51e}{%
+           family={Lokoc},
+           familyi={L\bibinitperiod},
+           given={Jakub},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{fullhash}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{fullhashraw}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{bibnamehash}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{authorbibnamehash}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{authornamehash}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{authorfullhash}{1512ed96e606bceef3680b9ed26dfe97}
+      \strng{authorfullhashraw}{1512ed96e606bceef3680b9ed26dfe97}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 32nd ACM International Conference on Multimedia}
+      \field{title}{Transnet v2: An effective deep network architecture for fast shot transition detection}
+      \field{year}{2024}
+      \field{pages}{11218\bibrangedash 11221}
+      \range{pages}{4}
+    \endentry
+    \entry{valand2021automated}{inproceedings}{}{}
+      \name{author}{9}{}{%
+        {{hash=d8eccf0b59a53e6752c29a024e8c98fe}{%
+           family={Valand},
+           familyi={V\bibinitperiod},
+           given={Joakim\bibnamedelima O},
+           giveni={J\bibinitperiod\bibinitdelim O\bibinitperiod}}}%
+        {{hash=0a740304fdd29a54363cd569431995e3}{%
+           family={Kadragic},
+           familyi={K\bibinitperiod},
+           given={Haris},
+           giveni={H\bibinitperiod}}}%
+        {{hash=cb75aaa65fa953b6ae953550895fddbd}{%
+           family={Hicks},
+           familyi={H\bibinitperiod},
+           given={Steven\bibnamedelima A},
+           giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=e90f4b7f42bb9b7e4f99e3d54cce70f8}{%
+           family={Thambawita},
+           familyi={T\bibinitperiod},
+           given={Vajira},
+           giveni={V\bibinitperiod}}}%
+        {{hash=9ab6c9094fa8b810e73ce18be8b00678}{%
+           family={Midoglu},
+           familyi={M\bibinitperiod},
+           given={Cise},
+           giveni={C\bibinitperiod}}}%
+        {{hash=17a21ff05976cddb034f6a746ed845f5}{%
+           family={Kupka},
+           familyi={K\bibinitperiod},
+           given={Tomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=f62b80846bf8b2af039b6533d43cf113}{%
+           family={Johansen},
+           familyi={J\bibinitperiod},
+           given={Dag},
+           giveni={D\bibinitperiod}}}%
+        {{hash=15c22b92a22862397c8cd4f8b9f73595}{%
+           family={Riegler},
+           familyi={R\bibinitperiod},
+           given={Michael\bibnamedelima A},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=a4125835b2de7178bab7296f1daf02ee}{%
+           family={Halvorsen},
+           familyi={H\bibinitperiod},
+           given={P{å}l},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{de43bf8d71da2b9fd4c1a28fa482e75c}
+      \strng{fullhash}{9fb8c95f60cba632a5679a40509a229a}
+      \strng{fullhashraw}{9fb8c95f60cba632a5679a40509a229a}
+      \strng{bibnamehash}{de43bf8d71da2b9fd4c1a28fa482e75c}
+      \strng{authorbibnamehash}{de43bf8d71da2b9fd4c1a28fa482e75c}
+      \strng{authornamehash}{de43bf8d71da2b9fd4c1a28fa482e75c}
+      \strng{authorfullhash}{9fb8c95f60cba632a5679a40509a229a}
+      \strng{authorfullhashraw}{9fb8c95f60cba632a5679a40509a229a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2021 IEEE International Symposium on Multimedia (ISM)}
+      \field{title}{Automated clipping of soccer events using machine learning}
+      \field{year}{2021}
+      \field{pages}{210\bibrangedash 214}
+      \range{pages}{5}
+    \endentry
+    \entry{zhu2023autoshot}{inproceedings}{}{}
+      \name{author}{8}{}{%
+        {{hash=0617a43f5a6cc67950dce84f7ee05b67}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Wentao},
+           giveni={W\bibinitperiod}}}%
+        {{hash=d2373bc8399b8f5eb134a64c970b50a8}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Yufang},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=b1099702e98ce5600c10afd9372c13ad}{%
+           family={Xie},
+           familyi={X\bibinitperiod},
+           given={Xiufeng},
+           giveni={X\bibinitperiod}}}%
+        {{hash=31dc75bac0db2986363b8f7f21b1a142}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Wenxian},
+           giveni={W\bibinitperiod}}}%
+        {{hash=e8e03fcf8cbac5fc07356b90273bdfb8}{%
+           family={Deng},
+           familyi={D\bibinitperiod},
+           given={Jincan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=da81cd144d20fd4493b3cd3766ff6d54}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Debing},
+           giveni={D\bibinitperiod}}}%
+        {{hash=4f87ba962b43f4d664922e1f3c38c9c0}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Zhangyang},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=0fb3269d926c0f6914d41e63b3182271}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Ji},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{391524271d14b3dc7abfc48a0d52badd}
+      \strng{fullhash}{7d461cb0cd4e4e4efd0fe356e2eb106f}
+      \strng{fullhashraw}{7d461cb0cd4e4e4efd0fe356e2eb106f}
+      \strng{bibnamehash}{391524271d14b3dc7abfc48a0d52badd}
+      \strng{authorbibnamehash}{391524271d14b3dc7abfc48a0d52badd}
+      \strng{authornamehash}{391524271d14b3dc7abfc48a0d52badd}
+      \strng{authorfullhash}{7d461cb0cd4e4e4efd0fe356e2eb106f}
+      \strng{authorfullhashraw}{7d461cb0cd4e4e4efd0fe356e2eb106f}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition}
+      \field{title}{Autoshot: A short video dataset and state-of-the-art shot boundary detection}
+      \field{year}{2023}
+      \field{pages}{2238\bibrangedash 2247}
+      \range{pages}{10}
+    \endentry
+    \entry{xarles2023astra}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=a480d13ede269b307d0781cbc16e07b9}{%
+           family={Xarles},
+           familyi={X\bibinitperiod},
+           given={Artur},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d551650e8cc9944645e34ae01c81034e}{%
+           family={Escalera},
+           familyi={E\bibinitperiod},
+           given={Sergio},
+           giveni={S\bibinitperiod}}}%
+        {{hash=13bab869a6231c2e4e4c5a51a8120dbb}{%
+           family={Moeslund},
+           familyi={M\bibinitperiod},
+           given={Thomas\bibnamedelima B},
+           giveni={T\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=268f85478ea49786f6a98d956f5c33a5}{%
+           family={Clapés},
+           familyi={C\bibinitperiod},
+           given={Albert},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{f6fb94ab89cd6bc43fc1773422b456f2}
+      \strng{fullhash}{fbeb00b5e46473dd88fae817c2664623}
+      \strng{fullhashraw}{fbeb00b5e46473dd88fae817c2664623}
+      \strng{bibnamehash}{fbeb00b5e46473dd88fae817c2664623}
+      \strng{authorbibnamehash}{fbeb00b5e46473dd88fae817c2664623}
+      \strng{authornamehash}{f6fb94ab89cd6bc43fc1773422b456f2}
+      \strng{authorfullhash}{fbeb00b5e46473dd88fae817c2664623}
+      \strng{authorfullhashraw}{fbeb00b5e46473dd88fae817c2664623}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 6th International Workshop on Multimedia Content Analysis in Sports}
+      \field{title}{Astra: An action spotting transformer for soccer videos}
+      \field{year}{2023}
+      \field{pages}{93\bibrangedash 102}
+      \range{pages}{10}
+    \endentry
+    \entry{hanzra2013automatic}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=352366aed89d2b525f7fc4358d4582e5}{%
+           family={Hanzra},
+           familyi={H\bibinitperiod},
+           given={Bikramjot\bibnamedelima Singh},
+           giveni={B\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=ada638cdda6819d8add47f6243081088}{%
+           family={Rossi},
+           familyi={R\bibinitperiod},
+           given={Romain},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{b3b9690ade7984a737cb4dad263df908}
+      \strng{fullhash}{b3b9690ade7984a737cb4dad263df908}
+      \strng{fullhashraw}{b3b9690ade7984a737cb4dad263df908}
+      \strng{bibnamehash}{b3b9690ade7984a737cb4dad263df908}
+      \strng{authorbibnamehash}{b3b9690ade7984a737cb4dad263df908}
+      \strng{authornamehash}{b3b9690ade7984a737cb4dad263df908}
+      \strng{authorfullhash}{b3b9690ade7984a737cb4dad263df908}
+      \strng{authorfullhashraw}{b3b9690ade7984a737cb4dad263df908}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2013 IEEE second international conference on image information processing (ICIIP-2013)}
+      \field{title}{Automatic cameraman for dynamic video acquisition of football match}
+      \field{year}{2013}
+      \field{pages}{142\bibrangedash 147}
+      \range{pages}{6}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
