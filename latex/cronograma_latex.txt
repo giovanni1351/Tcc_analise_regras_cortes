@@ -1,0 +1,22 @@
+\begin{table*}[t!]
+	\centering
+	\caption{Cronograma de atividades executadas e planejadas para o desenvolvimento do projeto ao longo de 2026.}
+	\label{tab:cronograma}
+	\resizebox{\textwidth}{!}{% <-- Início do redimensionamento
+		\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\textbf{Atividades} & \textbf{Fev} & \textbf{Mar} & \textbf{Abr} & \textbf{Mai} & \textbf{Jun} & \textbf{Jul} & \textbf{Ago} & \textbf{Set} & \textbf{Out} & \textbf{Nov} \\ \hline
+			Escolha do Tema e Definição do Escopo & X & X & & & & & & & & \\ \hline
+			Levantamento e Revisão Bibliográfica & & X & X & X & & & & & & \\ \hline
+			Definição da Arquitetura e Metodologia & & & X & X & & & & & & \\ \hline
+			Implementação e Testes (TransNet V2 e YOLO) & & & & X & & & & & & \\ \hline
+			Extração e Análise de Resultados Parciais & & & & X & & & & & & \\ \hline
+			Redação e Entrega do Relatório Parcial & & & & X & X & & & & & \\ \hline
+			Desenvolvimento da Triagem (Filtro Pré-LLM) & & & & & & X & X & & & \\ \hline
+			Integração e Inferência com Modelo LLM & & & & & & & X & X & & \\ \hline
+			Obtenção de Resultados Finais & & & & & & & & X & X & \\ \hline
+			Redação do Documento Final  & & & & & & & & & X & X \\ \hline
+			Revisão, Entrega e Defesa do Projeto & & & & & & & & & & X \\ \hline
+		\end{tabular}%
+	} % <-- Fim do redimensionamento
+\end{table*}
