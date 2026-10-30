@@ -105,6 +105,11 @@ uv run python -m tcc_soccer_highlights.streaming_analysis --limit 2 --splits tra
 Análises completas já existentes são preservadas e puladas. Arquivos incompletos ou
 corrompidos são processados novamente. Se o push falhar, o pipeline para e preserva
 o XLSX; execute o mesmo comando para reenviar sem repetir a inferência concluída.
+Timeouts e falhas transitórias de rede têm até quatro tentativas automáticas, com
+limite de cinco minutos por comando e pausas de 5, 15 e 30 segundos. O terminal
+mostra cada nova tentativa. O publicador consulta a ponta do branch e só executa
+`fetch` quando ainda não possui o commit remoto, evitando transferências repetidas.
+Uma retomada informa explicitamente quando está reenviando um XLSX pronto.
 Downloads temporários são descartados também em falhas e interrupções normais.
 Se o computador desligar abruptamente, podem restar até dois vídeos, reutilizáveis
 como espaço temporário na próxima execução. Apenas pequenos arquivos de anotações,
@@ -160,10 +165,17 @@ TransNet e YOLO. A redução temporal não equivale a economia monetária medida
 
 ### Desempenho do painel
 
-Na primeira leitura de cada Excel, o painel cria um cache Parquet em
-`analysis_output/.dashboard_cache/`. Nas próximas aberturas, reaproveita esse
-cache e converte apenas arquivos novos ou modificados. A primeira conversão
-ainda depende da leitura dos Excels; não há reexecução dos modelos.
+Ao abrir, o painel carrega um índice pequeno dos metadados e os dados completos
+somente do vídeo selecionado. Comparar vídeos carrega apenas os vídeos escolhidos;
+as páginas de estudo e simulador carregam os dados necessários ao conjunto inteiro.
+A página do relatório não carrega as amostras dos vídeos.
+
+O índice fica em `analysis_output/.dashboard_cache/metadata_index.json`. Novos
+resultados atualizam apenas as entradas novas ou modificadas. As abas lidas são
+convertidas para Parquet de forma incremental na mesma pasta; consultar apenas
+metadados não lê as amostras YOLO de todos os arquivos. A primeira construção do
+índice ainda depende dos arquivos disponíveis, mas as próximas aberturas reutilizam
+o índice persistente. Não há reexecução dos modelos.
 
 Enquanto você ajusta os parâmetros, a amostra permanece fixa em memória.
 **Atualizar arquivos concluídos** incorpora novos resultados do processamento.
@@ -195,12 +207,16 @@ numérico). Se o recall inicial está abaixo da meta, alcançá-la pode exigir m
 tempo de vídeo. Se nenhuma combinação atende à meta, os controles são mantidos
 e a tela informa o recall máximo alcançável nos limites da busca.
 
-O espaço de busca segue os controles: cenas de 1–20 s, fração de zeros de 0–1
+A cena máxima pode ser ajustada manualmente de 1 a 120 s. A busca automática
+considera cenas de 1–20 s por padrão e amplia esse intervalo até o valor atual
+quando ele é maior que 20 s. Os demais parâmetros são: fração de zeros de 0–1
 em passos de 0,05, agrupamento de 1–3 cenas, exigência anterior ligada/desligada
 e janelas inteiras de 0 até o limite escolhido (120 s por lado por padrão),
 com soma positiva. Esse limite deve incluir as janelas atuais e pode ser
-ampliado até 600 s por lado. Todas as 2.520 regras e todos os pares de janelas
-são considerados: com limite de 120 s, são **36.892.800 combinações**.
+ampliado até 600 s por lado. Todas as regras e todos os pares de janelas
+são considerados: na grade padrão de 2.520 regras, com limite de janela de
+120 s, são **36.892.800 combinações**. Ampliar a cena máxima aumenta a grade
+e o tempo da busca.
 O cálculo vetorizado usa histogramas acumulados das distâncias entre eventos
 e cenas para o recall, e união dos intervalos para a duração, compartilhando
 o núcleo de seleção de cenas com o simulador. Não há sorteios nem pesos
@@ -214,7 +230,25 @@ configuração inicial. O botão **Restaurar parâmetros anteriores** desfaz a a
 As anotações orientam a escolha dos parâmetros no
 treino, mas a geração de trechos continua usando apenas cortes e sinais do YOLO.
 O botão não altera a configuração do relatório PDF nem grava um preset em disco;
-os parâmetros aplicados ficam na sessão atual do simulador.
+os parâmetros aplicados ficam na sessão atual do simulador até você usar
+**Salvar configuração e métricas**.
+
+### Configurações salvas e comparação das regras
+
+No simulador, **Salvar parâmetros e resultado** registra um nome, observações,
+metas de recall e redução temporal, a regra, todos os parâmetros, os tipos de
+eventos e o delta. Guarda também uma fotografia das métricas por conjunto e da
+cobertura por evento, em `saved_rules/configurations.json`. Esse arquivo persiste
+ao reiniciar o dashboard e fica fora dos caches. Cada salvamento cria um registro.
+
+O modo **Resumo das regras salvas** compara as configurações em tabela e gráfico
+de recall × redução temporal, mostra se as duas metas foram atingidas e permite
+exportar CSV/JSON ou restaurar uma configuração no simulador. O resumo salvo abre
+sem carregar todos os XLSX. Se dados, eventos ou delta diferirem entre registros,
+a tela identifica essa diferença. **Reavaliar configurações nos dados atuais**
+aplica os parâmetros das configurações selecionadas às mesmas partidas, eventos e
+delta, sem modificar as fotografias originais. Restaurar parâmetros também usa
+os dados atuais, portanto suas métricas podem diferir das registradas no passado.
 
 ### Primeiro tempo em 720p e baixa resolução
 

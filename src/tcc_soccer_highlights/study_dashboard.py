@@ -15,6 +15,7 @@ from tcc_soccer_highlights.resolution_comparison import first_half_versions, pre
 from tcc_soccer_highlights.simulator_glossary import render_simulator_glossary
 from tcc_soccer_highlights.rule_descriptions import RULE_NAMES, rule_pseudocode
 from tcc_soccer_highlights.highlight_study import validate_event_delta
+from tcc_soccer_highlights.saved_rules_dashboard import apply_pending, render_restore, render_save
 
 
 @st.cache_resource(show_spinner='Calculando estudo dos vídeos concluídos...', max_entries=2)
@@ -154,10 +155,12 @@ def render_optimizer(records, token, labels, config, current_summary, event_delt
                    'Elevar um recall abaixo da meta pode exigir selecionar mais tempo de vídeo.')
         max_window = st.number_input('Limite de cada janela na busca (s)', min_value=1,
                                      max_value=MAX_WINDOW, value=120, step=1, key='optimizer_max_window')
-        st.caption('Busca: cena máxima de 1 a 20 s; fração de zeros de 0 a 100% em passos de 5%; '
+        st.caption(f'Busca: cena máxima de 1 a {max(20, config["short"])} s; fração de zeros de 0 a 100% em passos de 5%; '
                    '1 a 3 cenas agrupadas; exigir jogadores antes ligado/desligado; '
                    'janelas antes/depois em passos de 1 s até o limite acima. '
                    'Todas as combinações dessa grade são avaliadas, sem sorteios.')
+        if config['short'] > 20:
+            st.caption('A busca foi ampliada para incluir a cena máxima atual. Mais valores aumentam o tempo da busca.')
     training_events = sum(int(r['events'].label.isin(labels).sum())
                           for r in records.values() if r['split'] == 'treino')
     reason = None
@@ -384,6 +387,8 @@ def render(mode, items, token):
     else:
         st.subheader('Simulador de filtros para a LLM')
         st.warning('Ajustar parâmetros olhando o teste torna o resultado exploratório. A regra do PDF foi escolhida somente no treino. As anotações são usadas apenas para avaliar, nunca para gerar candidatos.')
+        apply_pending(result['records'])
+        render_restore()
         rule = st.selectbox('Regra para analisar', list(RULE_NAMES), format_func=RULE_NAMES.get,
                             key='simulator_rule')
         contextual = rule == 'context'
@@ -401,7 +406,7 @@ def render(mode, items, token):
             for name, value in pending.items():
                 st.session_state[f'simulator_{name}'] = value
         columns=st.columns(4)
-        short=columns[0].slider('Cena máxima (s)',1,20, key='simulator_short')
+        short=columns[0].slider('Cena máxima (s)',1,120, key='simulator_short')
         zero=columns[1].slider('Fração de zeros',0.,1.,step=.05, key='simulator_zero', disabled=contextual)
         cluster=columns[2].selectbox('Cenas qualificadas em ±10 s',[1,2,3], key='simulator_cluster')
         preceding=columns[3].checkbox('Exigir ≥6 jogadores antes',value=False, key='simulator_preceding', disabled=contextual)
@@ -489,6 +494,7 @@ recall = quantidade_de_eventos_cobertos / total_de_eventos_selecionados''', lang
                    'Recall = eventos selecionados capturados / total de eventos selecionados. '
                    'Precisão = propostas com ao menos um evento selecionado / total de propostas. '
                    'Cobertura = união dos trechos / duração. Recall sem eventos é indefinido (campo vazio).')
+        render_save(result['records'], token, rule_config, selected_labels, event_delta, summary, grouped)
         st.subheader('Comparação entre as duas regras')
         other_rule = 'zero' if contextual else 'context'
         other_summary, _, _, _ = cached_simulation(result['records'], token,

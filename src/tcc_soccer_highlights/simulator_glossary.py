@@ -57,7 +57,7 @@ Os controles abaixo definem a regra; os valores mostrados nas tabelas de cenas d
 | --- | --- |
 | **Corte de câmera / cena** | Um corte detectado delimita cenas consecutivas do vídeo. Uma cena não é necessariamente um evento esportivo nem um replay. |
 | **Regra para analisar** | Alterna entre a regra original de cenas curtas com zeros e a nova regra de queda relativa de jogadores após campo aberto. Todas as métricas, a timeline, os eventos perdidos e a comparação de resoluções usam a regra selecionada. A tabela entre regras aplica as duas às mesmas partidas e janelas. |
-| **Cena máxima (s)** | Maior duração permitida para uma cena acionar a regra. Cenas mais longas são descartadas por esse critério. |
+| **Cena máxima (s)** | Maior duração permitida para uma cena acionar a regra, ajustável de 1 a 120 s. Cenas mais longas são descartadas por esse critério. A busca automática pesquisa até 20 s por padrão e amplia a grade até o valor atual quando ele é maior. |
 | **Amostras YOLO (`size`)** | Quantidade de frames analisados pelo YOLO dentro da cena. A regra exige pelo menos três amostras; isso não significa que todos os frames do vídeo foram analisados. |
 | **Fração de zeros / amostras sem jogadores (`zero_fraction`)** | Amostras da cena com zero jogadores detectados ÷ total de amostras da cena. O controle estabelece o mínimo exigido. 100% significa zero detecções em todas as amostras; não comprova ausência real de jogadores nem confirma replay. Sem amostras, o valor é indefinido e a cena não aciona a regra. |
 | **Média de jogadores na cena (`mean`)** | Média da quantidade de jogadores detectados por amostra na cena. É uma contagem de detecções, não uma porcentagem nem garantia da quantidade real de jogadores visíveis. |
@@ -79,6 +79,15 @@ Os controles abaixo definem a regra; os valores mostrados nas tabelas de cenas d
 | **Recall máximo alcançável** | Maior recall encontrado dentro dos limites pesquisados. Quando ele fica abaixo da meta, a busca não aplica uma nova configuração. |
 | **Variação abaixo dos indicadores (p.p.)** | Diferença entre a avaliação dos controles atuais e a configuração anterior à última busca. Passar de 80% para 90% é +10 p.p., e não um aumento relativo de 10%. |
 | **Recall mínimo usado na última busca / histórico da busca** | Registro da última execução. O histórico mantém os resultados daquela execução; os indicadores da avaliação atual acompanham as alterações manuais. O gráfico mostra a evolução da melhor solução viável conforme as regras são avaliadas. |
+
+**Configurações salvas e resumo**
+
+| Termo / métrica | Significado e interpretação |
+| --- | --- |
+| **Meta de recall / meta de redução temporal** | Valores mínimos desejados para a configuração salva. São critérios de avaliação do resultado; salvar uma meta não executa uma busca nem altera os trechos. A meta de recall da busca automática continua sendo definida nas opções da busca. |
+| **Atingiu as duas metas** | O recall e a redução temporal alcançam os respectivos mínimos no conjunto exibido. Sem eventos, o recall fica indefinido e a linha não atende às duas metas. |
+| **Resultado salvo** | Fotografia dos parâmetros, eventos, delta e métricas no momento do salvamento. Não muda quando novos vídeos são adicionados ou os controles são alterados. |
+| **Comparação comum / reavaliação** | Recalcula cada regra salva com seus parâmetros, usando as mesmas partidas atuais, eventos e delta escolhidos na comparação. Preserva os resultados salvos e as metas de cada configuração. |
 
 **Exemplo para distinguir as três métricas principais:** de 100 eventos selecionados,
 90 tiveram seus intervalos intersectados pelos trechos (**recall de 90%**). Os trechos mantiveram 30 de 100 minutos

@@ -1,0 +1,561 @@
+{
+  "version": 1,
+  "configurations": [
+    {
+      "id": "08ec06c7f4db4cb19068efceee165a96",
+      "name": "boa regra",
+      "notes": "obteve mais de 92 em tudo menos na finalização no gol",
+      "created_at": "2026-10-26T23:54:38.050398+00:00",
+      "config": {
+        "short": 25,
+        "zero": 0.0,
+        "cluster": 1,
+        "preceding": true,
+        "before": 16,
+        "after": 12,
+        "rule": "zero",
+        "min_previous": 6,
+        "drop_fraction": 0.65
+      },
+      "labels": [
+        "Foul",
+        "Goal",
+        "Offside",
+        "Shots off target",
+        "Shots on target"
+      ],
+      "event_delta": 0.0,
+      "goals": {
+        "recall": 0.9,
+        "reduction": 0.3
+      },
+      "dataset": {
+        "fingerprint": "bedf16ae0547b06f07229363c6dbdebdb056cdd8d0af0e012f21ad289a3c1a9c",
+        "videos": 497,
+        "games": 249,
+        "duration_sec": 1360281.6
+      },
+      "summary": [
+        {
+          "split": "treino",
+          "hits": 8017,
+          "events": 8713,
+          "recall": 0.9201193618730632,
+          "coverage": 0.7005906899952353,
+          "proposal_precision": 0.5228612252187891,
+          "proposals": 11198,
+          "reducao_temporal": 0.2994093100047647
+        },
+        {
+          "split": "teste",
+          "hits": 4000,
+          "events": 4369,
+          "recall": 0.9155413138017853,
+          "coverage": 0.7033390154377915,
+          "proposal_precision": 0.5200710479573712,
+          "proposals": 5630,
+          "reducao_temporal": 0.29666098456220846
+        },
+        {
+          "split": "Todas as partidas",
+          "hits": 12017,
+          "events": 13082,
+          "recall": 0.9185904295979208,
+          "coverage": 0.70151565675813,
+          "proposal_precision": 0.521927739481816,
+          "proposals": 16828,
+          "reducao_temporal": 0.29848434324187
+        }
+      ],
+      "by_event": [
+        {
+          "split": "teste",
+          "label": "Foul",
+          "events": 1983,
+          "hits": 1822,
+          "recall": 0.91880988401412
+        },
+        {
+          "split": "teste",
+          "label": "Goal",
+          "events": 271,
+          "hits": 252,
+          "recall": 0.9298892988929889
+        },
+        {
+          "split": "teste",
+          "label": "Offside",
+          "events": 319,
+          "hits": 309,
+          "recall": 0.9686520376175548
+        },
+        {
+          "split": "teste",
+          "label": "Shots off target",
+          "events": 831,
+          "hits": 758,
+          "recall": 0.9121540312876053
+        },
+        {
+          "split": "teste",
+          "label": "Shots on target",
+          "events": 965,
+          "hits": 859,
+          "recall": 0.8901554404145078
+        },
+        {
+          "split": "treino",
+          "label": "Foul",
+          "events": 3818,
+          "hits": 3559,
+          "recall": 0.9321634363541121
+        },
+        {
+          "split": "treino",
+          "label": "Goal",
+          "events": 511,
+          "hits": 475,
+          "recall": 0.9295499021526419
+        },
+        {
+          "split": "treino",
+          "label": "Offside",
+          "events": 687,
+          "hits": 631,
+          "recall": 0.9184861717612809
+        },
+        {
+          "split": "treino",
+          "label": "Shots off target",
+          "events": 1805,
+          "hits": 1689,
+          "recall": 0.9357340720221606
+        },
+        {
+          "split": "treino",
+          "label": "Shots on target",
+          "events": 1892,
+          "hits": 1663,
+          "recall": 0.8789640591966174
+        }
+      ]
+    },
+    {
+      "id": "482c04a998224547af35403b8fd28f20",
+      "name": "redução de 35 e 89 de recall",
+      "notes": "",
+      "created_at": "2026-10-26T23:56:43.599632+00:00",
+      "config": {
+        "short": 25,
+        "zero": 0.0,
+        "cluster": 1,
+        "preceding": true,
+        "before": 8,
+        "after": 16,
+        "rule": "zero",
+        "min_previous": 6,
+        "drop_fraction": 0.65
+      },
+      "labels": [
+        "Foul",
+        "Goal",
+        "Offside",
+        "Shots off target",
+        "Shots on target"
+      ],
+      "event_delta": 0.0,
+      "goals": {
+        "recall": 0.9,
+        "reduction": 0.3
+      },
+      "dataset": {
+        "fingerprint": "bedf16ae0547b06f07229363c6dbdebdb056cdd8d0af0e012f21ad289a3c1a9c",
+        "videos": 497,
+        "games": 249,
+        "duration_sec": 1360281.6
+      },
+      "summary": [
+        {
+          "split": "treino",
+          "hits": 7805,
+          "events": 8713,
+          "recall": 0.8957879031332492,
+          "coverage": 0.6479699048167806,
+          "proposal_precision": 0.4840688226859965,
+          "proposals": 12554,
+          "reducao_temporal": 0.35203009518321937
+        },
+        {
+          "split": "teste",
+          "hits": 3925,
+          "events": 4369,
+          "recall": 0.8983749141680019,
+          "coverage": 0.6514220260037098,
+          "proposal_precision": 0.4830710538865045,
+          "proposals": 6291,
+          "reducao_temporal": 0.3485779739962902
+        },
+        {
+          "split": "Todas as partidas",
+          "hits": 11730,
+          "events": 13082,
+          "recall": 0.896651888090506,
+          "coverage": 0.6491317386047124,
+          "proposal_precision": 0.4837357389227912,
+          "proposals": 18845,
+          "reducao_temporal": 0.3508682613952876
+        }
+      ],
+      "by_event": [
+        {
+          "split": "teste",
+          "label": "Foul",
+          "events": 1983,
+          "hits": 1794,
+          "recall": 0.9046898638426626
+        },
+        {
+          "split": "teste",
+          "label": "Goal",
+          "events": 271,
+          "hits": 254,
+          "recall": 0.9372693726937269
+        },
+        {
+          "split": "teste",
+          "label": "Offside",
+          "events": 319,
+          "hits": 306,
+          "recall": 0.9592476489028213
+        },
+        {
+          "split": "teste",
+          "label": "Shots off target",
+          "events": 831,
+          "hits": 745,
+          "recall": 0.8965102286401926
+        },
+        {
+          "split": "teste",
+          "label": "Shots on target",
+          "events": 965,
+          "hits": 826,
+          "recall": 0.8559585492227979
+        },
+        {
+          "split": "treino",
+          "label": "Foul",
+          "events": 3818,
+          "hits": 3466,
+          "recall": 0.9078051335777895
+        },
+        {
+          "split": "treino",
+          "label": "Goal",
+          "events": 511,
+          "hits": 475,
+          "recall": 0.9295499021526419
+        },
+        {
+          "split": "treino",
+          "label": "Offside",
+          "events": 687,
+          "hits": 625,
+          "recall": 0.9097525473071325
+        },
+        {
+          "split": "treino",
+          "label": "Shots off target",
+          "events": 1805,
+          "hits": 1648,
+          "recall": 0.9130193905817174
+        },
+        {
+          "split": "treino",
+          "label": "Shots on target",
+          "events": 1892,
+          "hits": 1591,
+          "recall": 0.8409090909090909
+        }
+      ]
+    },
+    {
+      "id": "2ed9fa2d19b54209b72a8d5006601657",
+      "name": "redução de 31 e 91 de recall",
+      "notes": "",
+      "created_at": "2026-10-26T23:57:47.433120+00:00",
+      "config": {
+        "short": 25,
+        "zero": 0.0,
+        "cluster": 1,
+        "preceding": true,
+        "before": 10,
+        "after": 16,
+        "rule": "zero",
+        "min_previous": 6,
+        "drop_fraction": 0.65
+      },
+      "labels": [
+        "Foul",
+        "Goal",
+        "Offside",
+        "Shots off target",
+        "Shots on target"
+      ],
+      "event_delta": 0.0,
+      "goals": {
+        "recall": 0.9,
+        "reduction": 0.3
+      },
+      "dataset": {
+        "fingerprint": "bedf16ae0547b06f07229363c6dbdebdb056cdd8d0af0e012f21ad289a3c1a9c",
+        "videos": 497,
+        "games": 249,
+        "duration_sec": 1360281.6
+      },
+      "summary": [
+        {
+          "split": "treino",
+          "hits": 7936,
+          "events": 8713,
+          "recall": 0.9108229082979455,
+          "coverage": 0.6747862200405554,
+          "proposal_precision": 0.5064384954252795,
+          "proposals": 11804,
+          "reducao_temporal": 0.32521377995944456
+        },
+        {
+          "split": "teste",
+          "hits": 3980,
+          "events": 4369,
+          "recall": 0.9109636072327764,
+          "coverage": 0.6778613735431782,
+          "proposal_precision": 0.5057432432432433,
+          "proposals": 5920,
+          "reducao_temporal": 0.3221386264568218
+        },
+        {
+          "split": "Todas as partidas",
+          "hits": 11916,
+          "events": 13082,
+          "recall": 0.910869897569179,
+          "coverage": 0.6758211829080096,
+          "proposal_precision": 0.5062062739787858,
+          "proposals": 17724,
+          "reducao_temporal": 0.32417881709199037
+        }
+      ],
+      "by_event": [
+        {
+          "split": "teste",
+          "label": "Foul",
+          "events": 1983,
+          "hits": 1826,
+          "recall": 0.9208270297528997
+        },
+        {
+          "split": "teste",
+          "label": "Goal",
+          "events": 271,
+          "hits": 254,
+          "recall": 0.9372693726937269
+        },
+        {
+          "split": "teste",
+          "label": "Offside",
+          "events": 319,
+          "hits": 310,
+          "recall": 0.9717868338557993
+        },
+        {
+          "split": "teste",
+          "label": "Shots off target",
+          "events": 831,
+          "hits": 750,
+          "recall": 0.9025270758122743
+        },
+        {
+          "split": "teste",
+          "label": "Shots on target",
+          "events": 965,
+          "hits": 840,
+          "recall": 0.8704663212435233
+        },
+        {
+          "split": "treino",
+          "label": "Foul",
+          "events": 3818,
+          "hits": 3533,
+          "recall": 0.9253535882661079
+        },
+        {
+          "split": "treino",
+          "label": "Goal",
+          "events": 511,
+          "hits": 479,
+          "recall": 0.9373776908023483
+        },
+        {
+          "split": "treino",
+          "label": "Offside",
+          "events": 687,
+          "hits": 630,
+          "recall": 0.9170305676855895
+        },
+        {
+          "split": "treino",
+          "label": "Shots off target",
+          "events": 1805,
+          "hits": 1668,
+          "recall": 0.9240997229916897
+        },
+        {
+          "split": "treino",
+          "label": "Shots on target",
+          "events": 1892,
+          "hits": 1626,
+          "recall": 0.8594080338266384
+        }
+      ]
+    },
+    {
+      "id": "29450e76f78b4fdeb72fb483c11d90a9",
+      "name": "92 de recall e 29 de redução",
+      "notes": "",
+      "created_at": "2026-10-27T00:00:59.715393+00:00",
+      "config": {
+        "short": 27,
+        "zero": 0.0,
+        "cluster": 1,
+        "preceding": true,
+        "before": 16,
+        "after": 12,
+        "rule": "zero",
+        "min_previous": 6,
+        "drop_fraction": 0.65
+      },
+      "labels": [
+        "Foul",
+        "Goal",
+        "Offside",
+        "Shots off target",
+        "Shots on target"
+      ],
+      "event_delta": 0.0,
+      "goals": {
+        "recall": 0.92,
+        "reduction": 0.29
+      },
+      "dataset": {
+        "fingerprint": "bedf16ae0547b06f07229363c6dbdebdb056cdd8d0af0e012f21ad289a3c1a9c",
+        "videos": 497,
+        "games": 249,
+        "duration_sec": 1360281.6
+      },
+      "summary": [
+        {
+          "split": "treino",
+          "hits": 8035,
+          "events": 8713,
+          "recall": 0.9221852404453116,
+          "coverage": 0.703436036654958,
+          "proposal_precision": 0.5319188191881918,
+          "proposals": 10840,
+          "reducao_temporal": 0.296563963345042
+        },
+        {
+          "split": "teste",
+          "hits": 4018,
+          "events": 4369,
+          "recall": 0.9196612497138933,
+          "coverage": 0.7061991439273274,
+          "proposal_precision": 0.5317358697640387,
+          "proposals": 5467,
+          "reducao_temporal": 0.2938008560726726
+        },
+        {
+          "split": "Todas as partidas",
+          "hits": 12053,
+          "events": 13082,
+          "recall": 0.9213423024002446,
+          "coverage": 0.7043659783386027,
+          "proposal_precision": 0.5318574845158521,
+          "proposals": 16307,
+          "reducao_temporal": 0.2956340216613973
+        }
+      ],
+      "by_event": [
+        {
+          "split": "teste",
+          "label": "Foul",
+          "events": 1983,
+          "hits": 1830,
+          "recall": 0.9228441754916793
+        },
+        {
+          "split": "teste",
+          "label": "Goal",
+          "events": 271,
+          "hits": 253,
+          "recall": 0.933579335793358
+        },
+        {
+          "split": "teste",
+          "label": "Offside",
+          "events": 319,
+          "hits": 309,
+          "recall": 0.9686520376175548
+        },
+        {
+          "split": "teste",
+          "label": "Shots off target",
+          "events": 831,
+          "hits": 762,
+          "recall": 0.9169675090252708
+        },
+        {
+          "split": "teste",
+          "label": "Shots on target",
+          "events": 965,
+          "hits": 864,
+          "recall": 0.8953367875647669
+        },
+        {
+          "split": "treino",
+          "label": "Foul",
+          "events": 3818,
+          "hits": 3567,
+          "recall": 0.9342587742273442
+        },
+        {
+          "split": "treino",
+          "label": "Goal",
+          "events": 511,
+          "hits": 475,
+          "recall": 0.9295499021526419
+        },
+        {
+          "split": "treino",
+          "label": "Offside",
+          "events": 687,
+          "hits": 634,
+          "recall": 0.9228529839883551
+        },
+        {
+          "split": "treino",
+          "label": "Shots off target",
+          "events": 1805,
+          "hits": 1694,
+          "recall": 0.9385041551246538
+        },
+        {
+          "split": "treino",
+          "label": "Shots on target",
+          "events": 1892,
+          "hits": 1665,
+          "recall": 0.8800211416490487
+        }
+      ]
+    }
+  ]
+}

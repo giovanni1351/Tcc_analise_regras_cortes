@@ -2,34 +2,42 @@
 
 from __future__ import annotations
 
+from importlib import reload
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
-from plotly.subplots import make_subplots
-from tcc_soccer_highlights.analysis_store import read_workbook, source_signature
+from tcc_soccer_highlights.dashboard_charts import timeline_chart
+from tcc_soccer_highlights import analysis_store
+
+# Sessões já abertas podem manter a versão anterior deste módulo após o rerun.
+if not hasattr(analysis_store, 'read_metadata_index'):
+    reload(analysis_store)
+read_workbook = analysis_store.read_workbook
+read_metadata_index = analysis_store.read_metadata_index
+source_signature = analysis_store.source_signature
 
 st.set_page_config(page_title="TCC Soccer Highlights", layout="wide")
 OUTPUT_ROOT = Path("analysis_output")
 
 
-@st.cache_resource(show_spinner=False, max_entries=512)
-def load_one_workbook(path_text: str, stamp: tuple, cache_text: str):
+@st.cache_resource(show_spinner=False, max_entries=8)
+def load_one_workbook(path_text: str, stamp: tuple, cache_text: str, sheet_names=None):
     del stamp
-    return read_workbook(Path(path_text), Path(cache_text))
+    return read_workbook(Path(path_text), Path(cache_text), sheet_names=sheet_names)
 
 
-@st.cache_resource(show_spinner="Carregando análises...", max_entries=4)
+@st.cache_resource(show_spinner="Carregando análises para o estudo...", max_entries=1)
 def load_workbooks(root_text: str, signature: tuple):
     root = Path(root_text)
     items = {}
     for path_text, mtime, size in signature:
         path = Path(path_text)
         try:
-            sheets = load_one_workbook(path_text, (mtime, size), str(root / '.dashboard_cache'))
+            sheets = load_one_workbook(path_text, (mtime, size), str(root / '.dashboard_cache'),
+                                       ('metadata', 'samples', 'scenes', 'events'))
             meta = sheets.get("metadata", pd.DataFrame()).iloc[0].to_dict()
             key = str(meta.get("video_id") or path.relative_to(root))
             items[key] = {"path": path, "meta": meta, **sheets}
@@ -38,26 +46,16 @@ def load_workbooks(root_text: str, signature: tuple):
     return items
 
 
-def timeline_chart(data: dict, metrics: list[str], event_labels: list[str]):
-    samples = data.get("samples", pd.DataFrame())
-    events = data.get("events", pd.DataFrame())
-    scenes = data.get("scenes", pd.DataFrame())
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.78, 0.22], vertical_spacing=0.05)
-    for metric in metrics:
-        if metric in samples:
-            fig.add_trace(go.Scatter(x=samples.time_sec, y=samples[metric], mode="lines", name=metric), row=1, col=1)
-    filtered_events = events[events["label"].isin(event_labels)] if event_labels and not events.empty else events
-    for event in filtered_events.itertuples():
-        fig.add_vline(x=event.time_sec, line_dash="dash", line_color="crimson", opacity=.55, row="all", col=1)
-        fig.add_annotation(x=event.time_sec, y=1, yref="paper", text=str(event.label), textangle=-90,
-                           showarrow=False, font=dict(size=9, color="crimson"))
-    for scene in scenes.itertuples():
-        fig.add_trace(go.Bar(x=[scene.duration_sec], y=["cenas"], base=[scene.start_sec], orientation="h",
-                             name=f"Cena {scene.scene_id}", showlegend=False,
-                             hovertemplate=f"Cena {scene.scene_id}<br>{scene.start_sec:.2f}s–{scene.end_sec:.2f}s<extra></extra>"), row=2, col=1)
-    fig.update_layout(height=650, barmode="stack", hovermode="x unified", title="Timeline: YOLO, TransNetV2 e eventos reais")
-    fig.update_xaxes(title="Tempo no vídeo (s)", row=2, col=1)
-    return fig
+@st.cache_resource(show_spinner="Carregando lista de vídeos...", max_entries=1)
+def load_index(root_text: str, signature: tuple):
+    return read_metadata_index(Path(root_text), signature)
+
+
+def load_selected(data, signature, root):
+    stamps = {path: (mtime, size) for path, mtime, size in signature}
+    path_text = str(data['path'])
+    sheets = load_one_workbook(path_text, stamps[path_text], str(root / '.dashboard_cache'))
+    return {**data, **sheets, 'meta': sheets['metadata'].iloc[0].to_dict()}
 
 
 def individual_view(data: dict):
@@ -140,20 +138,34 @@ if snapshot is None or snapshot['root'] != snapshot_key:
     snapshot = dict(root=snapshot_key, signature=source_signature(root))
     st.session_state['analysis_snapshot'] = snapshot
 signature = snapshot['signature']
-items = {k: v for k, v in load_workbooks(root_text, signature).items() if "error" not in v}
+mode = st.sidebar.radio("Modo", ["Vídeo individual", "Comparar vídeos", "Eventos, cortes e YOLO", "Simulador de regras", "Resumo das regras salvas", "Relatório do estudo"], key='dashboard_mode')
+if mode == 'Resumo das regras salvas':
+    from tcc_soccer_highlights.saved_rules_dashboard import render_saved_summary
+    from tcc_soccer_highlights.study_dashboard import cached_study
+
+    def load_current_study():
+        current_items = {k: v for k, v in load_workbooks(root_text, signature).items() if 'error' not in v}
+        if not current_items:
+            raise ValueError('Nenhuma análise disponível para reavaliar as regras.')
+        return cached_study(current_items, (snapshot_key, signature))
+
+    render_saved_summary(load_current_study, (snapshot_key, signature))
+    st.stop()
+items = {k: v for k, v in load_index(root_text, signature).items() if "error" not in v}
 if not items:
     st.warning("Nenhum Excel de análise encontrado. Execute primeiro o pipeline em lote.")
     st.stop()
-mode = st.sidebar.radio("Modo", ["Vídeo individual", "Comparar vídeos", "Eventos, cortes e YOLO", "Simulador de regras", "Relatório do estudo"])
 names = list(items)
 if mode == "Vídeo individual":
     selected = st.sidebar.selectbox("Vídeo", names)
     st.caption(selected)
-    individual_view(items[selected])
+    individual_view(load_selected(items[selected], signature, root))
 elif mode == "Comparar vídeos":
     selected = st.sidebar.multiselect("Vídeos", names, default=names[: min(3, len(names))])
     if selected:
-        comparison_view(selected, items)
+        comparison_view(selected, {key: load_selected(items[key], signature, root) for key in selected})
 else:
+    if mode != 'Relatório do estudo':
+        items = {k: v for k, v in load_workbooks(root_text, signature).items() if 'error' not in v}
     from tcc_soccer_highlights.study_dashboard import render
     render(mode, items, (snapshot_key, signature))

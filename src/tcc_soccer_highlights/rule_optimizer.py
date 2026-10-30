@@ -132,7 +132,8 @@ def optimize_rules(records, labels, initial_config, *, min_recall=.9, max_window
                    progress: Callable[[int, int, float], None] | None = None):
     """Maximiza redução com recall >= meta solicitada nesta execução.
 
-    Enumera todas as 2.520 regras e todos os pares de janelas da grade finita.
+    Pesquisa cenas de 1 a 20 s, ampliando até o valor inicial quando ele é maior.
+    Enumera todas as regras e todos os pares de janelas da grade finita.
     Não usa aleatoriedade, pesos ou penalidades que permitam violar o recall.
     Sem solução viável, devolve a configuração inicial com feasible=False.
     """
@@ -143,7 +144,7 @@ def optimize_rules(records, labels, initial_config, *, min_recall=.9, max_window
     max_window = int(max_window)
     initial = {**dict(short=8, zero=.8, cluster=1, preceding=False, before=20, after=25),
                **initial_config}
-    if (not 1 <= initial['short'] <= 20 or int(initial['short']) != initial['short']
+    if (not np.isfinite(initial['short']) or not 1 <= initial['short'] <= 120 or int(initial['short']) != initial['short']
             or initial['cluster'] not in (1, 2, 3) or not 0 <= initial['zero'] <= 1
             or not np.isclose(initial['zero'] * 20, round(initial['zero'] * 20))
             or initial['preceding'] not in (True, False)):
@@ -158,7 +159,8 @@ def optimize_rules(records, labels, initial_config, *, min_recall=.9, max_window
     best = baseline if baseline['hits'] >= required_hits else None
     candidates, history = [], []
     maximum_hits = baseline['hits']
-    rules = list(product(range(1, 21), range(21), (1, 2, 3), (False, True)))
+    scene_limit = max(20, int(initial['short']))
+    rules = list(product(range(1, scene_limit + 1), range(21), (1, 2, 3), (False, True)))
     for number, (short, zero, cluster, preceding) in enumerate(rules, 1):
         rule = dict(short=short, zero=zero / 20, cluster=cluster, preceding=preceding)
         hits, selected = evaluator.window_grid(rule, max_window)

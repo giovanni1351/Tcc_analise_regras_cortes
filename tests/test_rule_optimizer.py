@@ -24,6 +24,20 @@ INITIAL = dict(short=8, zero=.8, cluster=2, preceding=False, before=20, after=25
 
 
 class OptimizerTests(unittest.TestCase):
+    def test_search_includes_scenes_longer_than_twenty_seconds(self):
+        records = records_fixture()
+        records['train']['features'] = records['train']['features'].assign(
+            duration_sec=[100., 25., 25., 100.])
+        records['train']['events'] = pd.DataFrame(dict(label=['Goal'], time_sec=[32.]))
+        initial = {**INITIAL, 'short': 30, 'before': 1, 'after': 1}
+        result = optimize_rules(records, ['Goal'], initial, max_window=3)
+        self.assertEqual(result.baseline['recall'], 0.)
+        self.assertTrue(result.feasible)
+        self.assertEqual(result.best['recall'], 1.)
+        self.assertGreaterEqual(result.config['short'], 25)
+        self.assertLessEqual(result.config['short'], 30)
+        self.assertEqual(result.evaluated_combinations, 30 * 21 * 3 * 2 * 15)
+
     def test_preserves_ninety_percent_recall_instead_of_trading_it_for_time(self):
         records = records_fixture()
         records['train']['events'] = pd.DataFrame(dict(label=['Goal'] * 10,
@@ -171,6 +185,19 @@ dashboard.render('Simulador de regras', {}, 'fixture')
                                     "label=['Goal'] * 10 + ['Corner'] * 2, time_sec=[*range(21, 30), 90, 10, 80]")
             source = source.replace("'fixture'", "'fixture-mixed-events'")
         return AppTest.from_string(source, default_timeout=30).run()
+
+    def test_larger_scene_limit_is_preserved_between_rules(self):
+        app = self.app()
+        app.slider(key='simulator_short').set_value(60).run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.slider(key='simulator_short').value, 60)
+        app.selectbox(key='simulator_rule').set_value('context').run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.slider(key='simulator_short').value, 60)
+        app.slider(key='simulator_short').set_value(120).run()
+        app.selectbox(key='simulator_rule').set_value('zero').run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.slider(key='simulator_short').value, 120)
 
     def test_event_table_counts_missed_events_and_tracks_rule_and_selection(self):
         app = self.app(mixed_events=True)

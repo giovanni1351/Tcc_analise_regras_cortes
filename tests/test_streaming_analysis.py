@@ -274,6 +274,45 @@ class StreamingTests(unittest.TestCase):
 
 
 class PublisherTests(unittest.TestCase):
+    def test_network_timeout_is_retried_and_succeeds(self):
+        publisher = XlsxPublisher.__new__(XlsxPublisher)
+        success = subprocess.CompletedProcess([], 0, b"ok", b"")
+        with patch.object(publisher, "git", side_effect=[subprocess.TimeoutExpired("fetch", 300), success]) as git, \
+                patch("tcc_soccer_highlights.xlsx_publisher.time.sleep") as sleep:
+            self.assertIs(publisher.network("fetch", "origin", "main"), success)
+        self.assertEqual(git.call_count, 2)
+        self.assertEqual(git.call_args.kwargs["timeout"], 300)
+        sleep.assert_called_once_with(5)
+
+    def test_network_connection_failure_is_retried_but_auth_and_conflicts_are_not(self):
+        publisher = XlsxPublisher.__new__(XlsxPublisher)
+        failure = subprocess.CompletedProcess([], 128, b"", b"fatal: Could not resolve host: github.com")
+        success = subprocess.CompletedProcess([], 0, b"ok", b"")
+        with patch.object(publisher, "git", side_effect=[failure, success]) as git, \
+                patch("tcc_soccer_highlights.xlsx_publisher.time.sleep"):
+            self.assertIs(publisher.network("fetch", "origin", "main"), success)
+            self.assertEqual(git.call_count, 2)
+        failure.stderr = b"fatal: Authentication failed"
+        with patch.object(publisher, "git", return_value=failure) as git, \
+                patch("tcc_soccer_highlights.xlsx_publisher.time.sleep") as sleep:
+            with self.assertRaisesRegex(RuntimeError, "Authentication failed"):
+                publisher.network("fetch", "origin", "main")
+            self.assertEqual(git.call_count, 1)
+            sleep.assert_not_called()
+        failure.stderr = b"rejected (fetch first)"
+        with patch.object(publisher, "git", return_value=failure) as git:
+            self.assertIs(publisher.network("push", "origin", "main", check=False), failure)
+            self.assertEqual(git.call_count, 1)
+
+    def test_repeated_network_timeouts_stop_with_a_clear_resume_message(self):
+        publisher = XlsxPublisher.__new__(XlsxPublisher)
+        with patch.object(publisher, "git", side_effect=subprocess.TimeoutExpired("fetch", 300)) as git, \
+                patch("tcc_soccer_highlights.xlsx_publisher.time.sleep") as sleep:
+            with self.assertRaisesRegex(RuntimeError, "XLSX local foi preservado"):
+                publisher.network("fetch", "origin", "main")
+            self.assertEqual(git.call_count, 4)
+            self.assertEqual([call.args[0] for call in sleep.call_args_list], [5, 15, 30])
+
     def test_publish_only_xlsx_with_unmerged_source_index_and_no_duplicate_commit(self):
         with TemporaryDirectory(prefix="tmp_publisher_", dir=Path(__file__).parent) as temp:
             root = Path(temp).resolve()
@@ -303,10 +342,23 @@ class PublisherTests(unittest.TestCase):
             workbook.write_bytes(b"xlsx output")
             publisher = XlsxPublisher(project, project / ".pipeline_state")
             publisher.preflight()
-            commit = publisher.publish(workbook)
+            with patch.object(publisher, "git", wraps=publisher.git) as commands:
+                commit = publisher.publish(workbook)
+                self.assertEqual(publisher.publish(workbook), commit)
+                self.assertFalse(any(call.args[0] == "fetch" for call in commands.call_args_list))
             self.assertEqual(git("--git-dir", str(remote), "diff-tree", "--no-commit-id", "--name-only", "-r", commit),
                              workbook.relative_to(project).as_posix())
             self.assertEqual(publisher.publish(workbook), commit)
+            # Alterações externas precisam ser buscadas e preservadas na próxima publicação.
+            second = workbook.with_name("2_224p_analysis.xlsx")
+            second.write_bytes(b"second output")
+            other = XlsxPublisher(project, project / ".other_pipeline_state")
+            other_commit = other.publish(second)
+            with patch.object(publisher, "git", wraps=publisher.git) as commands:
+                self.assertEqual(publisher.publish(workbook), other_commit)
+                self.assertEqual(sum(call.args[0] == "fetch" for call in commands.call_args_list), 1)
+            self.assertEqual(git("--git-dir", str(remote), "show", f"{other_commit}:{second.relative_to(project).as_posix()}"),
+                             "second output")
             self.assertEqual((project / ".git/index").read_bytes(), index_before)
             self.assertEqual((project / "unrelated.txt").read_text(), "keep local")
             with self.assertRaises(ValueError):

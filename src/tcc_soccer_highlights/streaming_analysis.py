@@ -142,8 +142,10 @@ def run_pipeline(jobs, *, videos_root, output_root, state_dir, download, analyze
         previous = journal.read(job)
         if valid(output):
             if previous.get("stage") == "analyzed":
+                LOG.info("Retomada: reenviando XLSX pronto, sem repetir inferência: %s", job.key)
                 commit = publish(output)
                 journal.write(job, "published", commit=commit)
+                LOG.info("Retomada: XLSX salvo no GitHub (%s)", commit[:12])
             remove_video(job.video(videos_root), videos_root)
             skipped += 1
         else:
