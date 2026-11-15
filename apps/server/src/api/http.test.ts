@@ -1,7 +1,7 @@
 import { NodeHttpServer, NodeServices } from "@effect/platform-node";
 import { assert, it } from "@effect/vitest";
 import { Effect, FileSystem, Layer } from "effect";
-import { HttpApiClient } from "effect/http-api";
+import { HttpApiClient, OpenApi } from "effect/http-api";
 import { HttpClient } from "effect/http";
 import { Api, JobId, SourceId } from "@tcc/contracts";
 import { Schema } from "effect";
@@ -127,4 +127,23 @@ it.live(
       Effect.provide(NodeHttpServer.layerTest),
       Effect.provide(NodeServices.layer),
     ),
+);
+
+it.effect("fixture blob publication atomically moves the temporary file", () =>
+  Effect.gen(function* () {
+    const blobs = yield* BlobStore;
+    const fs = yield* FileSystem.FileSystem;
+    const temp = yield* blobs.tempPath("bin");
+    yield* fs.writeFileString(temp, "atomic");
+    const hash = yield* blobs.publish(temp, "bin");
+    assert.isFalse(yield* fs.exists(temp));
+    assert.strictEqual(yield* fs.readFileString(yield* blobs.path(hash)), "atomic");
+  }).pipe(Effect.provide(testServices), Effect.scoped, Effect.provide(NodeServices.layer)),
+);
+
+it.effect("OpenAPI advertises only implemented endpoint errors", () =>
+  Effect.sync(() => {
+    const spec = OpenApi.fromApi(Api);
+    assert.isFalse(JSON.stringify(spec).includes('"501"'));
+  }),
 );

@@ -1,11 +1,12 @@
 import { Effect, FileSystem, Layer } from "effect";
+import { blobStoreLayer } from "../media/index.ts";
 import { databaseLayer } from "../database.ts";
 import { budgetLayer } from "../budget.ts";
 import { repositoryLayer } from "./repository.ts";
 import { sourcesLayer } from "./sources.ts";
 import { StageLogic, LlmStep, stageRunsLayer } from "./stages.ts";
 import { runnerLayer } from "./runner.ts";
-import { devMediaLayer, devProbeLayer, devStageLogic, devLlmStep } from "./dev.ts";
+import { devProbeLayer, devStageLogic, devLlmStep } from "./dev.ts";
 
 export const fixtureServices = (
   directory: string,
@@ -16,7 +17,7 @@ export const fixtureServices = (
   const database = databaseLayer(filename);
   const repo = repositoryLayer.pipe(Layer.provideMerge(database));
   const media = Layer.mergeAll(
-    devMediaLayer(directory),
+    blobStoreLayer(directory),
     devProbeLayer,
     Layer.succeed(StageLogic, logic ?? devStageLogic),
     Layer.succeed(LlmStep, llm ?? devLlmStep),

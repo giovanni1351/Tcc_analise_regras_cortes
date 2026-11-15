@@ -12,7 +12,7 @@ import { repositoryLayer } from "./jobs/repository.ts";
 import { sourcesLayer } from "./jobs/sources.ts";
 import { Runner, runnerLayer } from "./jobs/runner.ts";
 import { stageRunsLayer } from "./jobs/stages.ts";
-import { devMediaLayer, devProbeLayer, devStagesLayer } from "./jobs/dev.ts";
+import { devProbeLayer, devStagesLayer } from "./jobs/dev.ts";
 import { blobStoreLayer, mediaProbeLayer, clipEncoderLayer } from "./media/index.ts";
 import { cvLayer } from "./cv/index.ts";
 import { processLayer } from "./process.ts";
@@ -126,7 +126,7 @@ const main = Effect.gen(function* () {
     }),
   ).pipe(Layer.provideMerge(repo), Layer.provideMerge(encoders));
   const media = dev
-    ? Layer.mergeAll(devMediaLayer(dataDir), devProbeLayer, devStagesLayer)
+    ? Layer.mergeAll(blobStoreLayer(dataDir), devProbeLayer, devStagesLayer)
     : Layer.mergeAll(logic, llm);
   const sources = sourcesLayer(root).pipe(Layer.provideMerge(repo), Layer.provideMerge(media));
   const runs = stageRunsLayer.pipe(Layer.provideMerge(sources));

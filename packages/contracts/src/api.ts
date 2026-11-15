@@ -13,10 +13,6 @@ import {
   SourceRef,
 } from "./domain.ts";
 
-export class NotImplemented extends Schema.TaggedError<
-  NotImplemented,
-  { readonly brand: unique symbol }
->()("NotImplemented", { operation: Schema.String }) {}
 export class NotFound extends Schema.TaggedError<NotFound, { readonly brand: unique symbol }>()(
   "NotFound",
   { resource: Schema.String, id: Schema.String },
@@ -30,7 +26,6 @@ export class PersistenceError extends Schema.TaggedError<
   { readonly brand: unique symbol }
 >()("PersistenceError", { operation: Schema.String, message: Schema.String }) {}
 const errors = [
-  NotImplemented.pipe(HttpApiSchema.status(501)),
   NotFound.pipe(HttpApiSchema.status(404)),
   Conflict.pipe(HttpApiSchema.status(409)),
   PersistenceError.pipe(HttpApiSchema.status(500)),
