@@ -35,15 +35,17 @@ export function classifyError(
   const category =
     status === 429
       ? "RateLimited"
-      : status === 402
-        ? /in.?flight|concurrent|outstanding/i.test(evidence)
-          ? "InFlightBudget"
-          : "CreditExhausted"
-        : status === 403 && /moderation|flagged_input|reasons/i.test(evidence)
-          ? "Moderation"
-          : status === 401 || status === 403
-            ? "Unauthorized"
-            : "Upstream";
+      : status >= 400 && status < 500 && /in balance|insufficient (credits|balance)/i.test(message)
+        ? "CreditExhausted"
+        : status === 402
+          ? /in.?flight|concurrent|outstanding/i.test(evidence)
+            ? "InFlightBudget"
+            : "CreditExhausted"
+          : status === 403 && /moderation|flagged_input|reasons/i.test(evidence)
+            ? "Moderation"
+            : status === 401 || status === 403
+              ? "Unauthorized"
+              : "Upstream";
   const numeric = retryAfter === undefined ? NaN : Number(retryAfter);
   const delay =
     retryAfter === undefined

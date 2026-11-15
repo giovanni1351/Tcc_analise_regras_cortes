@@ -104,6 +104,7 @@ export const PartialReason = Schema.Union([
   Schema.TaggedStruct("FreeDailyLimit", { retryAfterMs: NonNegative }),
   Schema.TaggedStruct("BudgetExceeded", { capUsd: NonNegative, committedUsd: NonNegative }),
   Schema.TaggedStruct("AmbiguousAttempts", { count: Count }),
+  Schema.TaggedStruct("CreditExhausted", { message: Schema.String }),
 ]);
 export class JobError extends Schema.TaggedError<JobError, { readonly brand: unique symbol }>()(
   "JobError",

@@ -161,7 +161,7 @@ At startup, any attempt still `Sent` becomes `Ambiguous`. It keeps its reservati
 
 The reservation is a pessimistic bound: video seconds times the model's highest recorded cost per second, plus the full `max_tokens` priced as output. A model with no record uses a configured bound. If the new attempt would cross a limit, the stage stops and the job becomes `Partial`. Paid concurrency is 1.
 
-A local ledger can't stop spending from other clients or from estimate errors. **The hard ceiling is a dedicated OpenRouter key with its own credit limit** set below the balance, so OpenRouter itself refuses calls past it.
+A local ledger can't stop spending from other clients or from estimate errors. **The hard ceiling is a dedicated OpenRouter key with its own credit limit** set below the balance, so OpenRouter itself refuses calls past it. OpenRouter refuses video requests when less than $1.00 remains on the key or the account, so the key's limit must sit at least $1.00 above the intended spend, and the last $1.00 of the account can't be spent on video.
 
 ### LLM boundary
 
@@ -170,7 +170,7 @@ A local ledger can't stop spending from other clients or from estimate errors. *
 - `parseVerdict` validates locally with Schema. These are invalid verdicts, not crashes: a schema violation, `finish_reason: "length"`, empty content, or a timestamp outside `[0, clip duration]`. The paper reports the valid-output rate, so invalid outputs are data.
 - **Retries.**
   - 408, 425, 429 and 5xx retry with backoff, honouring `Retry-After`.
-  - 402 is read from its metadata. An in-flight budget limit is transient and is retried later. Exhausted credit stops the job.
+  - 402 is read from its metadata. An in-flight budget limit is transient and is retried later. Exhausted credit ends the job as Partial (`CreditExhausted`): answered verdicts are kept, the rest count as not sent, and the job can be resumed after a top-up. OpenRouter's "requires at least $1.00 in balance for video" reply counts as exhausted credit, whatever its status.
   - 401 and 403 stop the job. A 403 from moderation marks that segment's verdict invalid instead.
 - **Rate limits.** One account-wide limiter covers free models: 20 per minute and the daily cap. The daily cap is 50 until you confirm otherwise.
 

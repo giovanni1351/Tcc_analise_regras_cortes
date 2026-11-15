@@ -153,6 +153,11 @@ export const llmStepLayer = (accountCapUsd: number) =>
                   partial = { _tag: "FreeDailyLimit", retryAfterMs: error.retryAfterMs ?? 0 };
                   break;
                 }
+                if (error.category === "CreditExhausted") {
+                  coverage.notSent++;
+                  partial = { _tag: "CreditExhausted", message: error.message };
+                  break;
+                }
                 const ambiguous =
                   error.sent !== false &&
                   !(error.category === "Upstream" && error.httpStatus === 200) &&

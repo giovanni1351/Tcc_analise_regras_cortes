@@ -19,6 +19,7 @@ for (const state of [
   "Interrupted",
   "Recovery",
   "Daily",
+  "Credit",
   "ReplyCancelled",
 ] as const)
   it.effect(`clips with ${state} attempts are protected across jobs and segment ids`, () =>
@@ -41,6 +42,13 @@ for (const state of [
                 message: "Free model day limit",
                 sent: false,
                 quotaPeriod: "day",
+              });
+            if (state === "Credit")
+              return yield* new ProviderError({
+                category: "CreditExhausted",
+                httpStatus: 402,
+                retryAfterMs: null,
+                message: "This request requires at least $1.00 in balance for video",
               });
 
             yield* Deferred.succeed(started, undefined);
@@ -100,7 +108,7 @@ for (const state of [
             },
           ]),
         );
-        if (state === "Daily") {
+        if (state === "Daily" || state === "Credit") {
           yield* sql`INSERT INTO segments VALUES ('remaining',${key},'window',${source.mediaHash},0,20)`;
           const text = yield* fs.readFileString(artifactPath);
           yield* fs.writeFileString(
@@ -180,16 +188,21 @@ for (const state of [
                 _tag: "FreeDailyLimit",
                 retryAfterMs: 86_400_000,
               });
+            if (state === "Credit")
+              assert.deepStrictEqual(result.partial, {
+                _tag: "CreditExhausted",
+                message: "This request requires at least $1.00 in balance for video",
+              });
             assert.strictEqual(
-              state === "Daily"
+              state === "Daily" || state === "Credit"
                 ? result.coverage?.notSent
                 : index === 1 && state !== "Answered" && state !== "ReplyCancelled"
                   ? result.coverage?.ambiguous
                   : result.coverage?.valid,
-              state === "Daily" ? 2 : 1,
+              state === "Daily" || state === "Credit" ? 2 : 1,
             );
           }
-          if (state === "Daily") break;
+          if (state === "Daily" || state === "Credit") break;
           if (index === 0 && (state === "Sent" || state === "Ambiguous"))
             yield* sql`UPDATE llm_attempts SET state=${state},cost_usd=NULL,verdict_json=NULL`;
         }
@@ -210,7 +223,7 @@ for (const state of [
               state:
                 state === "ReplyCancelled"
                   ? "Answered"
-                  : state === "Daily"
+                  : state === "Daily" || state === "Credit"
                     ? "Failed"
                     : state === "Interrupted" || state === "Recovery"
                       ? "Ambiguous"

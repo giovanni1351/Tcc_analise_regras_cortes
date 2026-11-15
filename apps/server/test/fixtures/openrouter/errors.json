@@ -135,5 +135,27 @@
     },
     "expected": "Upstream",
     "retryAfter": null
+  },
+  {
+    "status": 400,
+    "body": {
+      "error": {
+        "message": "This request requires at least $1.00 in balance for video",
+        "metadata": {}
+      }
+    },
+    "expected": "CreditExhausted",
+    "retryAfter": null
+  },
+  {
+    "status": 403,
+    "body": {
+      "error": {
+        "message": "This request requires at least $1.00 in balance for video",
+        "metadata": {}
+      }
+    },
+    "expected": "CreditExhausted",
+    "retryAfter": null
   }
 ]
