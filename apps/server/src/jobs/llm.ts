@@ -76,19 +76,61 @@ export const llmStepLayer = (accountCapUsd: number) =>
                   highestRecordedUsdPerSecond: Math.max(recorded[0]?.rate ?? 0, fallbackRate),
                   outputUsdPerToken: outputRate,
                 });
-                const admitted = yield* ledger.reserve({
-                  id,
-                  verdictKey: key,
-                  jobId: input.job.id,
-                  segmentId: segment.id,
-                  model,
-                  promptVersion: input.job.spec.llm.promptVersion,
-                  attemptNumber: (numbers[0]?.n ?? 0) + retry + 1,
-                  reservation,
-                  jobCapUsd: input.job.spec.llm.maxCostUsd,
-                  accountCapUsd,
-                });
-                if (!admitted) {
+                const clipPath = yield* blobs.path(segment.blob);
+                const outcome = yield* Effect.uninterruptibleMask((restore) =>
+                  Effect.gen(function* () {
+                    const admitted = yield* ledger.reserve({
+                      id,
+                      verdictKey: key,
+                      jobId: input.job.id,
+                      segmentId: segment.id,
+                      model,
+                      promptVersion: input.job.spec.llm.promptVersion,
+                      attemptNumber: (numbers[0]?.n ?? 0) + retry + 1,
+                      reservation,
+                      jobCapUsd: input.job.spec.llm.maxCostUsd,
+                      accountCapUsd,
+                    });
+                    if (!admitted) return { _tag: "Denied" } as const;
+                    yield* ledger.markSent(id);
+                    const response = yield* restore(
+                      provider.complete({
+                        model,
+                        promptVersion: input.job.spec.llm.promptVersion,
+                        maxTokens: 4096,
+                        clipPath,
+                      }),
+                    ).pipe(
+                      Effect.result,
+                      Effect.onInterrupt(() =>
+                        ledger.fail(id, "Interrupted during provider request").pipe(Effect.orDie),
+                      ),
+                    );
+                    if (response._tag === "Success") {
+                      const parsed = parseVerdict(response.success, segment.durationSec);
+                      yield* ledger.answer(id, response.success, parsed);
+                      return { _tag: "Answered", valid: parsed._tag === "Valid" } as const;
+                    }
+                    const error = response.failure;
+                    if (error.category === "Moderation") {
+                      yield* ledger.answer(
+                        id,
+                        {
+                          httpStatus: error.httpStatus ?? 403,
+                          body: error.responseBody ?? error.message,
+                          generationId: null,
+                          costUsd: 0,
+                          latencyMs: 0,
+                        },
+                        { _tag: "Invalid", reason: error.message },
+                      );
+                      return { _tag: "Answered", valid: false } as const;
+                    }
+                    yield* ledger.fail(id, error);
+                    return { _tag: "Failed", error } as const;
+                  }),
+                );
+                if (outcome._tag === "Denied") {
                   coverage.notSent++;
                   const totals = yield* sql<{
                     committed: number;
@@ -100,51 +142,12 @@ export const llmStepLayer = (accountCapUsd: number) =>
                   };
                   break;
                 }
-
-                const clipPath = yield* blobs.path(segment.blob);
-                const response = yield* Effect.uninterruptibleMask((restore) =>
-                  Effect.gen(function* () {
-                    yield* ledger.markSent(id);
-                    return yield* restore(
-                      provider
-                        .complete({
-                          model,
-                          promptVersion: input.job.spec.llm.promptVersion,
-                          maxTokens: 4096,
-                          clipPath,
-                        })
-                        .pipe(Effect.result),
-                    ).pipe(
-                      Effect.onInterrupt(() =>
-                        ledger.fail(id, "Interrupted during provider request").pipe(Effect.orDie),
-                      ),
-                    );
-                  }),
-                );
-                if (response._tag === "Success") {
-                  const parsed = parseVerdict(response.success, segment.durationSec);
-                  yield* ledger.answer(id, response.success, parsed);
-                  if (parsed._tag === "Valid") coverage.valid++;
+                if (outcome._tag === "Answered") {
+                  if (outcome.valid) coverage.valid++;
                   else coverage.invalid++;
                   break;
                 }
-                const error = response.failure;
-                if (error.category === "Moderation") {
-                  yield* ledger.answer(
-                    id,
-                    {
-                      httpStatus: error.httpStatus ?? 403,
-                      body: error.responseBody ?? error.message,
-                      generationId: null,
-                      costUsd: 0,
-                      latencyMs: 0,
-                    },
-                    { _tag: "Invalid", reason: error.message },
-                  );
-                  coverage.invalid++;
-                  break;
-                }
-                yield* ledger.fail(id, error);
+                const error = outcome.error;
                 if (error.quotaPeriod === "day") {
                   coverage.notSent++;
                   partial = { _tag: "FreeDailyLimit", retryAfterMs: error.retryAfterMs ?? 0 };

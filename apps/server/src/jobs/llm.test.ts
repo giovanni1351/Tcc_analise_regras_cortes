@@ -12,7 +12,15 @@ import { Sources } from "./sources.ts";
 import { LlmStep } from "./stages.ts";
 import { llmStepLayer } from "./llm.ts";
 
-for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery", "Daily"] as const)
+for (const state of [
+  "Answered",
+  "Sent",
+  "Ambiguous",
+  "Interrupted",
+  "Recovery",
+  "Daily",
+  "ReplyCancelled",
+] as const)
   it.effect(`clips with ${state} attempts are protected across jobs and segment ids`, () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
@@ -37,6 +45,7 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery",
 
             yield* Deferred.succeed(started, undefined);
             if (state === "Interrupted" || state === "Recovery") return yield* Effect.never;
+            const caller = yield* Effect.fiber;
             return {
               httpStatus: 200,
               body: {
@@ -49,7 +58,10 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery",
                 ],
               },
               generationId: "gen-fixture",
-              costUsd: 0,
+              get costUsd() {
+                if (state === "ReplyCancelled") caller.interruptUnsafe(caller.id);
+                return 0;
+              },
               latencyMs: 1,
             };
           }),
@@ -144,7 +156,9 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery",
             },
             index === 0 ? key : yield* Schema.decodeEffect(StageRunKey)("b".repeat(64)),
           );
-          if (index === 0 && (state === "Interrupted" || state === "Recovery")) {
+          if (index === 0 && state === "ReplyCancelled") {
+            yield* Effect.forkChild(run).pipe(Effect.flatMap(Fiber.await));
+          } else if (index === 0 && (state === "Interrupted" || state === "Recovery")) {
             const fiber = yield* Effect.forkChild(run);
             yield* Deferred.await(started);
             yield* Fiber.interrupt(fiber);
@@ -169,7 +183,7 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery",
             assert.strictEqual(
               state === "Daily"
                 ? result.coverage?.notSent
-                : index === 1 && state !== "Answered"
+                : index === 1 && state !== "Answered" && state !== "ReplyCancelled"
                   ? result.coverage?.ambiguous
                   : result.coverage?.valid,
               state === "Daily" ? 2 : 1,
@@ -194,11 +208,13 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery",
             {
               job_id: first.id,
               state:
-                state === "Daily"
-                  ? "Failed"
-                  : state === "Interrupted" || state === "Recovery"
-                    ? "Ambiguous"
-                    : state,
+                state === "ReplyCancelled"
+                  ? "Answered"
+                  : state === "Daily"
+                    ? "Failed"
+                    : state === "Interrupted" || state === "Recovery"
+                      ? "Ambiguous"
+                      : state,
             },
           ],
         );
