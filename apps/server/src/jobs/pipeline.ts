@@ -16,7 +16,7 @@ import {
   type PlannedSegment,
 } from "../services.ts";
 import type { computeWindows } from "../domain/rules.ts";
-import { cvParams, cvProvenance } from "../cv/provenance.ts";
+import { cvParams, cvProvenance, cvStageParams } from "../cv/provenance.ts";
 import { StageLogic, type StageInput, type StageOutput } from "./stages.ts";
 
 const sceneSchema = Schema.Struct({
@@ -194,7 +194,7 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
         version: functions.version,
         params: (stage, job) => ({
           config: functions.params(stage),
-          ...(stage === "scenes" || stage === "detections" ? { ...cvParams, ...provenance } : {}),
+          ...(stage === "scenes" || stage === "detections" ? cvStageParams(stage, provenance) : {}),
           ...(stage === "windows" ? { rule: job.spec.rule } : {}),
           ...(stage === "verdicts"
             ? {
