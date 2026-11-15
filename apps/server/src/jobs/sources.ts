@@ -64,7 +64,12 @@ export const makeSources = Effect.fn("Sources.make")(function* (soccerNetRoot: s
       mtime_ms: number;
     }>`SELECT size,mtime_ms FROM sources WHERE id=${id}`.pipe(persistence("sourceMetadata"));
     if (rows[0]?.size === info.size && rows[0]?.mtime_ms === info.mtime)
-      return { path: file, hash: source.mediaHash, probe: source.probe };
+      return {
+        path: file,
+        hash: source.mediaHash,
+        probe: source.probe,
+        sourceStat: { size: info.size, mtimeMs: info.mtime },
+      };
     const media = yield* probe.probe(file).pipe(persistence("checkSource"));
     if (media.hash !== source.mediaHash)
       return yield* new JobError({

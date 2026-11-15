@@ -104,8 +104,8 @@ it.live(
       yield* fs.writeFileString(temp, "0123456789");
       const hash = yield* blobs.publish(temp, "bin");
       const binary = yield* client.highlights.getBlob({ params: { hash } }).pipe(Effect.result);
-  assert.strictEqual(binary._tag, "Success");
-  const complete = yield* http.get(`/blobs/${hash}`);
+      assert.strictEqual(binary._tag, "Success");
+      const complete = yield* http.get(`/blobs/${hash}`);
       assert.strictEqual(complete.status, 200);
       assert.strictEqual(yield* complete.text, "0123456789");
       for (const [range, expected] of [

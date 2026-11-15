@@ -1,4 +1,4 @@
-import { Effect, FileSystem, Layer, Path, Schema } from "effect";
+import { Effect, FileSystem, Layer, Option, Path, Schema } from "effect";
 import { MediaHash, Probe } from "@tcc/contracts";
 import { BlobStore, MediaError, MediaProbe } from "../services.ts";
 import { emptyCoverage, newId } from "./repository.ts";
@@ -70,7 +70,16 @@ export const devProbeLayer = Layer.effect(
             frameCount: 1,
             size: bytes.length,
           });
-          return { path, hash, probe };
+          const stat = yield* fs.stat(path);
+          return {
+            path,
+            hash,
+            probe,
+            sourceStat: {
+              size: Number(stat.size),
+              mtimeMs: Option.getOrNull(stat.mtime)?.getTime() ?? 0,
+            },
+          };
         },
         Effect.mapError((cause) => new MediaError({ operation: "probe", path: "dev", cause })),
       ),
@@ -89,7 +98,7 @@ export const devStageLogic = {
     stage === "windows"
       ? job.spec.rule
       : stage === "verdicts" || stage === "highlights"
-        ? { jobId: job.id, spec: job.spec }
+        ? { llm: job.spec.llm, clips: job.spec.clips }
         : {},
   run: Effect.fn("DevStages.run")(() => Effect.succeed(emptyOutput)),
 } satisfies StageLogic["Service"];
