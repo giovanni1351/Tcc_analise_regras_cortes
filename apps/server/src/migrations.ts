@@ -49,5 +49,13 @@ const initial = Effect.gen(function* () {
   yield* sql.unsafe(`CREATE INDEX highlights_job_time ON highlights(job_id,video_seconds)`);
 });
 export const migrate = SqliteMigrator.run({
-  loader: SqliteMigrator.fromRecord({ "001_initial": initial }),
+  loader: SqliteMigrator.fromRecord({
+    "001_initial": initial,
+    "002_job_options": Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
+      yield* sql`ALTER TABLE stage_runs ADD COLUMN result_json TEXT NOT NULL DEFAULT '{}'`;
+      yield* sql`CREATE UNIQUE INDEX sources_media ON sources(media_hash)`;
+      yield* sql`CREATE TABLE job_options (job_id TEXT PRIMARY KEY REFERENCES jobs(id), retry_ambiguous INTEGER NOT NULL DEFAULT 0)`;
+    }),
+  }),
 });

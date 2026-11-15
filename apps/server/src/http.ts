@@ -1,23 +1,35 @@
 import { Effect, Layer } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
 import { HttpRouter } from "effect/http";
-import { Api, NotImplemented } from "@tcc/contracts";
+import { Api } from "@tcc/contracts";
 import { BudgetService } from "./budget.ts";
+import { Repository } from "./jobs/repository.ts";
+import { Sources } from "./jobs/sources.ts";
+import { Runner } from "./jobs/runner.ts";
+import { getBlob } from "./api/blobs.ts";
 
-const unimplemented = (operation: string) => Effect.fail(new NotImplemented({ operation }));
 export const handlersLayer = HttpApiBuilder.group(Api, "highlights", (handlers) =>
   Effect.gen(function* () {
     const budget = yield* BudgetService;
+    const repo = yield* Repository;
+    const sources = yield* Sources;
+    const runner = yield* Runner;
     return handlers
-      .handle("registerSource", () => unimplemented("registerSource"))
-      .handle("getSource", () => unimplemented("getSource"))
-      .handle("createJob", () => unimplemented("createJob"))
-      .handle("listJobs", () => unimplemented("listJobs"))
-      .handle("getJob", () => unimplemented("getJob"))
-      .handle("cancelJob", () => unimplemented("cancelJob"))
-      .handle("resumeJob", () => unimplemented("resumeJob"))
-      .handle("getResult", () => unimplemented("getResult"))
-      .handle("getBlob", () => unimplemented("getBlob"))
+      .handle("registerSource", ({ payload }) => sources.register(payload))
+      .handle("getSource", ({ params }) => repo.source(params.id))
+      .handle("createJob", ({ payload }) =>
+        repo
+          .create(payload.sourceId, payload.spec, payload.force)
+          .pipe(Effect.tap(() => runner.notify)),
+      )
+      .handle("listJobs", ({ query }) => repo.list(query.offset, query.limit, query.state))
+      .handle("getJob", ({ params }) => repo.job(params.id))
+      .handle("cancelJob", ({ params }) => runner.cancel(params.id))
+      .handle("resumeJob", ({ params, payload }) =>
+        runner.resume(params.id, payload.retryAmbiguous),
+      )
+      .handle("getResult", ({ params }) => repo.result(params.id))
+      .handleRaw("getBlob", ({ params, request }) => getBlob(params.hash, request.headers.range))
       .handle("budget", () => budget.get);
   }),
 );

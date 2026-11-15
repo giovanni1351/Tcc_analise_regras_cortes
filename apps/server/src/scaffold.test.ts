@@ -12,12 +12,13 @@ import { BudgetService, budgetLayer } from "./budget.ts";
 import { httpLayer } from "./http.ts";
 import { Process, processLayer } from "./process.ts";
 import { acquireDataDirectoryLock } from "./lock.ts";
+import { testServices } from "./jobs/fixtures.testkit.ts";
 
 it.effect("migrates an in-memory database once", () =>
   Effect.gen(function* () {
     const first = yield* migrate;
     const second = yield* migrate;
-    assert.strictEqual(first.length, 1);
+    assert.strictEqual(first.length, 2);
     assert.deepStrictEqual(second, []);
     const sql = yield* SqlClient.SqlClient;
     const tables = yield* sql<{
@@ -53,7 +54,7 @@ it.effect("file migrations survive reopening and are a no-op", () =>
     const second = yield* Effect.scoped(
       migrate.pipe(Effect.provide(SqliteClient.layer({ filename }))),
     );
-    assert.strictEqual(first.length, 1);
+    assert.strictEqual(first.length, 2);
     assert.deepStrictEqual(second, []);
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
@@ -85,13 +86,11 @@ it.live("generated client reads zero budget from a live server", () =>
       ambiguousUsd: 0,
     });
     const missing = yield* client.highlights.listJobs({ query: {} }).pipe(Effect.result);
-    assert.strictEqual(missing._tag, "Failure");
-    if (missing._tag === "Failure") assert.strictEqual(missing.failure._tag, "NotImplemented");
+    assert.strictEqual(missing._tag, "Success");
   }).pipe(
-    Effect.provide(
-      httpLayer.pipe(Layer.provide(budgetLayer(0).pipe(Layer.provide(databaseLayer(":memory:"))))),
-    ),
+    Effect.provide(httpLayer.pipe(Layer.provide(testServices))),
     Effect.provide(NodeHttpServer.layerTest),
+    Effect.provide(NodeServices.layer),
   ),
 );
 
