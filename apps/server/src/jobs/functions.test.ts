@@ -1,7 +1,7 @@
 import { assert, it } from "@effect/vitest";
 import { Schema } from "effect";
 import { Highlight, MediaHash, VideoSeconds } from "@tcc/contracts";
-import { mergeOverlaps, toVideoSeconds } from "./functions.ts";
+import { pipelineFunctions, mergeOverlaps, toVideoSeconds } from "./functions.ts";
 
 it("merges at encoded bounds and keeps the winning prediction's provenance", () => {
   const seconds = Schema.decodeSync(VideoSeconds);
@@ -29,4 +29,19 @@ it("merges at encoded bounds and keeps the winning prediction's provenance", () 
   );
   assert.deepStrictEqual(mergeOverlaps(predictions, segments), [predictions[1]!]);
   assert.strictEqual(toVideoSeconds(seconds(134), 1, 40), 135);
+});
+
+it("versions stages independently and fingerprints encoder and overlap merge parameters", () => {
+  const names = [
+    "probe",
+    "scenes",
+    "detections",
+    "windows",
+    "segments",
+    "verdicts",
+    "highlights",
+  ] as const;
+  assert.strictEqual(new Set(names.map(pipelineFunctions.version)).size, names.length);
+  assert.match(JSON.stringify(pipelineFunctions.params("segments")), /encodeArgsHash/);
+  assert.match(JSON.stringify(pipelineFunctions.params("highlights")), /overlapMergeVersion/);
 });

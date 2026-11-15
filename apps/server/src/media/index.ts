@@ -197,6 +197,26 @@ export const blobStoreLayer = (dataDir: string) =>
     }),
   );
 
+export const encodeArgs = [
+  "-map",
+  "0:v:0",
+  "-map",
+  "0:a?",
+  "-vf",
+  "showinfo",
+  "-c:v",
+  "libx264",
+  "-preset",
+  "veryfast",
+  "-crf",
+  "28",
+  "-c:a",
+  "aac",
+  "-movflags",
+  "+faststart",
+] as const;
+export const encodeArgsHash = createHash("sha256").update(JSON.stringify(encodeArgs)).digest("hex");
+
 export const clipEncoderLayer = Layer.effect(
   ClipEncoder,
   Effect.gen(function* () {
@@ -226,22 +246,7 @@ export const clipEncoderLayer = Layer.effect(
               String(end),
               "-i",
               media.path,
-              "-map",
-              "0:v:0",
-              "-map",
-              "0:a?",
-              "-vf",
-              "showinfo",
-              "-c:v",
-              "libx264",
-              "-preset",
-              "veryfast",
-              "-crf",
-              "28",
-              "-c:a",
-              "aac",
-              "-movflags",
-              "+faststart",
+              ...encodeArgs,
               temp,
             ]);
             const metadata = yield* probeFile(temp);

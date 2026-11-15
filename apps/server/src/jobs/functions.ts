@@ -6,12 +6,27 @@ import {
   mergeOverlaps as mergePredictions,
   toVideoSeconds as mapTime,
 } from "../domain/segments.ts";
+import { encodeArgsHash } from "../media/index.ts";
 import type { MergeHighlights } from "./highlights.ts";
 import type { PipelineFunctions } from "./pipeline.ts";
 
 export const pipelineFunctions = {
-  version: () => "rules-c-v1",
-  params: (stage) => (stage === "segments" ? { maxSec: 40, overlapSec: 5 } : {}),
+  version: (stage) =>
+    ({
+      probe: "probe-v1",
+      scenes: "scenes-v1",
+      detections: "detections-v1",
+      windows: "rules-c-v1",
+      segments: "segments-v1",
+      verdicts: "verdicts-v1",
+      highlights: "highlights-v1",
+    })[stage],
+  params: (stage) =>
+    stage === "segments"
+      ? { maxSec: 40, overlapSec: 5, encodeArgsHash }
+      : stage === "highlights"
+        ? { overlapMergeVersion: "nearest-v1" }
+        : {},
   computeWindows,
   planSegments: (windows) => planSegments(windows, { maxSec: 40, overlapSec: 5 }),
 } satisfies Omit<PipelineFunctions, "highlights">;
