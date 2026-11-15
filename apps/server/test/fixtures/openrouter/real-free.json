@@ -1,0 +1,61 @@
+{
+  "model": "nvidia/nemotron-3.5-super-vl:free",
+  "httpStatus": 200,
+  "body": {
+    "id": "gen-1794705987-pUqp6EihhChA024rfFP4",
+    "object": "chat.completion",
+    "created": 1794705987,
+    "model": "nvidia/nemotron-3.5-super-vl:free",
+    "provider": "Nvidia",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"segment_kind\": \"Single-highlight\", \"events\": [{\"event_class\": \"Goal\", \"timestamp_seconds\": 0.0, \"confidence\": 0.95, \"alternate_prediction\": null}]}",
+          "refusal": null,
+          "reasoning": "The user wants me to detect soccer highlight events in the provided video segment.\n\n1.  **Analyze the video:**\n    *   **00:00 - 00:03:** Players are running towards the goal. A player in a black and red striped jersey (Milan) shoots. The goalkeeper dives but misses. The ball goes into the net. This is a Goal.\n    *   **00:03 - 00:06:** The ball hits the back of the net. Celebration ensues.\n    *   **00:06 - 00:08:** Serie A logo transition.\n    *   **00:08 - 00:10:** Close-up of players talking/interacting after the goal. No new foul or offside shown clearly as a distinct event separate from the goal context, just post-goal interaction.\n\n2.  **Identify events:**\n    *   The primary event is a Goal scored around 00:03-00:04. The shot happens just before.\n\n3.  **Classify events:**\n    *   Event 1: Goal. Timestamp: starts around 00:00 when the play develops, but the actual goal event (ball entering net) is around 00:03. Let's look at the allowed classes: Goal, Shot on target, Shot off target, Foul, Offside.\n    *   The clip shows a goal being scored. So \"Goal\" is the correct class.\n    *   Timestamps: The action starts at 00:00 and the ball is in the net by 00:04. I will mark the timestamp for the goal event roughly from the start of the attack or just the goal itself. Let's say [00:00, 00:04] covers the scoring action.\n\n4.  **Format output:**\n    *   segment_kind: Single-highlight (only one main event type detected).\n    *   events array: [{ \"label\": \"Goal\", \"start_seconds\": 0.0, \"end_seconds\": 4.0 }] approximately. Let's refine. The shot is taken almost immediately, ball hits net around 3-4s.\n\n    Wait, let me look closer at the first few seconds.\n    *   00:00 - 00:02: Player runs with ball.\n    *   00:02 - 00:03: Shot is taken.\n    *   00:03 - 00:04: Ball goes in.\n    *   So the event is definitely a Goal.\n\n    Let's check if there are other events.\n    *   Is it a \"Shot on target\"? Yes, technically, but \"Goal\" takes precedence as the final outcome.\n    *   Are there fouls? No obvious fouls shown as a primary event.\n    *   Offside? No indication.\n\n    So, just one event: Goal.\n\n    Timestamps: Start at 0.0 (start of clip where the play is happening), End at 4.0 (ball in net).\n\n    Let's construct the JSON.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "The user wants me to detect soccer highlight events in the provided video segment.\n\n1.  **Analyze the video:**\n    *   **00:00 - 00:03:** Players are running towards the goal. A player in a black and red striped jersey (Milan) shoots. The goalkeeper dives but misses. The ball goes into the net. This is a Goal.\n    *   **00:03 - 00:06:** The ball hits the back of the net. Celebration ensues.\n    *   **00:06 - 00:08:** Serie A logo transition.\n    *   **00:08 - 00:10:** Close-up of players talking/interacting after the goal. No new foul or offside shown clearly as a distinct event separate from the goal context, just post-goal interaction.\n\n2.  **Identify events:**\n    *   The primary event is a Goal scored around 00:03-00:04. The shot happens just before.\n\n3.  **Classify events:**\n    *   Event 1: Goal. Timestamp: starts around 00:00 when the play develops, but the actual goal event (ball entering net) is around 00:03. Let's look at the allowed classes: Goal, Shot on target, Shot off target, Foul, Offside.\n    *   The clip shows a goal being scored. So \"Goal\" is the correct class.\n    *   Timestamps: The action starts at 00:00 and the ball is in the net by 00:04. I will mark the timestamp for the goal event roughly from the start of the attack or just the goal itself. Let's say [00:00, 00:04] covers the scoring action.\n\n4.  **Format output:**\n    *   segment_kind: Single-highlight (only one main event type detected).\n    *   events array: [{ \"label\": \"Goal\", \"start_seconds\": 0.0, \"end_seconds\": 4.0 }] approximately. Let's refine. The shot is taken almost immediately, ball hits net around 3-4s.\n\n    Wait, let me look closer at the first few seconds.\n    *   00:00 - 00:02: Player runs with ball.\n    *   00:02 - 00:03: Shot is taken.\n    *   00:03 - 00:04: Ball goes in.\n    *   So the event is definitely a Goal.\n\n    Let's check if there are other events.\n    *   Is it a \"Shot on target\"? Yes, technically, but \"Goal\" takes precedence as the final outcome.\n    *   Are there fouls? No obvious fouls shown as a primary event.\n    *   Offside? No indication.\n\n    So, just one event: Goal.\n\n    Timestamps: Start at 0.0 (start of clip where the play is happening), End at 4.0 (ball in net).\n\n    Let's construct the JSON.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2652,
+      "completion_tokens": 729,
+      "total_tokens": 3381,
+      "cost": 0,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0,
+        "upstream_inference_prompt_cost": 0,
+        "upstream_inference_completions_cost": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 674,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "generationId": "gen-1794705987-pUqp6EihhChA024rfFP4",
+  "costUsd": 0,
+  "latencyMs": 7680.581182
+}

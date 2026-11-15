@@ -1,0 +1,28 @@
+[
+  {
+    "name": "length",
+    "body": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "message": {
+            "content": "{\"segment_kind\":\"Non-highlight\",\"events\":[]}"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "schema violation",
+    "body": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "message": {
+            "content": "{\"segment_kind\":\"Non-highlight\",\"events\":[],\"extra\":true}"
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,139 @@
+[
+  {
+    "status": 429,
+    "body": {
+      "error": {
+        "message": "Too many requests",
+        "metadata": {}
+      }
+    },
+    "expected": "RateLimited",
+    "retryAfter": "2"
+  },
+  {
+    "status": 429,
+    "body": {
+      "error": {
+        "message": "Upstream capacity",
+        "metadata": {}
+      }
+    },
+    "expected": "RateLimited",
+    "retryAfter": null
+  },
+  {
+    "status": 402,
+    "body": {
+      "error": {
+        "message": "Budget limit",
+        "metadata": {
+          "limit_type": "in_flight"
+        }
+      }
+    },
+    "expected": "InFlightBudget",
+    "retryAfter": null
+  },
+  {
+    "status": 402,
+    "body": {
+      "error": {
+        "message": "Insufficient credits",
+        "metadata": {}
+      }
+    },
+    "expected": "CreditExhausted",
+    "retryAfter": null
+  },
+  {
+    "status": 500,
+    "body": {
+      "error": {
+        "message": "Internal error",
+        "metadata": {}
+      }
+    },
+    "expected": "Upstream",
+    "retryAfter": null
+  },
+  {
+    "status": 502,
+    "body": {
+      "error": {
+        "message": "Bad gateway",
+        "metadata": {}
+      }
+    },
+    "expected": "Upstream",
+    "retryAfter": null
+  },
+  {
+    "status": 503,
+    "body": {
+      "error": {
+        "message": "Unavailable",
+        "metadata": {}
+      }
+    },
+    "expected": "Upstream",
+    "retryAfter": null
+  },
+  {
+    "status": 403,
+    "body": {
+      "error": {
+        "message": "Input blocked",
+        "metadata": {
+          "reasons": ["moderation"],
+          "flagged_input": "redacted"
+        }
+      }
+    },
+    "expected": "Moderation",
+    "retryAfter": null
+  },
+  {
+    "status": 401,
+    "body": {
+      "error": {
+        "message": "Invalid key",
+        "metadata": {}
+      }
+    },
+    "expected": "Unauthorized",
+    "retryAfter": null
+  },
+  {
+    "status": 403,
+    "body": {
+      "error": {
+        "message": "Forbidden",
+        "metadata": {}
+      }
+    },
+    "expected": "Unauthorized",
+    "retryAfter": null
+  },
+  {
+    "status": 408,
+    "body": {
+      "error": {
+        "message": "Timeout",
+        "metadata": {}
+      }
+    },
+    "expected": "Upstream",
+    "retryAfter": null
+  },
+  {
+    "status": 425,
+    "body": {
+      "error": {
+        "message": "Too early",
+        "metadata": {}
+      }
+    },
+    "expected": "Upstream",
+    "retryAfter": null
+  }
+]
