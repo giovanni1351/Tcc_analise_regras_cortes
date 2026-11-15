@@ -15,6 +15,7 @@ export interface ProbedMedia {
   readonly path: string;
   readonly hash: MediaHash;
   readonly probe: Probe;
+  readonly sourceStat: { readonly size: number; readonly mtimeMs: number };
 }
 
 export interface Scene {
