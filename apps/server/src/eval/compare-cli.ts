@@ -39,6 +39,8 @@ const main = Effect.gen(function* () {
           out: { type: "string" },
           "dry-run": { type: "boolean", default: false },
           "retry-ambiguous": { type: "boolean", default: false },
+          "video-from": { type: "string", default: "/home/pedro/soccernet/downloads" },
+          "video-root": { type: "string", default: "/home/pedro/tcc/benchmark/downloads" },
         },
       }),
     catch: (cause) => new ComparisonError({ operation: "arguments", resource: "argv", cause }),
@@ -48,7 +50,7 @@ const main = Effect.gen(function* () {
       operation: "arguments",
       resource: "--out",
       cause:
-        "Required: --out <report.json> [--n 100] [--dry-run] [--retry-ambiguous] [--db <sqlite>] [--run <id>]",
+        "Required: --out <report.json> [--n 100] [--dry-run] [--retry-ambiguous] [--db <sqlite>] [--run <id>] [--video-from <stored prefix>] [--video-root <local prefix>]",
     });
   const rows = yield* Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient;
@@ -61,7 +63,13 @@ const main = Effect.gen(function* () {
         resource: values.db,
         cause: "Choose one run with flash-lite responses using --run",
       });
-    return [...new Map(decoded.map((r) => [r.segment_id, r])).values()];
+    const from = values["video-from"];
+    const relocated = decoded.map((r) =>
+      r.source_video_path.startsWith(`${from}/`)
+        ? { ...r, source_video_path: values["video-root"] + r.source_video_path.slice(from.length) }
+        : r,
+    );
+    return [...new Map(relocated.map((r) => [r.segment_id, r])).values()];
   }).pipe(Effect.provide(SqliteClient.layer({ filename: values.db, readonly: true })));
   const selected = yield* Effect.try({
     try: () => selectStratified(rows, Number(values.n)),
