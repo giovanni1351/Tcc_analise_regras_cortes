@@ -15,6 +15,8 @@ import { Process } from "../process.ts";
 import { InferenceError, ObjectDetector, SceneDetector } from "../services.ts";
 import type { ProbedMedia } from "../services.ts";
 
+import { cvParams } from "./provenance.ts";
+
 const Device = Schema.Literals(["cuda", "cpu", "coreml"]);
 const Scene = Schema.Struct({
   sceneId: Count,
@@ -129,7 +131,7 @@ export const cvWorkerLayer = (repoRoot: string) =>
                 yield* Queue.offer(
                   active.outgoing,
                   new TextEncoder().encode(
-                    JSON.stringify({ id, op, path: media.path, stride }) + "\n",
+                    JSON.stringify({ ...cvParams, id, op, path: media.path, stride }) + "\n",
                   ),
                 );
                 while (true) {

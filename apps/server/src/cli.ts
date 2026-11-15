@@ -115,7 +115,8 @@ const main = Effect.gen(function* () {
       const rows = yield* sql<{
         total: number;
       }>`SELECT COUNT(*) AS total FROM llm_attempts WHERE model LIKE '%:free' AND state<>'Reserved' AND created_at>=strftime('%Y-%m-%dT00:00:00.000Z','now')`;
-      return freeModelLimiterLayer(50, rows[0]?.total ?? 0);
+      const dailyCap = yield* Config.Int("OPENROUTER_FREE_DAILY_CAP").pipe(Config.withDefault(50));
+      return freeModelLimiterLayer(dailyCap, rows[0]?.total ?? 0);
     }),
   ).pipe(Layer.provide(database));
   const llm = llmStepLayer(limit).pipe(

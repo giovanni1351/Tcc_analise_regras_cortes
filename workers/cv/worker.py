@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 
 def emit(message):
-    print(json.dumps(message, allow_nan=False), flush=True)
+    print(json.dumps(message, allow_nan=False), file=sys.__stdout__, flush=True)
 
 
 def run():
@@ -43,7 +43,7 @@ def run():
             started = time.monotonic()
             with contextlib.redirect_stdout(sys.stderr):
                 if request["op"] == "scenes":
-                    rows = run_transnet(path, fps, 0.5, device)
+                    rows = run_transnet(path, fps, request["threshold"], device)
                     items = [dict(sceneId=int(r.scene_id), startFrame=int(r.start_frame),
                                   endFrame=int(r.end_frame), startSec=float(r.start_sec),
                                   durationSec=float(r.duration_sec)) for r in rows.itertuples()]
@@ -52,8 +52,25 @@ def run():
                     if not isinstance(stride, int) or stride < 1:
                         raise ValueError("stride must be a positive integer")
                     if model is None:
-                        model = load_yolo(ROOT / "best.pt", 0.25, 0.45, device)
-                    rows = run_yolo(path, model, fps, stride, None, batch_size=16)
+                        model = load_yolo(ROOT / "best.pt", request["conf"], request["iou"], device)
+                    class ProgressModel:
+                        def __init__(self):
+                            self.done = 0
+                            self.reported = 0
+
+                        def __getattr__(self, name):
+                            return getattr(model, name)
+
+                        def predict(self, frames, **kwargs):
+                            results = model.predict(frames, **kwargs)
+                            self.done = min(total, self.done + len(frames) * stride)
+                            if self.done - self.reported >= max(1, total * 0.02):
+                                emit(dict(id=request["id"], kind="progress", device=device,
+                                          done=self.done, total=total))
+                                self.reported = self.done
+                            return results
+
+                    rows = run_yolo(path, ProgressModel(), fps, stride, None, batch_size=request["batch"])
                     items = [dict(frameIndex=int(r.frame), timeSec=float(r.time_sec),
                                   counts={name: int(getattr(r, name + "_count")) for name in
                                           ("player", "goalkeeper", "referee", "ball")})
