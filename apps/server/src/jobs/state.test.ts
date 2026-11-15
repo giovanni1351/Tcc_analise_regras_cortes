@@ -51,7 +51,7 @@ it.effect("state/event matrix accepts only legal moves", () =>
       ["Progress", "Complete", "Cancel", "Recover"],
       ["Cancel", "Resume"],
       [],
-      [],
+      ["Resume"],
       [],
     ];
     for (const [index, state] of states.entries())

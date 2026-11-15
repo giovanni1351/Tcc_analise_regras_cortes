@@ -4,6 +4,7 @@ import { SqlClient } from "effect/sql";
 import { SecureRandom } from "effect/crypto";
 import {
   Conflict,
+  BadRequest,
   Coverage,
   Job,
   JobId,
@@ -164,7 +165,7 @@ export const makeRepository = Effect.gen(function* () {
       limit < 1 ||
       limit > 100
     )
-      return yield* new Conflict({
+      return yield* new BadRequest({
         operation: "listJobs",
         message: "offset must be nonnegative and limit between 1 and 100",
       });

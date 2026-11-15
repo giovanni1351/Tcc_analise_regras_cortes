@@ -127,7 +127,7 @@ type JobSpec = {
 
 The job state is a state machine. Legal transitions live in one function, and nothing writes a status column directly.
 
-A `Partial` job resumes with `POST /jobs/:id/resume`. Resuming re-admits the segments that were never sent, under the current budget. It never resends an ambiguous attempt unless `retryAmbiguous` is set.
+A `Partial` or `Failed` job resumes with `POST /jobs/:id/resume`. Resuming re-admits the segments that were never sent, under the current budget. It never resends an ambiguous attempt unless `retryAmbiguous` is set.
 
 ### Data layer
 
@@ -230,15 +230,15 @@ Built with Effect HttpApi from `packages/contracts`. It listens on `127.0.0.1` w
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/sources` | Register a `SourceRef`. Probes and hashes it. Idempotent by canonical source reference; media is shared by hash. |
+| POST | `/sources` | Register a `SourceRef`. Probes and hashes it. Invalid paths, missing files and unprobeable media return 400 `BadRequest`. Idempotent by canonical source reference; media is shared by hash. |
 | GET | `/sources/:id` | Source, media and probe. |
 | POST | `/jobs` | `{ sourceId, spec? }` returns 202 and the job. The same source and spec return the existing job unless `force` is set. |
-| GET | `/jobs` | Paged list, filterable by state. |
+| GET | `/jobs` | Paged list, filterable by state. `offset >= 0`, `1 <= limit <= 100`; invalid bounds return 400 `BadRequest`. |
 | GET | `/jobs/:id` | State, per-stage progress, devices used, coverage, cost committed and reserved. |
 | POST | `/jobs/:id/cancel` | Cancel. Finished stage runs stay for reuse. |
-| POST | `/jobs/:id/resume` | Resume a `Partial` job. Optional `retryAmbiguous`. |
+| POST | `/jobs/:id/resume` | Resume a `Partial` or `Failed` job. Optional `retryAmbiguous` authorizes only currently Ambiguous attempts and is cleared on recovery or verdict completion. |
 | GET | `/jobs/:id/result` | Paper §3.5 output: highlights with class, half, `videoSeconds`, confidence, id and clip URL, plus coverage. |
-| GET | `/blobs/:hash` | Media, with HTTP Range support. |
+| GET | `/blobs/:hash` | Clips as `video/mp4` and JSON artifacts as `application/json`, with HTTP Range support. |
 | GET | `/budget` | Limit, committed, reserved, ambiguous. |
 
 Progress comes from polling `GET /jobs/:id`. Deferred until a consumer needs them: server-sent events, audit views of scenes, windows and attempts, detection boxes, and a model registry endpoint. Each is an additive change to the contract. Boxes are the only one with a real later cost, because adding them means rerunning `detections`.

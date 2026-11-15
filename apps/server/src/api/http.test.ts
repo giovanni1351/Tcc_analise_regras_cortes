@@ -2,8 +2,8 @@ import { NodeHttpServer, NodeServices } from "@effect/platform-node";
 import { assert, it } from "@effect/vitest";
 import { Effect, FileSystem, Layer } from "effect";
 import { HttpApiClient, OpenApi } from "effect/http-api";
-import { HttpClient } from "effect/http";
-import { Api, JobId, SourceId } from "@tcc/contracts";
+import { HttpBody, HttpClient } from "effect/http";
+import { Api, JobError, JobId, SourceId } from "@tcc/contracts";
 import { Schema } from "effect";
 import { BlobStore } from "../services.ts";
 import { Repository } from "../jobs/repository.ts";
@@ -48,6 +48,33 @@ it.live(
         yield* client.highlights.getSource({ params: { id: source.id } }),
         source,
       );
+      for (const query of [{ offset: -1 }, { limit: 0 }, { limit: 101 }]) {
+        const response = yield* http.get("/jobs", { urlParams: query });
+        assert.strictEqual(response.status, 400);
+      }
+      for (const ref of [
+        { _tag: "LocalFile", path: `${dir}/missing` },
+        {
+          _tag: "SoccerNetHalf",
+          league: "..",
+          season: "season",
+          game: "game",
+          half: 1,
+          resolution: "224p",
+        },
+      ]) {
+        const response = yield* http.post("/sources", {
+          body: HttpBody.jsonUnsafe(ref),
+          headers: { "content-type": "application/json" },
+        });
+        assert.strictEqual(response.status, 400);
+        assert.strictEqual(
+          (yield* Schema.decodeUnknownEffect(Schema.Struct({ _tag: Schema.String }))(
+            yield* response.json,
+          ))._tag,
+          "BadRequest",
+        );
+      }
       const job = yield* client.highlights.createJob({ payload: { sourceId: source.id } });
       assert.strictEqual(
         (yield* client.highlights.createJob({ payload: { sourceId: source.id } })).id,
@@ -79,6 +106,19 @@ it.live(
           params: { id: job.id },
           payload: { retryAmbiguous: true },
         })).state._tag,
+        "Queued",
+      );
+      yield* repo.change(job.id, { _tag: "Start" });
+      yield* repo.change(job.id, {
+        _tag: "Complete",
+        state: {
+          _tag: "Failed",
+          stage: "probe",
+          error: new JobError({ stage: "probe", category: "Inference", message: "bad" }),
+        },
+      });
+      assert.strictEqual(
+        (yield* client.highlights.resumeJob({ params: { id: job.id }, payload: {} })).state._tag,
         "Queued",
       );
       assert.strictEqual(
@@ -117,6 +157,18 @@ it.live(
         assert.strictEqual(response.status, 206);
         assert.strictEqual(yield* response.text, expected);
         assert.match(response.headers["content-range"] ?? "", /^bytes \d+-\d+\/10$/);
+      }
+      for (const [ext, contentType] of [
+        ["mp4", "video/mp4"],
+        ["json", "application/json"],
+      ]) {
+        const temp = yield* blobs.tempPath(ext!);
+        yield* fs.writeFileString(temp, ext!);
+        const hash = yield* blobs.publish(temp, ext!);
+        for (const headers of [{}, { range: "bytes=0-1" }]) {
+          const response = yield* http.get(`/blobs/${hash}`, { headers });
+          assert.include(response.headers["content-type"] ?? "", contentType!);
+        }
       }
       const unsatisfied = yield* http.get(`/blobs/${hash}`, { headers: { range: "bytes=10-" } });
       assert.strictEqual(unsatisfied.status, 416);

@@ -35,6 +35,11 @@ export const getBlob = Effect.fn("Blobs.get")(function* (hash: MediaHash, range?
     });
   return yield* HttpServerResponse.file(path, {
     status: selected ? 206 : 200,
+    contentType: path.endsWith(".mp4")
+      ? "video/mp4"
+      : path.endsWith(".json")
+        ? "application/json"
+        : "application/octet-stream",
     ...(selected ? { offset: selected.start, bytesToRead: selected.end - selected.start + 1 } : {}),
     headers: {
       "accept-ranges": "bytes",

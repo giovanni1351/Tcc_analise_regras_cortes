@@ -1,7 +1,16 @@
-import { Context, Effect, FileSystem, Layer, Option, Path } from "effect";
-import { Conflict, JobError, type SourceId, type SourceRef, type StageName } from "@tcc/contracts";
+import { Context, Effect, FileSystem, Layer, Option, Path, Schema } from "effect";
+import {
+  BadRequest,
+  PersistenceError,
+  Conflict,
+  JobError,
+  type SourceId,
+  type SourceRef,
+  type StageName,
+} from "@tcc/contracts";
 import { SqlClient } from "effect/sql";
-import { MediaProbe } from "../services.ts";
+import { ProcessError } from "../process.ts";
+import { MediaError, MediaProbe } from "../services.ts";
 import { Repository, persistence } from "./repository.ts";
 
 export const makeSources = Effect.fn("Sources.make")(function* (soccerNetRoot: string) {
@@ -31,16 +40,29 @@ export const makeSources = Effect.fn("Sources.make")(function* (soccerNetRoot: s
     if (
       ref._tag === "SoccerNetHalf" &&
       [ref.league, ref.season, ref.game].some(
-        (part) => part === "." || part === ".." || /[/\\]/.test(part),
+        (part) => part === "" || part === "." || part === ".." || /[/\\]/.test(part),
       )
     )
-      return yield* new Conflict({
+      return yield* new BadRequest({
         operation: "registerSource",
         message: "SoccerNet path components must be single directory names",
       });
     const file = resolve(ref);
+    if (!(yield* fs.exists(file).pipe(persistence("statSource"))))
+      return yield* new BadRequest({
+        operation: "registerSource",
+        message: "Source file does not exist",
+      });
     const before = yield* inspect(file);
-    const media = yield* probe.probe(file).pipe(persistence("probe"));
+    const media = yield* probe.probe(file).pipe(
+      Effect.mapError((cause) => {
+        let origin: unknown = cause;
+        while (Schema.is(MediaError)(origin)) origin = origin.cause;
+        return Schema.is(ProcessError)(origin)
+          ? new PersistenceError({ operation: "probe", message: String(cause) })
+          : new BadRequest({ operation: "probe", message: String(cause) });
+      }),
+    );
     const after = yield* inspect(file);
     if (before.size !== after.size || before.mtime !== after.mtime)
       return yield* new Conflict({

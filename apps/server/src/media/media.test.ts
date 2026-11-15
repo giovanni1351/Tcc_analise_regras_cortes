@@ -3,7 +3,10 @@ import { assert, it } from "@effect/vitest";
 import { Effect, FileSystem, Layer, Schema, Stream } from "effect";
 import { VideoSeconds } from "@tcc/contracts";
 import { BlobStore, ClipEncoder, MediaProbe } from "../services.ts";
-import { processLayer } from "../process.ts";
+import { Process, ProcessError, processLayer } from "../process.ts";
+import { Sources, sourcesLayer } from "../jobs/sources.ts";
+import { repositoryLayer } from "../jobs/repository.ts";
+import { databaseLayer } from "../database.ts";
 import { blobStoreLayer, clipEncoderLayer, commandOutput, mediaProbeLayer } from "./index.ts";
 
 const runtime = processLayer.pipe(Layer.provideMerge(NodeServices.layer));
@@ -119,3 +122,37 @@ it.live(
     }).pipe(Effect.scoped, Effect.provide(runtime)),
   { timeout: 30000 },
 );
+
+for (const unavailable of [false, true])
+  it.live(
+    `source registration distinguishes unprobeable media from unavailable tools ${unavailable}`,
+    () =>
+      Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem;
+        const dir = yield* fs.makeTempDirectoryScoped();
+        const path = `${dir}/invalid.mp4`;
+        yield* fs.writeFileString(path, "not media");
+        const error = yield* Effect.gen(function* () {
+          return yield* (yield* Sources).register({ _tag: "LocalFile", path }).pipe(Effect.flip);
+        }).pipe(
+          Effect.provide(
+            sourcesLayer().pipe(
+              Layer.provide(repositoryLayer.pipe(Layer.provideMerge(databaseLayer(":memory:")))),
+              Layer.provide(
+                unavailable
+                  ? mediaProbeLayer.pipe(
+                      Layer.provide(
+                        Layer.succeed(Process, {
+                          spawn: (command) =>
+                            Effect.fail(new ProcessError({ command, cause: "tool unavailable" })),
+                        }),
+                      ),
+                    )
+                  : mediaProbeLayer,
+              ),
+            ),
+          ),
+        );
+        assert.strictEqual(error._tag, unavailable ? "PersistenceError" : "BadRequest");
+      }).pipe(Effect.scoped, Effect.provide(runtime)),
+  );

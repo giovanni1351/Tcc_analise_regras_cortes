@@ -34,7 +34,8 @@ export const transition = (state: JobState | null, event: JobEvent): JobState | 
     if (event._tag === "Complete") return event.state;
     if (event._tag === "Recover") return { _tag: "Queued" };
   }
-  if (state?._tag === "Partial" && event._tag === "Resume") return { _tag: "Queued" };
+  if ((state?._tag === "Partial" || state?._tag === "Failed") && event._tag === "Resume")
+    return { _tag: "Queued" };
   if (
     (state?._tag === "Queued" || state?._tag === "Running" || state?._tag === "Partial") &&
     event._tag === "Cancel"
