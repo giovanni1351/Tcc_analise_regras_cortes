@@ -58,20 +58,21 @@ export const attemptLedgerLayer = Layer.effect(
             }>`SELECT job_id, COALESCE(SUM(cost_usd),0) AS committed, ${sql.literal(heldReservationSql)} AS reserved FROM llm_attempts GROUP BY job_id`;
             const job = totals.find((row) => row.job_id === input.jobId);
             if (
-              !admit({
+              input.reservation !== 0 &&
+              (!admit({
                 committedUsd: job?.committed ?? 0,
                 reservedUsd: job?.reserved ?? 0,
                 reservation: input.reservation,
                 jobCapUsd: input.jobCapUsd,
                 accountCapUsd: input.jobCapUsd,
               }) ||
-              !admit({
-                committedUsd: totals.reduce((n, row) => n + row.committed, 0),
-                reservedUsd: totals.reduce((n, row) => n + row.reserved, 0),
-                reservation: input.reservation,
-                jobCapUsd: input.accountCapUsd,
-                accountCapUsd: input.accountCapUsd,
-              })
+                !admit({
+                  committedUsd: totals.reduce((n, row) => n + row.committed, 0),
+                  reservedUsd: totals.reduce((n, row) => n + row.reserved, 0),
+                  reservation: input.reservation,
+                  jobCapUsd: input.accountCapUsd,
+                  accountCapUsd: input.accountCapUsd,
+                }))
             )
               return false;
             yield* sql`INSERT INTO llm_attempts (id,job_id,segment_id,model,prompt_version,attempt_number,state,reserved_usd,created_at,updated_at,verdict_key) VALUES (${input.id},${input.jobId},${input.segmentId},${input.model},${input.promptVersion},${input.attemptNumber},'Reserved',${input.reservation},${now},${now},${input.verdictKey ?? null})`;

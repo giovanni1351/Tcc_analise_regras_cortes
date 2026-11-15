@@ -202,3 +202,22 @@ it.effect("restart restores both quotas and ignores locally rejected attempts", 
     }).pipe(Effect.provide(persistedFreeModelLimiterLayer(21)));
   }).pipe(Effect.provide(services)),
 );
+
+it.effect("free reservations bypass exhausted job and account admission", () =>
+  Effect.gen(function* () {
+    yield* seed;
+    const ledger = yield* AttemptLedger;
+    yield* ledger.reserve(reservation);
+    assert.isTrue(
+      yield* ledger.reserve({
+        ...reservation,
+        id: "free",
+        model: "model:free",
+        attemptNumber: 2,
+        reservation: 0,
+        jobCapUsd: 0,
+        accountCapUsd: 0,
+      }),
+    );
+  }).pipe(Effect.provide(services)),
+);
