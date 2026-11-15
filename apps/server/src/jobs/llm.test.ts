@@ -78,7 +78,15 @@ it.effect(
         yield* blobs.publish(temp, "bin");
         const media = yield* (yield* Sources).check(source.id, "verdicts");
         const step = yield* LlmStep;
-        for (const job of [first, second]) {
+        for (const [index, job] of [first, second].entries()) {
+          if (index === 1) {
+            yield* sql`INSERT INTO segments VALUES ('segment2',${key},'window',${source.mediaHash},0,20)`;
+            const original = yield* fs.readFileString(artifactPath);
+            yield* fs.writeFileString(
+              artifactPath,
+              original.replace('"id":"segment"', '"id":"segment2"'),
+            );
+          }
           const result = yield* step.run(
             {
               job,
@@ -87,7 +95,7 @@ it.effect(
               retryAmbiguous: false,
               progress: () => Effect.void,
             },
-            key,
+            index === 0 ? key : yield* Schema.decodeEffect(StageRunKey)("b".repeat(64)),
           );
           assert.strictEqual(result.coverage?.valid, 1);
         }

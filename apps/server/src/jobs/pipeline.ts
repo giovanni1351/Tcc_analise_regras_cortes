@@ -5,7 +5,6 @@ import {
   JobError,
   MediaHash,
   VideoSeconds,
-  type RuleConfig,
   type StageRunKey,
   type StageName,
 } from "@tcc/contracts";
@@ -15,9 +14,9 @@ import {
   SceneDetector,
   type CandidateWindow,
   type PlannedSegment,
-  type Sample,
-  type Scene,
 } from "../services.ts";
+import type { computeWindows } from "../domain/rules.ts";
+import { cvParams, cvProvenance } from "../cv/provenance.ts";
 import { StageLogic, type StageInput, type StageOutput } from "./stages.ts";
 
 const sceneSchema = Schema.Struct({
@@ -57,11 +56,7 @@ export const segmentArtifact = Schema.Array(
 export interface PipelineFunctions {
   readonly version: (stage: StageName) => string;
   readonly params: (stage: StageName) => unknown;
-  readonly computeWindows: (
-    scenes: ReadonlyArray<Scene>,
-    samples: ReadonlyArray<Sample>,
-    rule: RuleConfig,
-  ) => ReadonlyArray<CandidateWindow>;
+  readonly computeWindows: typeof computeWindows;
   readonly planSegments: (windows: ReadonlyArray<CandidateWindow>) => ReadonlyArray<PlannedSegment>;
   readonly highlights: (input: StageInput) => Effect.Effect<StageOutput, JobError>;
 }
@@ -73,6 +68,7 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
       const scenes = yield* SceneDetector;
       const objects = yield* ObjectDetector;
       const clips = yield* ClipEncoder;
+      const provenance = yield* cvProvenance();
       const read = Effect.fn("Pipeline.read")(function* <A>(
         input: StageInput,
         stage: StageName,
@@ -122,7 +118,7 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
           }
           case "detections": {
             const output = yield* objects
-              .detect(input.media, 5, input.progress)
+              .detect(input.media, cvParams.stride, input.progress)
               .pipe(Effect.mapError(inferenceError));
             return {
               artifact: output.items,
@@ -137,7 +133,12 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
           case "windows": {
             const sceneRows = yield* read(input, "scenes", Schema.Array(sceneSchema));
             const sampleRows = yield* read(input, "detections", Schema.Array(sampleSchema));
-            const windows = functions.computeWindows(sceneRows, sampleRows, input.job.spec.rule);
+            const windows = functions.computeWindows(
+              sceneRows,
+              sampleRows,
+              { ...input.media.probe, stride: cvParams.stride },
+              input.job.spec.rule,
+            );
             return {
               artifact: windows,
               device: null,
@@ -193,7 +194,7 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
         version: functions.version,
         params: (stage, job) => ({
           config: functions.params(stage),
-          ...(stage === "detections" ? { stride: 5 } : {}),
+          ...(stage === "scenes" || stage === "detections" ? { ...cvParams, ...provenance } : {}),
           ...(stage === "windows" ? { rule: job.spec.rule } : {}),
           ...(stage === "verdicts"
             ? {

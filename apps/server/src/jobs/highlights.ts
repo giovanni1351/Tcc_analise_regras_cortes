@@ -19,7 +19,7 @@ export type MergeHighlights = (
 ) => ReadonlyArray<Highlight>;
 export const makeHighlightStage = Effect.fn("Highlights.make")(function* (
   merge: MergeHighlights,
-  toVideoSeconds: (start: VideoSeconds, offset: number) => VideoSeconds,
+  toVideoSeconds: (start: VideoSeconds, offset: number, duration: number) => VideoSeconds,
 ) {
   const sql = yield* SqlClient.SqlClient;
   const fs = yield* FileSystem.FileSystem;
@@ -37,7 +37,7 @@ export const makeHighlightStage = Effect.fn("Highlights.make")(function* (
       const segments = yield* Schema.decodeEffect(Schema.fromJsonString(segmentArtifact))(text);
       const source = yield* repo.source(input.job.sourceId);
       const rows =
-        yield* sql`SELECT a.id,a.segment_id,a.verdict_json FROM llm_attempts a WHERE a.verdict_key=${input.inputs.find((item) => item.stage === "verdicts")?.key ?? ""} AND a.state='Answered' AND a.verdict_json IS NOT NULL AND NOT EXISTS (SELECT 1 FROM llm_attempts newer WHERE newer.verdict_key=a.verdict_key AND newer.segment_id=a.segment_id AND newer.state='Answered' AND newer.attempt_number>a.attempt_number)`;
+        yield* sql`SELECT a.id,s.id AS segment_id,a.verdict_json FROM segments s JOIN llm_attempts a ON a.id=(SELECT candidate.id FROM llm_attempts candidate JOIN segments encoded ON encoded.id=candidate.segment_id WHERE candidate.state='Answered' AND candidate.model=${input.job.spec.llm.model} AND candidate.prompt_version=${input.job.spec.llm.promptVersion} AND encoded.blob_hash=s.blob_hash AND encoded.clip_start_sec=s.clip_start_sec AND encoded.duration_sec=s.duration_sec ORDER BY candidate.updated_at DESC,candidate.id DESC LIMIT 1) WHERE s.stage_run_key=${artifact.key} AND a.verdict_json IS NOT NULL`;
       const attempts = yield* Schema.decodeUnknownEffect(
         Schema.Array(
           Schema.Struct({ id: AttemptId, segment_id: SegmentId, verdict_json: Schema.String }),
@@ -62,7 +62,7 @@ export const makeHighlightStage = Effect.fn("Highlights.make")(function* (
             class: event.event_class,
             half: source.ref._tag === "SoccerNetHalf" ? source.ref.half : null,
             videoSeconds: yield* Schema.decodeEffect(VideoSeconds)(
-              toVideoSeconds(segment.clipStart, event.timestamp_seconds),
+              toVideoSeconds(segment.clipStart, event.timestamp_seconds, segment.durationSec),
             ),
             confidence: event.confidence,
             segmentId: yield* Schema.decodeEffect(SegmentId)(segment.id),

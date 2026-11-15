@@ -1,32 +1,44 @@
-import { Schema } from "effect";
-import { VideoSeconds } from "@tcc/contracts";
+import { Option, Schema } from "effect";
+import { ClipSeconds, VideoSeconds } from "@tcc/contracts";
+import { computeWindows } from "../domain/rules.ts";
+import {
+  planSegments,
+  mergeOverlaps as mergePredictions,
+  toVideoSeconds as mapTime,
+} from "../domain/segments.ts";
 import type { MergeHighlights } from "./highlights.ts";
 import type { PipelineFunctions } from "./pipeline.ts";
 
-const seconds = Schema.decodeSync(VideoSeconds);
 export const pipelineFunctions = {
-  version: () => "stand-in-windows-v1",
-  params: (stage) =>
-    stage === "windows"
-      ? { starts: [0, 40, 80], duration: 20 }
-      : stage === "segments"
-        ? { maxDuration: 40, overlap: 5 }
-        : stage === "verdicts"
-          ? { maxTokens: 4096 }
-          : {},
-  computeWindows: (_scenes, samples) => {
-    const end = samples.at(-1)?.timeSec ?? 0;
-    return [0, 40, 80]
-      .filter((start) => start < end)
-      .map((start) => ({
-        start: seconds(start),
-        end: seconds(Math.min(start + 20, end)),
-        anchors: [seconds(start)],
-      }));
-  },
-  planSegments: (windows) =>
-    windows.map((window, windowIndex) => ({ windowIndex, start: window.start, end: window.end })),
+  version: () => "rules-c-v1",
+  params: (stage) => (stage === "segments" ? { maxSec: 40, overlapSec: 5 } : {}),
+  computeWindows,
+  planSegments: (windows) => planSegments(windows, { maxSec: 40, overlapSec: 5 }),
 } satisfies Omit<PipelineFunctions, "highlights">;
 
-export const mergeOverlaps: MergeHighlights = (predictions) => predictions;
-export const toVideoSeconds = (start: VideoSeconds, offset: number) => seconds(start + offset);
+export const mergeOverlaps: MergeHighlights = (predictions, segments) => {
+  const bounds = segments.map((segment) => ({
+    windowIndex: segment.windowIndex,
+    start: segment.clipStart,
+    end: Schema.decodeSync(VideoSeconds)(segment.clipStart + segment.durationSec),
+  }));
+  const mapped = predictions.map((prediction) => {
+    const segmentIndex = segments.findIndex((segment) => segment.id === prediction.segmentId);
+    return {
+      segmentIndex,
+      eventClass: prediction.class,
+      t: Schema.decodeSync(ClipSeconds)(
+        prediction.videoSeconds - segments[segmentIndex]!.clipStart,
+      ),
+      confidence: prediction.confidence,
+    };
+  });
+  return mergePredictions(mapped, bounds).map((merged) => {
+    const original = merged.predictionIndices.find(
+      (index) => mapped[index]!.segmentIndex === merged.segmentIndex,
+    )!;
+    return { ...predictions[original]!, videoSeconds: merged.videoSeconds };
+  });
+};
+export const toVideoSeconds = (start: VideoSeconds, offset: number, duration: number) =>
+  Option.getOrThrow(mapTime(start, offset, duration));

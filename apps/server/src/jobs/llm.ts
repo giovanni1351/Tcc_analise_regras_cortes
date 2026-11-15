@@ -45,6 +45,14 @@ export const llmStepLayer = (accountCapUsd: number) =>
               rate: number | null;
             }>`SELECT MAX(a.cost_usd/s.duration_sec) AS rate FROM llm_attempts a JOIN segments s ON s.id=a.segment_id WHERE a.model=${model} AND s.duration_sec>0`;
             for (const segment of segments) {
+              const reused = yield* sql<{
+                verdict_json: string | null;
+              }>`SELECT a.verdict_json FROM llm_attempts a JOIN segments s ON s.id=a.segment_id WHERE a.state='Answered' AND a.model=${model} AND a.prompt_version=${input.job.spec.llm.promptVersion} AND s.blob_hash=${segment.blob} AND s.clip_start_sec=${segment.clipStart} AND s.duration_sec=${segment.durationSec} ORDER BY a.updated_at DESC,a.id DESC LIMIT 1`;
+              if (reused[0]) {
+                if (reused[0].verdict_json === null) coverage.invalid++;
+                else coverage.valid++;
+                continue;
+              }
               const previous = yield* sql<{
                 state: string;
                 verdict_json: string | null;
