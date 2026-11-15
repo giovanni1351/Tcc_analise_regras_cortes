@@ -2,6 +2,8 @@ import { Effect } from "effect";
 import { SqlClient } from "effect/sql";
 import { SqliteMigrator } from "@effect/sql-sqlite-node";
 
+import { canonicalJson } from "./jobs/keys.ts";
+
 const initial = Effect.gen(function* () {
   const sql = yield* SqlClient.SqlClient;
   yield* sql.unsafe(
@@ -51,6 +53,14 @@ const initial = Effect.gen(function* () {
 export const migrate = SqliteMigrator.run({
   loader: SqliteMigrator.fromRecord({
     "001_initial": initial,
+    "005_source_refs": Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
+      yield* sql`DROP INDEX sources_media`;
+      const rows = yield* sql<{ id: string; ref_json: string }>`SELECT id,ref_json FROM sources`;
+      for (const row of rows)
+        yield* sql`UPDATE sources SET ref_json=${canonicalJson(JSON.parse(row.ref_json))} WHERE id=${row.id}`;
+      yield* sql`CREATE UNIQUE INDEX sources_ref ON sources(ref_json)`;
+    }),
     "004_inference_identity": Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
       yield* sql`ALTER TABLE llm_attempts ADD COLUMN inference_json TEXT NOT NULL DEFAULT '{"maxTokens":4096}'`;

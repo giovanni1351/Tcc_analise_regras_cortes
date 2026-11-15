@@ -279,3 +279,54 @@ it.effect("partial verdicts publish highlights and leave them rebuildable on res
     );
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
+
+it.effect(
+  "source refs retain distinct locations and identities while sharing media and caches",
+  () =>
+    Effect.gen(function* () {
+      const { directory, path, fs } = yield* setup;
+      const otherPath = `${directory}/other.bin`;
+      yield* fs.copyFile(path, otherPath);
+      yield* Effect.gen(function* () {
+        const sources = yield* Sources;
+        const repo = yield* Repository;
+        const first = yield* sources.register({ _tag: "LocalFile", path });
+        const other = yield* sources.register({ _tag: "LocalFile", path: otherPath });
+        assert.notStrictEqual(first.id, other.id);
+        assert.strictEqual(first.mediaHash, other.mediaHash);
+        assert.deepStrictEqual(other.ref, { _tag: "LocalFile", path: otherPath });
+        const soccer = {
+          _tag: "SoccerNetHalf",
+          league: "league",
+          season: "season",
+          game: "game",
+          half: 2,
+          resolution: "224p",
+        } as const;
+        const half = yield* repo.register(soccer, first.mediaHash, first.probe, 8, 0);
+        assert.notStrictEqual(half.id, first.id);
+        assert.deepStrictEqual(half.ref, soccer);
+        assert.strictEqual(
+          (yield* repo.register(
+            {
+              resolution: "224p",
+              half: 2,
+              game: "game",
+              season: "season",
+              league: "league",
+              _tag: "SoccerNetHalf",
+            },
+            first.mediaHash,
+            first.probe,
+            8,
+            0,
+          )).id,
+          half.id,
+        );
+        yield* fs.remove(path);
+        assert.strictEqual((yield* sources.check(other.id, "scenes")).path, otherPath);
+        const sql = yield* SqlClient.SqlClient;
+        assert.strictEqual((yield* sql`SELECT COUNT(*) AS n FROM media`)[0]?.n, 1);
+      }).pipe(Effect.provide(fixtureServices(directory)));
+    }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);

@@ -18,7 +18,7 @@ import {
   type MediaHash,
   defaultRuleConfig,
 } from "@tcc/contracts";
-import { stageKey } from "./keys.ts";
+import { canonicalJson, stageKey } from "./keys.ts";
 import { move, type JobEvent } from "./state.ts";
 
 export const emptyCoverage = {
@@ -203,7 +203,9 @@ export const makeRepository = Effect.gen(function* () {
   ) {
     const existing = yield* sql<{
       id: string;
-    }>`SELECT id FROM sources WHERE media_hash=${hash} LIMIT 1`.pipe(persistence("findSource"));
+    }>`SELECT id FROM sources WHERE ref_json=${canonicalJson(ref)} LIMIT 1`.pipe(
+      persistence("findSource"),
+    );
     if (existing[0])
       return yield* source(
         yield* Schema.decodeEffect(SourceId)(existing[0].id).pipe(persistence("sourceId")),
@@ -216,13 +218,13 @@ export const makeRepository = Effect.gen(function* () {
       .withTransaction(
         Effect.gen(function* () {
           yield* sql`INSERT OR IGNORE INTO media VALUES (${hash},${size},${JSON.stringify(probe)})`;
-          yield* sql`INSERT OR IGNORE INTO sources VALUES (${id},${JSON.stringify(ref)},${hash},${size},${mtime})`;
+          yield* sql`INSERT OR IGNORE INTO sources VALUES (${id},${canonicalJson(ref)},${hash},${size},${mtime})`;
         }),
       )
       .pipe(persistence("registerSource"));
     const registered = yield* sql<{
       id: string;
-    }>`SELECT id FROM sources WHERE media_hash=${hash} LIMIT 1`.pipe(
+    }>`SELECT id FROM sources WHERE ref_json=${canonicalJson(ref)} LIMIT 1`.pipe(
       persistence("registeredSource"),
     );
     return yield* source(

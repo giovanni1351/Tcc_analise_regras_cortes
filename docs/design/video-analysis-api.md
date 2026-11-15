@@ -230,7 +230,7 @@ Built with Effect HttpApi from `packages/contracts`. It listens on `127.0.0.1` w
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/sources` | Register a `SourceRef`. Probes and hashes it. Idempotent by media hash. |
+| POST | `/sources` | Register a `SourceRef`. Probes and hashes it. Idempotent by canonical source reference; media is shared by hash. |
 | GET | `/sources/:id` | Source, media and probe. |
 | POST | `/jobs` | `{ sourceId, spec? }` returns 202 and the job. The same source and spec return the existing job unless `force` is set. |
 | GET | `/jobs` | Paged list, filterable by state. |
