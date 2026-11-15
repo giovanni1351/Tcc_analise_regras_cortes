@@ -3,6 +3,7 @@ import contextlib
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import time
 
@@ -12,6 +13,36 @@ sys.path.insert(0, str(ROOT / "src"))
 
 def emit(message):
     print(json.dumps(message, allow_nan=False), file=sys.__stdout__, flush=True)
+
+
+def frame_timeline(path, fps):
+    data = json.loads(subprocess.check_output([
+        "ffprobe", "-v", "error", "-select_streams", "v:0", "-show_frames",
+        "-show_entries", "frame=best_effort_timestamp_time,duration_time,pkt_duration_time",
+        "-of", "json", str(path),
+    ]))
+    frames = data["frames"]
+    pts = [float(frame["best_effort_timestamp_time"]) for frame in frames]
+    origin = pts[0]
+    pts = [value - origin for value in pts]
+    if all(abs(value - index / fps) < 0.0001 for index, value in enumerate(pts)):
+        return None
+    last = frames[-1]
+    duration = float(last.get("duration_time", last.get("pkt_duration_time", 0)))
+    if duration <= 0:
+        duration = pts[-1] - pts[-2] if len(pts) > 1 else 1 / fps
+    return pts + [pts[-1] + duration]
+
+
+def map_times(operation, items, timeline):
+    if timeline is None:
+        return
+    for item in items:
+        if operation == "scenes":
+            item["startSec"] = timeline[item["startFrame"]]
+            item["durationSec"] = timeline[item["endFrame"] + 1] - item["startSec"]
+        else:
+            item["timeSec"] = timeline[item["frameIndex"]]
 
 
 def run():
@@ -39,6 +70,7 @@ def run():
             fps = float(cap.get(cv2.CAP_PROP_FPS))
             total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             cap.release()
+            timeline = frame_timeline(path, fps)
             emit(dict(id=request["id"], kind="progress", device=device, done=0, total=total))
             started = time.monotonic()
             with contextlib.redirect_stdout(sys.stderr):
@@ -77,6 +109,7 @@ def run():
                              for r in rows.itertuples()]
                 else:
                     raise ValueError("Unknown operation")
+                map_times(request["op"], items, timeline)
                 if device == "cuda":
                     torch.cuda.synchronize()
             emit(dict(id=request["id"], kind="progress", device=device, done=total, total=total))
