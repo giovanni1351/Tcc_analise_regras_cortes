@@ -22,9 +22,8 @@ import { makeHighlightStage } from "./jobs/highlights.ts";
 import { llmStepLayer } from "./jobs/llm.ts";
 import { AttemptLedger, attemptLedgerLayer } from "./llm/ledger.ts";
 import { openRouterLayer } from "./llm/openrouter.ts";
-import { freeModelLimiterLayer } from "./llm/limiter.ts";
+import { persistedFreeModelLimiterLayer } from "./llm/limiter.ts";
 import { defaultSpec } from "./jobs/repository.ts";
-import { SqlClient } from "effect/sql";
 
 export class CliError extends Schema.TaggedError<CliError, { readonly brand: unique symbol }>()(
   "CliError",
@@ -111,12 +110,8 @@ const main = Effect.gen(function* () {
   const encoders = clipEncoderLayer.pipe(Layer.provideMerge(realMedia));
   const limiter = Layer.unwrap(
     Effect.gen(function* () {
-      const sql = yield* SqlClient.SqlClient;
-      const rows = yield* sql<{
-        total: number;
-      }>`SELECT COUNT(*) AS total FROM llm_attempts WHERE model LIKE '%:free' AND state<>'Reserved' AND created_at>=strftime('%Y-%m-%dT00:00:00.000Z','now')`;
       const dailyCap = yield* Config.Int("OPENROUTER_FREE_DAILY_CAP").pipe(Config.withDefault(50));
-      return freeModelLimiterLayer(dailyCap, rows[0]?.total ?? 0);
+      return persistedFreeModelLimiterLayer(dailyCap);
     }),
   ).pipe(Layer.provide(database));
   const llm = llmStepLayer(limit).pipe(

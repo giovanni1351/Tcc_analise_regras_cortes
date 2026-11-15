@@ -145,7 +145,9 @@ export const llmStepLayer = (accountCapUsd: number) =>
                 }
                 yield* ledger.fail(id, error);
                 const ambiguous =
-                  error.httpStatus === null || (error.httpStatus >= 200 && error.httpStatus < 400);
+                  error.sent !== false &&
+                  (error.httpStatus === null ||
+                    (error.httpStatus >= 200 && error.httpStatus < 400));
                 if (ambiguous && !model.endsWith(":free")) {
                   coverage.ambiguous++;
                   break;

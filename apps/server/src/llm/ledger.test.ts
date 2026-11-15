@@ -1,7 +1,9 @@
 import { assert, it } from "@effect/vitest";
+import { TestClock } from "effect/testing";
 import { Effect, Layer } from "effect";
 import { SqlClient } from "effect/sql";
 import { AttemptLedger, attemptLedgerLayer } from "./ledger.ts";
+import { FreeModelLimiter, persistedFreeModelLimiterLayer } from "./limiter.ts";
 import { databaseLayer } from "../database.ts";
 import { BudgetService, budgetLayer } from "../budget.ts";
 import { ProviderError } from "../services.ts";
@@ -147,5 +149,56 @@ it.effect("retains a network failure after sending as ambiguous", () =>
       }),
     );
     assert.strictEqual((yield* budget.get).ambiguousUsd, 0.4);
+  }).pipe(Effect.provide(services)),
+);
+
+it.effect("local limiter rejection releases the reservation and stores no send", () =>
+  Effect.gen(function* () {
+    yield* seed;
+    const ledger = yield* AttemptLedger;
+    yield* ledger.reserve(reservation);
+    yield* ledger.markSent("one");
+    yield* ledger.fail(
+      "one",
+      new ProviderError({
+        category: "RateLimited",
+        httpStatus: null,
+        retryAfterMs: 1000,
+        message: "Local quota",
+        sent: false,
+      }),
+    );
+    const sql = yield* SqlClient.SqlClient;
+    const rows = yield* sql`SELECT state FROM llm_attempts WHERE id='one'`;
+    assert.strictEqual(rows[0]?.state, "Failed");
+    assert.strictEqual((yield* (yield* BudgetService).get).reservedUsd, 0);
+  }).pipe(Effect.provide(services)),
+);
+
+it.effect("restart restores both quotas and ignores locally rejected attempts", () =>
+  Effect.gen(function* () {
+    yield* seed;
+    const sql = yield* SqlClient.SqlClient;
+    const ledger = yield* AttemptLedger;
+    for (let i = 0; i < 50; i++) {
+      const id = String(i);
+      yield* ledger.reserve({
+        ...reservation,
+        id,
+        model: "model:free",
+        attemptNumber: i + 1,
+        reservation: 0,
+      });
+      const state = i < 5 ? "Sent" : i < 10 ? "Answered" : i < 15 ? "Ambiguous" : "Failed";
+      const status = i >= 15 && i < 20 ? 429 : null;
+      yield* sql`UPDATE llm_attempts SET state=${state},http_status=${status},created_at='1970-01-01T00:00:00.000Z' WHERE id=${id}`;
+    }
+    yield* Effect.gen(function* () {
+      const limiter = yield* FreeModelLimiter;
+      assert.strictEqual((yield* limiter.acquire.pipe(Effect.flip)).period, "minute");
+      yield* TestClock.adjust(60_000);
+      yield* limiter.acquire;
+      assert.strictEqual((yield* limiter.acquire.pipe(Effect.flip)).period, "day");
+    }).pipe(Effect.provide(persistedFreeModelLimiterLayer(21)));
   }).pipe(Effect.provide(services)),
 );

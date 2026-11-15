@@ -231,5 +231,13 @@ it.effect("seeds the daily free quota from persisted attempts", () =>
     const limiter = yield* FreeModelLimiter;
     const denied = yield* limiter.acquire.pipe(Effect.flip);
     assert.strictEqual(denied.period, "day");
-  }).pipe(Effect.provide(freeModelLimiterLayer(50, 50))),
+  }).pipe(Effect.provide(freeModelLimiterLayer(50, Array(50).fill(0)))),
+);
+
+it.effect("seeds the minute free quota from persisted timestamps", () =>
+  Effect.gen(function* () {
+    const limiter = yield* FreeModelLimiter;
+    const denied = yield* limiter.acquire.pipe(Effect.flip);
+    assert.strictEqual(denied.period, "minute");
+  }).pipe(Effect.provide(freeModelLimiterLayer(50, Array(20).fill(0)))),
 );

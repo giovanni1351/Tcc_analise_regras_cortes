@@ -118,9 +118,11 @@ export const attemptLedgerLayer = Layer.effect(
     const fail = Effect.fn("AttemptLedger.fail")(
       function* (id: string, cause: unknown) {
         const now = DateTime.formatIso(yield* DateTime.now);
+        const notSent = Schema.is(ProviderError)(cause) && cause.sent === false;
+        const status = Schema.is(ProviderError)(cause) ? cause.httpStatus : null;
         const refused =
           Schema.is(ProviderError)(cause) && cause.httpStatus !== null && cause.httpStatus >= 400;
-        yield* sql`UPDATE llm_attempts SET state=CASE WHEN state='Sent' AND ${refused ? 0 : 1}=1 THEN 'Ambiguous' ELSE 'Failed' END,parse_error_json=${JSON.stringify(cause)},updated_at=${now} WHERE id=${id} AND state IN ('Reserved','Sent')`;
+        yield* sql`UPDATE llm_attempts SET state=CASE WHEN state='Sent' AND ${refused || notSent ? 0 : 1}=1 THEN 'Ambiguous' ELSE 'Failed' END,http_status=${status},parse_error_json=${JSON.stringify(cause)},updated_at=${now} WHERE id=${id} AND state IN ('Reserved','Sent')`;
       },
       Effect.mapError(
         (cause) => new LedgerError({ operation: "fail", resource: "attempt", cause }),

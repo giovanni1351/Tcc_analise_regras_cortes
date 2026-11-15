@@ -84,6 +84,7 @@ export const openRouterLayer = (apiKey: string, timeoutMs = 120_000) =>
               httpStatus: null,
               retryAfterMs: null,
               message: "Unknown prompt version",
+              sent: false,
             });
           if (request.model.endsWith(":free"))
             yield* limiter.acquire.pipe(
@@ -94,6 +95,7 @@ export const openRouterLayer = (apiKey: string, timeoutMs = 120_000) =>
                     httpStatus: null,
                     retryAfterMs: limit.retryAfterMs,
                     message: `Free model ${limit.period} limit`,
+                    sent: false,
                   }),
               ),
             );
@@ -106,6 +108,7 @@ export const openRouterLayer = (apiKey: string, timeoutMs = 120_000) =>
                   httpStatus: null,
                   retryAfterMs: null,
                   message: "Cannot read clip",
+                  sent: false,
                 }),
             ),
           );

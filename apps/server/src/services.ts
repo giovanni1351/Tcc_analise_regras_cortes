@@ -106,6 +106,7 @@ export class ProviderError extends Schema.TaggedError<
   ProviderError,
   { readonly brand: unique symbol }
 >()("ProviderError", {
+  sent: Schema.optional(Schema.Boolean),
   category: Schema.Literals([
     "RateLimited",
     "InFlightBudget",
