@@ -273,6 +273,27 @@ V2 reads the study's xlsx files through the existing Python reader, exported onc
 
 Spending order: V1 to V9 cost nothing. V10 to V12 together stay under $0.50, which leaves most of the $1.34.
 
+### Results
+
+Paid runs went through a dedicated key and the ledger. Total spend was $0.61, with no double-billed call. Reports are in `docs/design/results/`.
+
+- **V10.** GLM 5.3 Flash made 9 calls on a 7-minute clip for $0.0072, about $0.0008 per 40 s segment, at 17 to 99 s per call. 3 of the 9 answers were cut off: GLM spent all 4,096 output tokens reasoning.
+- **V11.** On the same 100 benchmark segments, GLM scored F1@5s 0.313 and flash-lite 0.555. The paired bootstrap gives ΔF1 −0.242, with a 95% interval of [−0.330, −0.157].
+  - GLM gave a valid answer on 57%: 42 were truncated and 1 timed out. The timed-out call stayed ambiguous and was not resent.
+  - On the 57 segments GLM did answer, it scored 0.447 against flash-lite's 0.579.
+  - flash-lite is about 11 times faster (6 s per call against 62 s). So flash-lite is the model for the remaining paid checks, and GLM was dropped.
+- **V9.** This deviated from the plan: the free model's answers are noise (F1 about 0.06 on 3 train halves), so tuning ran on flash-lite, on 2 train halves.
+  - 40/5 scored F1 0.349 (P 0.23, R 0.69) at $0.067 per half.
+  - 20/4 scored F1 0.242 (P 0.15, R 0.72) at $0.085 per half, and was worse on both halves.
+  - **Frozen at 40 s segments with 5 s overlap.** Two halves are too few for a reliable interval, but the direction agreed on both.
+- **V12.** Three test halves at 40/5 with flash-lite gave a pooled F1@5s of **0.389** (P 0.295, R 0.571; TP 44, FP 105, FN 33).
+  - The rule's recall ceiling was 68 of 77 labels (0.88).
+  - Cost was $0.071 per half, 190 of 191 answers were valid, and none were ambiguous.
+  - Per half, F1 was 0.30, 0.39 and 0.48.
+  - Precision is the weak point. "Shot on target" alone produced 58 of the 105 false positives, while Goal recall was 5 of 5.
+  - Three halves show the system works end to end. They are not enough for a citable system score.
+- **Spending floor.** OpenRouter refuses video requests below $1.00 of balance. A capped key needs its limit at least $1.00 above the intended spend.
+
 ## Tooling
 
 - pnpm workspace on Node 26, the version t3code pins.
@@ -293,7 +314,7 @@ The first implementation step is a scaffold that proves the versions work togeth
 ## Open decisions
 
 1. **Where the code lives.** My recommendation is this repo, as a pnpm workspace next to the Python study, so the paper, the rule study and the system share one history. The alternatives are `~/tcc`, next to the benchmark, or a new repo.
-2. **The free-tier daily limit.** Have you ever bought $10 or more of OpenRouter credits in total? If yes, the free models allow 1,000 requests a day. If no, 50.
-3. **A dedicated OpenRouter key with a credit limit**, for example $1.00, as the hard spending ceiling. Only you can create it.
+2. **The free-tier daily limit.** Resolved: lifetime credits are over $10, so the cap is 1,000 a day.
+3. **A dedicated OpenRouter key with a credit limit.** Resolved: a key capped at $2.00, with the server budget holding total spend to the $0.90 approved.
 4. **NVIDIA driver.** Upgrading from 550 to a driver that supports CUDA 13 is the simplest way to let ONNX run on the GPU from Node. It's a system change on your machine. Without it, option N needs an older `onnxruntime-node` built for CUDA 12.
 5. **Replays.** v1 keeps the benchmark's categories, which have no replay type, so results stay comparable with the paper. A replay field would be a new prompt version, measured on its own.
