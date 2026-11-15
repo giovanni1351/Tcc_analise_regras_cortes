@@ -2,6 +2,7 @@ import { Context, Effect, FileSystem, Layer, Schema } from "effect";
 import { SqlClient } from "effect/sql";
 import {
   JobError,
+  Highlight,
   MediaHash,
   Coverage,
   type Job,
@@ -10,7 +11,7 @@ import {
   type StageRunKey,
 } from "@tcc/contracts";
 import { BlobStore, type Device, type ProbedMedia } from "../services.ts";
-import { now, persistence } from "./repository.ts";
+import { now, newId, persistence } from "./repository.ts";
 import { stageKey } from "./keys.ts";
 
 export const stages: ReadonlyArray<StageName> = [
@@ -100,9 +101,18 @@ export const makeStageRuns = Effect.gen(function* () {
       const hash = yield* Schema.decodeEffect(Schema.String)(found.artifact_hash);
       const artifactPath = yield* blobs.path(yield* Schema.decodeEffect(MediaHash)(hash));
       if (stage === "highlights") {
-        yield* sql`INSERT INTO highlights SELECT lower(hex(randomblob(16))),${input.job.id},h.class,h.half,h.video_seconds,h.confidence,h.segment_id,h.attempt_id,h.clip_blob_hash FROM highlights h WHERE h.job_id=(SELECT job_id FROM job_stages WHERE stage_run_key=${key} AND stage='highlights' AND job_id<>${input.job.id} LIMIT 1) AND NOT EXISTS (SELECT 1 FROM highlights WHERE job_id=${input.job.id})`.pipe(
-          persistence("reuseHighlights"),
-        );
+        const highlights = yield* Schema.decodeEffect(
+          Schema.fromJsonString(Schema.Array(Highlight)),
+        )(yield* fs.readFileString(artifactPath));
+        yield* sql
+          .withTransaction(
+            Effect.gen(function* () {
+              yield* sql`DELETE FROM highlights WHERE job_id=${input.job.id}`;
+              for (const highlight of highlights)
+                yield* sql`INSERT INTO highlights VALUES (${yield* newId},${input.job.id},${highlight.class},${highlight.half},${highlight.videoSeconds},${highlight.confidence},${highlight.segmentId},${highlight.attemptId},${highlight.clipUrl?.split("/").at(-1) ?? null})`;
+            }),
+          )
+          .pipe(persistence("reuseHighlights"));
       }
       yield* link.pipe(persistence("linkStage"));
       const result = yield* Schema.decodeEffect(Schema.fromJsonString(stageResult))(

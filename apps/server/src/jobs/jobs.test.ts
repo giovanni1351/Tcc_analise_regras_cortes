@@ -364,3 +364,53 @@ it.live("runner records defects as Failed and continues with queued jobs", () =>
     );
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
+
+it.effect("highlight cache rebuilds stale rows from its artifact without another job", () =>
+  Effect.gen(function* () {
+    const { directory, path } = yield* setup;
+    yield* Effect.gen(function* () {
+      const job = yield* create(path);
+      const sql = yield* SqlClient.SqlClient;
+      const media = yield* (yield* Sources).check(job.sourceId, "highlights");
+      const runs = yield* StageRuns;
+      yield* sql`INSERT INTO stage_runs (key,stage,version,params_json,status) VALUES ('seed','segments','v1','{}','Finished')`;
+      yield* sql`INSERT INTO windows VALUES ('window','seed',0,10,'[]')`;
+      yield* sql`INSERT INTO segments VALUES ('segment','seed','window',${media.hash},0,10)`;
+      yield* sql`INSERT INTO llm_attempts (id,job_id,segment_id,model,prompt_version,attempt_number,state,reserved_usd,created_at,updated_at) VALUES ('attempt',${job.id},'segment','paid','v1',1,'Answered',0,'now','now')`;
+      const input = { job, media, inputs: [], retryAmbiguous: false, progress: () => Effect.void };
+      yield* runs.execute("highlights", input);
+      yield* sql`INSERT INTO highlights VALUES ('stale',${job.id},'Goal',NULL,9,1,'segment','attempt',NULL)`;
+      yield* runs.execute("highlights", input);
+      const result = yield* (yield* Repository).result(job.id);
+      assert.strictEqual(result.highlights.length, 1);
+      assert.strictEqual(result.highlights[0]?.videoSeconds, 2);
+      yield* sql`DELETE FROM highlights WHERE job_id=${job.id}`;
+      yield* runs.execute("highlights", input);
+      assert.strictEqual((yield* (yield* Repository).result(job.id)).highlights.length, 1);
+    }).pipe(
+      Effect.provide(
+        fixtureServices(
+          directory,
+          ":memory:",
+          logic(() =>
+            Effect.succeed({
+              ...output,
+              artifact: [
+                {
+                  id: "published",
+                  class: "Goal",
+                  half: null,
+                  videoSeconds: 2,
+                  confidence: 1,
+                  segmentId: "segment",
+                  attemptId: "attempt",
+                  clipUrl: null,
+                },
+              ],
+            }),
+          ),
+        ),
+      ),
+    );
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);
