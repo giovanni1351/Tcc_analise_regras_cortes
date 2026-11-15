@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "oxlint --report-unused-disable-directives apps packages vitest.config.ts",
-    "fmt": "oxfmt apps packages *.json *.jsonc *.ts mise.toml pnpm-workspace.yaml AGENTS.md",
+    "lint": "oxlint --no-ignore --report-unused-disable-directives apps/server/src packages/contracts/src vitest.config.ts",
+    "fmt": "oxfmt --ignore-path .formatignore apps packages *.json *.ts .oxlintrc.json .oxfmtrc.json mise.toml pnpm-workspace.yaml AGENTS.md",
     "fmt:check": "pnpm fmt --check",
     "typecheck": "effect-tsgo tsc --project tsconfig.json",
     "test": "vitest run",

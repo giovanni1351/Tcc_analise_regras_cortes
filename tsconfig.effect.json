@@ -6,6 +6,7 @@
         "namespaceImportPackages": ["@effect/platform-node", "effect"],
         "effectFn": ["span", "inferred-span", "suggested-span"],
         "diagnosticSeverity": {
+          "multipleEffectProvide": "off",
           "abortControllerInEffect": "error",
           "runEffectInsideEffect": "error",
           "flatMapConditionalToFilterOrFail": "error",
@@ -95,6 +96,10 @@
           "schemaNumber": "off"
         },
         "overrides": [
+          {
+            "include": ["apps/server/src/cli.ts"],
+            "options": { "diagnosticSeverity": { "nodeBuiltinImport": "off" } }
+          },
           {
             "include": ["**/*.test.ts", "**/*.test.tsx"],
             "options": {
