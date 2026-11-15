@@ -47,28 +47,18 @@ export const llmStepLayer = (accountCapUsd: number) =>
             for (const segment of segments) {
               const reused = yield* sql<{
                 verdict_json: string | null;
-              }>`SELECT a.verdict_json FROM llm_attempts a JOIN segments s ON s.id=a.segment_id WHERE a.state='Answered' AND a.model=${model} AND a.prompt_version=${input.job.spec.llm.promptVersion} AND s.blob_hash=${segment.blob} AND s.clip_start_sec=${segment.clipStart} AND s.duration_sec=${segment.durationSec} ORDER BY a.updated_at DESC,a.id DESC LIMIT 1`;
+              }>`SELECT a.verdict_json FROM llm_attempts a JOIN segments s ON s.id=a.segment_id WHERE a.state='Answered' AND a.model=${model} AND a.prompt_version=${input.job.spec.llm.promptVersion} AND s.blob_hash=${segment.blob} AND a.inference_json='{"maxTokens":4096}' ORDER BY a.updated_at DESC,a.id DESC LIMIT 1`;
               if (reused[0]) {
                 if (reused[0].verdict_json === null) coverage.invalid++;
                 else coverage.valid++;
                 continue;
               }
-              const previous = yield* sql<{
-                state: string;
-                verdict_json: string | null;
-                attempt_number: number;
-              }>`SELECT state,verdict_json,attempt_number FROM llm_attempts WHERE verdict_key=${key} AND segment_id=${segment.id} ORDER BY attempt_number DESC LIMIT 1`;
-              const found = previous[0];
-              if (found?.state === "Answered") {
-                if (found.verdict_json === null) coverage.invalid++;
-                else coverage.valid++;
-                continue;
-              }
-              if (
-                found?.state === "Ambiguous" &&
-                !model.endsWith(":free") &&
-                !input.retryAmbiguous
-              ) {
+              const unresolved = yield* sql`
+                SELECT a.id FROM llm_attempts a JOIN segments s ON s.id=a.segment_id
+                WHERE a.state IN ('Sent','Ambiguous') AND a.model=${model}
+                AND a.prompt_version=${input.job.spec.llm.promptVersion}
+                AND s.blob_hash=${segment.blob} AND a.inference_json='{"maxTokens":4096}' LIMIT 1`;
+              if (unresolved.length && !model.endsWith(":free") && !input.retryAmbiguous) {
                 coverage.ambiguous++;
                 continue;
               }
@@ -111,15 +101,25 @@ export const llmStepLayer = (accountCapUsd: number) =>
                 }
 
                 const clipPath = yield* blobs.path(segment.blob);
-                yield* ledger.markSent(id);
-                const response = yield* provider
-                  .complete({
-                    model,
-                    promptVersion: input.job.spec.llm.promptVersion,
-                    maxTokens: 4096,
-                    clipPath,
-                  })
-                  .pipe(Effect.result);
+                const response = yield* Effect.uninterruptibleMask((restore) =>
+                  Effect.gen(function* () {
+                    yield* ledger.markSent(id);
+                    return yield* restore(
+                      provider
+                        .complete({
+                          model,
+                          promptVersion: input.job.spec.llm.promptVersion,
+                          maxTokens: 4096,
+                          clipPath,
+                        })
+                        .pipe(Effect.result),
+                    ).pipe(
+                      Effect.onInterrupt(() =>
+                        ledger.fail(id, "Interrupted during provider request").pipe(Effect.orDie),
+                      ),
+                    );
+                  }),
+                );
                 if (response._tag === "Success") {
                   const parsed = parseVerdict(response.success, segment.durationSec);
                   yield* ledger.answer(id, response.success, parsed);

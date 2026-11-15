@@ -37,7 +37,7 @@ export const makeHighlightStage = Effect.fn("Highlights.make")(function* (
       const segments = yield* Schema.decodeEffect(Schema.fromJsonString(segmentArtifact))(text);
       const source = yield* repo.source(input.job.sourceId);
       const rows =
-        yield* sql`SELECT a.id,s.id AS segment_id,a.verdict_json FROM segments s JOIN llm_attempts a ON a.id=(SELECT candidate.id FROM llm_attempts candidate JOIN segments encoded ON encoded.id=candidate.segment_id WHERE candidate.state='Answered' AND candidate.model=${input.job.spec.llm.model} AND candidate.prompt_version=${input.job.spec.llm.promptVersion} AND encoded.blob_hash=s.blob_hash AND encoded.clip_start_sec=s.clip_start_sec AND encoded.duration_sec=s.duration_sec ORDER BY candidate.updated_at DESC,candidate.id DESC LIMIT 1) WHERE s.stage_run_key=${artifact.key} AND a.verdict_json IS NOT NULL`;
+        yield* sql`SELECT a.id,s.id AS segment_id,a.verdict_json FROM segments s JOIN llm_attempts a ON a.id=(SELECT candidate.id FROM llm_attempts candidate JOIN segments encoded ON encoded.id=candidate.segment_id WHERE candidate.state='Answered' AND candidate.model=${input.job.spec.llm.model} AND candidate.prompt_version=${input.job.spec.llm.promptVersion} AND encoded.blob_hash=s.blob_hash AND candidate.inference_json='{"maxTokens":4096}'  ORDER BY candidate.updated_at DESC,candidate.id DESC LIMIT 1) WHERE s.stage_run_key=${artifact.key} AND a.verdict_json IS NOT NULL`;
       const attempts = yield* Schema.decodeUnknownEffect(
         Schema.Array(
           Schema.Struct({ id: AttemptId, segment_id: SegmentId, verdict_json: Schema.String }),

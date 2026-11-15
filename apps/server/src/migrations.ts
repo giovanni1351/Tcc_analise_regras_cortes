@@ -51,6 +51,10 @@ const initial = Effect.gen(function* () {
 export const migrate = SqliteMigrator.run({
   loader: SqliteMigrator.fromRecord({
     "001_initial": initial,
+    "004_inference_identity": Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
+      yield* sql`ALTER TABLE llm_attempts ADD COLUMN inference_json TEXT NOT NULL DEFAULT '{"maxTokens":4096}'`;
+    }),
     "003_attempt_keys": Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
       yield* sql`ALTER TABLE llm_attempts ADD COLUMN verdict_key TEXT REFERENCES stage_runs(key)`;

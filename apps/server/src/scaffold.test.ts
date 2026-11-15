@@ -18,7 +18,7 @@ it.effect("migrates an in-memory database once", () =>
   Effect.gen(function* () {
     const first = yield* migrate;
     const second = yield* migrate;
-    assert.strictEqual(first.length, 3);
+    assert.strictEqual(first.length, 4);
     assert.deepStrictEqual(second, []);
     const sql = yield* SqlClient.SqlClient;
     const tables = yield* sql<{
@@ -54,7 +54,7 @@ it.effect("file migrations survive reopening and are a no-op", () =>
     const second = yield* Effect.scoped(
       migrate.pipe(Effect.provide(SqliteClient.layer({ filename }))),
     );
-    assert.strictEqual(first.length, 3);
+    assert.strictEqual(first.length, 4);
     assert.deepStrictEqual(second, []);
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
