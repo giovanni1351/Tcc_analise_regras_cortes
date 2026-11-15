@@ -1,3 +1,4 @@
+import { heldReservationSql } from "../llm/accounting.ts";
 import { Context, DateTime, Effect, Layer, Schema } from "effect";
 import { SqlClient } from "effect/sql";
 import { SecureRandom } from "effect/crypto";
@@ -83,7 +84,7 @@ export const makeRepository = Effect.gen(function* () {
         persistence("jobStages"),
       );
     const cost =
-      yield* sql`SELECT COALESCE(SUM(cost_usd),0) AS committedUsd, COALESCE(SUM(CASE WHEN cost_usd IS NULL AND state IN ('Reserved','Sent','Ambiguous') THEN reserved_usd ELSE 0 END),0) AS reservedUsd FROM llm_attempts WHERE job_id=${id}`.pipe(
+      yield* sql`SELECT COALESCE(SUM(cost_usd),0) AS committedUsd, ${sql.literal(heldReservationSql)} AS reservedUsd FROM llm_attempts WHERE job_id=${id}`.pipe(
         persistence("jobCost"),
       );
     const state = yield* Schema.decodeEffect(Schema.fromJsonString(JobState))(row.state_json).pipe(

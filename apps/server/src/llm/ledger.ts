@@ -1,3 +1,4 @@
+import { heldReservationSql } from "./accounting.ts";
 import { DateTime, Context, Effect, Layer, Schema } from "effect";
 import { SqlClient } from "effect/sql";
 import type { ProviderReply, ParsedVerdict } from "../services.ts";
@@ -54,7 +55,7 @@ export const attemptLedgerLayer = Layer.effect(
               job_id: string;
               committed: number;
               reserved: number;
-            }>`SELECT job_id, COALESCE(SUM(cost_usd),0) AS committed, COALESCE(SUM(CASE WHEN cost_usd IS NULL AND state IN ('Reserved','Sent','Ambiguous','Answered') THEN reserved_usd ELSE 0 END),0) AS reserved FROM llm_attempts GROUP BY job_id`;
+            }>`SELECT job_id, COALESCE(SUM(cost_usd),0) AS committed, ${sql.literal(heldReservationSql)} AS reserved FROM llm_attempts GROUP BY job_id`;
             const job = totals.find((row) => row.job_id === input.jobId);
             if (
               !admit({

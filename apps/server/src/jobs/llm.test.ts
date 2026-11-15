@@ -131,3 +131,23 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted"] as const)
       }).pipe(Effect.provide(llm));
     }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
   );
+
+it.effect("job budget retains answered attempts with unknown cost", () =>
+  Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem;
+    const dir = yield* fs.makeTempDirectoryScoped();
+    const path = `${dir}/video`;
+    yield* fs.writeFileString(path, "video");
+    yield* Effect.gen(function* () {
+      const source = yield* (yield* Sources).register({ _tag: "LocalFile", path });
+      const repo = yield* Repository;
+      const job = yield* repo.create(source.id);
+      const sql = yield* SqlClient.SqlClient;
+      yield* sql`INSERT INTO stage_runs (key,stage,version,params_json,status) VALUES ('run','verdicts','v1','{}','Running')`;
+      yield* sql`INSERT INTO windows VALUES ('window','run',0,10,'[]')`;
+      yield* sql`INSERT INTO segments VALUES ('segment','run','window',${source.mediaHash},0,10)`;
+      yield* sql`INSERT INTO llm_attempts (id,job_id,segment_id,model,prompt_version,attempt_number,state,reserved_usd,created_at,updated_at) VALUES ('attempt',${job.id},'segment','paid','v1',1,'Answered',0.4,'now','now')`;
+      assert.strictEqual((yield* repo.job(job.id)).reservedUsd, 0.4);
+    }).pipe(Effect.provide(fixtureServices(dir)));
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);

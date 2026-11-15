@@ -1,3 +1,4 @@
+import { heldReservationSql } from "./llm/accounting.ts";
 import { Context, Effect, Layer, Schema } from "effect";
 import { SqlClient } from "effect/sql";
 import { Budget, PersistenceError } from "@tcc/contracts";
@@ -15,7 +16,7 @@ export const budgetLayer = (limitUsd: number) =>
         function* () {
           const rows = yield* sql`SELECT
    COALESCE(SUM(cost_usd),0) AS committedUsd,
-   COALESCE(SUM(CASE WHEN cost_usd IS NULL AND state IN ('Reserved','Sent','Ambiguous','Answered') THEN reserved_usd ELSE 0 END),0) AS reservedUsd,
+   ${sql.literal(heldReservationSql)} AS reservedUsd,
    COALESCE(SUM(CASE WHEN cost_usd IS NULL AND state = 'Ambiguous' THEN reserved_usd ELSE 0 END),0) AS ambiguousUsd
    FROM llm_attempts`;
           return yield* Schema.decodeUnknownEffect(Budget)({ ...rows[0], limitUsd });
