@@ -195,9 +195,14 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
           config: functions.params(stage),
           ...(stage === "detections" ? { stride: 5 } : {}),
           ...(stage === "windows" ? { rule: job.spec.rule } : {}),
-          ...(stage === "verdicts" || stage === "highlights"
-            ? { jobId: job.id, spec: job.spec }
+          ...(stage === "verdicts"
+            ? {
+                model: job.spec.llm.model,
+                promptVersion: job.spec.llm.promptVersion,
+                maxTokens: 4096,
+              }
             : {}),
+          ...(stage === "highlights" ? { clips: job.spec.clips } : {}),
         }),
         run: execute,
       } satisfies StageLogic["Service"];

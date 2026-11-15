@@ -51,6 +51,11 @@ const initial = Effect.gen(function* () {
 export const migrate = SqliteMigrator.run({
   loader: SqliteMigrator.fromRecord({
     "001_initial": initial,
+    "003_attempt_keys": Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
+      yield* sql`ALTER TABLE llm_attempts ADD COLUMN verdict_key TEXT REFERENCES stage_runs(key)`;
+      yield* sql`CREATE INDEX attempts_verdict_key ON llm_attempts(verdict_key,segment_id,state)`;
+    }),
     "002_job_options": Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
       yield* sql`ALTER TABLE stage_runs ADD COLUMN result_json TEXT NOT NULL DEFAULT '{}'`;

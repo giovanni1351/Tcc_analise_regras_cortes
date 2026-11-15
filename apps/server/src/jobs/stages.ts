@@ -31,6 +31,7 @@ export interface StageInput {
     readonly artifactPath: string;
   }>;
   readonly retryAmbiguous: boolean;
+  readonly partial?: PartialReason;
   readonly progress: (done: number, total: number) => Effect.Effect<void>;
 }
 export interface StageOutput {
@@ -73,12 +74,19 @@ export const makeStageRuns = Effect.gen(function* () {
   const execute = Effect.fn("Stages.execute")(function* (stage: StageName, input: StageInput) {
     const params = {
       config: logic.params(stage, input.job),
-      ...(stage === "verdicts" || stage === "highlights" ? { jobId: input.job.id } : {}),
     };
     const version = logic.version(stage);
     const key = yield* stageKey(stage, version, params, [
       input.media.hash,
-      ...input.inputs.map((i) => i.key),
+      ...input.inputs
+        .filter((i) =>
+          stage === "verdicts"
+            ? i.stage === "segments"
+            : stage === "highlights"
+              ? i.stage === "verdicts"
+              : true,
+        )
+        .map((i) => i.key),
     ]);
     const cached = yield* sql<{
       artifact_hash: string;
@@ -91,6 +99,11 @@ export const makeStageRuns = Effect.gen(function* () {
     if (found) {
       const hash = yield* Schema.decodeEffect(Schema.String)(found.artifact_hash);
       const artifactPath = yield* blobs.path(yield* Schema.decodeEffect(MediaHash)(hash));
+      if (stage === "highlights") {
+        yield* sql`INSERT INTO highlights SELECT lower(hex(randomblob(16))),${input.job.id},h.class,h.half,h.video_seconds,h.confidence,h.segment_id,h.attempt_id,h.clip_blob_hash FROM highlights h WHERE h.job_id=(SELECT job_id FROM job_stages WHERE stage_run_key=${key} AND stage='highlights' AND job_id<>${input.job.id} LIMIT 1) AND NOT EXISTS (SELECT 1 FROM highlights WHERE job_id=${input.job.id})`.pipe(
+          persistence("reuseHighlights"),
+        );
+      }
       yield* link.pipe(persistence("linkStage"));
       const result = yield* Schema.decodeEffect(Schema.fromJsonString(stageResult))(
         found.result_json,
@@ -102,7 +115,10 @@ export const makeStageRuns = Effect.gen(function* () {
       persistence("startStage"),
     );
     yield* link.pipe(persistence("linkStage"));
-    const output = yield* stage === "verdicts" ? llm.run(input, key) : logic.run(stage, input, key);
+    const executed = yield* stage === "verdicts"
+      ? llm.run(input, key)
+      : logic.run(stage, input, key);
+    const output = input.partial ? { ...executed, partial: input.partial } : executed;
     const temp = yield* blobs.tempPath("json");
     yield* fs
       .writeFileString(temp, JSON.stringify(output.artifact))

@@ -1,5 +1,13 @@
 import { Context, Effect, Fiber, Layer, Queue, Schema } from "effect";
-import { Conflict, NotFound, PersistenceError, JobError, JobId, type Job } from "@tcc/contracts";
+import {
+  Conflict,
+  NotFound,
+  PersistenceError,
+  JobError,
+  JobId,
+  type PartialReason,
+  type Job,
+} from "@tcc/contracts";
 import { SqlClient } from "effect/sql";
 import { Repository, emptyCoverage, persistence } from "./repository.ts";
 import { Sources } from "./sources.ts";
@@ -16,6 +24,7 @@ export const makeRunner = Effect.gen(function* () {
   const run = Effect.fn("Runner.run")(function* (job: Job) {
     const inputs: Array<StageInput["inputs"][number]> = [];
     let coverage = emptyCoverage;
+    let partial: PartialReason | undefined;
     for (const stage of stages) {
       yield* repo.change(job.id, { _tag: "Progress", stage, done: 0, total: 1 });
       const media = yield* sources.check(job.sourceId, stage);
@@ -29,6 +38,7 @@ export const makeRunner = Effect.gen(function* () {
         media,
         inputs,
         retryAmbiguous: flags[0]?.retry_ambiguous === 1,
+        ...(partial ? { partial } : {}),
         progress: (done, total) =>
           repo
             .change(job.id, { _tag: "Progress", stage, done, total })
@@ -36,15 +46,14 @@ export const makeRunner = Effect.gen(function* () {
       });
       inputs.push(output);
       if (output.coverage) coverage = output.coverage;
-      if (output.partial) {
-        yield* repo.change(job.id, {
-          _tag: "Complete",
-          state: { _tag: "Partial", coverage, reason: output.partial },
-        });
-        return;
-      }
+      partial = output.partial ?? partial;
     }
-    yield* repo.change(job.id, { _tag: "Complete", state: { _tag: "Succeeded", coverage } });
+    yield* repo.change(job.id, {
+      _tag: "Complete",
+      state: partial
+        ? { _tag: "Partial", coverage, reason: partial }
+        : { _tag: "Succeeded", coverage },
+    });
   });
   const handled = Effect.fn("Runner.handled")((job: Job) =>
     run(job).pipe(

@@ -6,7 +6,7 @@ import { JobError, type StageRunKey } from "@tcc/contracts";
 import { Repository, emptyCoverage } from "./repository.ts";
 import { Runner } from "./runner.ts";
 import { Sources } from "./sources.ts";
-import { type StageLogic, type StageOutput } from "./stages.ts";
+import { StageRuns, stages, type StageInput, type StageLogic, type StageOutput } from "./stages.ts";
 import { fixtureServices } from "./fixtures.testkit.ts";
 
 const output = {
@@ -182,5 +182,100 @@ it.effect("V5 changing source between stages raises SourceChanged", () =>
       }
       assert.strictEqual((yield* repo.job(job.id)).sourceId, job.sourceId);
     }).pipe(Effect.provide(fixtureServices(directory)));
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);
+
+it.effect("forced jobs reuse all stage keys and never invoke the LLM twice", () =>
+  Effect.gen(function* () {
+    const { directory, path } = yield* setup;
+    let calls = 0;
+    yield* Effect.gen(function* () {
+      const repo = yield* Repository;
+      const sources = yield* Sources;
+      const runs = yield* StageRuns;
+      const first = yield* create(path);
+      const second = yield* repo.create(first.sourceId, undefined, true);
+      const keys = [];
+      for (const job of [first, second]) {
+        const inputs: Array<StageInput["inputs"][number]> = [];
+        const media = yield* sources.check(job.sourceId, "probe");
+        for (const stage of stages)
+          inputs.push(
+            yield* runs.execute(stage, {
+              job,
+              media,
+              inputs,
+              retryAmbiguous: false,
+              progress: () => Effect.void,
+            }),
+          );
+        keys.push(inputs.map((item) => item.key));
+      }
+      assert.deepStrictEqual(keys[0], keys[1]);
+      assert.strictEqual(calls, 1);
+    }).pipe(
+      Effect.provide(
+        fixtureServices(
+          directory,
+          ":memory:",
+          logic(() => Effect.succeed(output)),
+          {
+            run: () =>
+              Effect.sync(() => {
+                calls++;
+                return output;
+              }),
+          },
+        ),
+      ),
+    );
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);
+
+it.effect("partial verdicts publish highlights and leave them rebuildable on resume", () =>
+  Effect.gen(function* () {
+    const { directory, path } = yield* setup;
+    let highlights = 0;
+    let verdicts = 0;
+    const partial = { _tag: "AmbiguousAttempts", count: 1 } as const;
+    const stageLogic = logic((stage) =>
+      Effect.sync(() => {
+        if (stage === "highlights") highlights++;
+        return output;
+      }),
+    );
+    yield* Effect.gen(function* () {
+      const job = yield* create(path);
+      const media = yield* (yield* Sources).check(job.sourceId, "probe");
+      const runs = yield* StageRuns;
+      for (let run = 0; run < 2; run++) {
+        const inputs: Array<StageInput["inputs"][number]> = [];
+        let incomplete: typeof partial | undefined;
+        for (const stage of stages) {
+          const result = yield* runs.execute(stage, {
+            job,
+            media,
+            inputs,
+            retryAmbiguous: run > 0,
+            ...(incomplete ? { partial: incomplete } : {}),
+            progress: () => Effect.void,
+          });
+          inputs.push(result);
+          if (result.partial) incomplete = partial;
+        }
+      }
+      assert.strictEqual(verdicts, 2);
+      assert.strictEqual(highlights, 2);
+      const rows = yield* (yield* SqlClient.SqlClient)<{
+        status: string;
+      }>`SELECT status FROM stage_runs WHERE stage='highlights'`;
+      assert.strictEqual(rows[0]?.status, "Finished");
+    }).pipe(
+      Effect.provide(
+        fixtureServices(directory, ":memory:", stageLogic, {
+          run: () => Effect.sync(() => ({ ...output, ...(verdicts++ === 0 ? { partial } : {}) })),
+        }),
+      ),
+    );
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
