@@ -221,3 +221,17 @@ it.effect("free reservations bypass exhausted job and account admission", () =>
     );
   }).pipe(Effect.provide(services)),
 );
+
+it.effect("database enforces foreign keys after migrations", () =>
+  Effect.gen(function* () {
+    const sql = yield* SqlClient.SqlClient;
+    const rows = yield* sql<{ foreign_keys: number }>`PRAGMA foreign_keys`;
+    assert.strictEqual(rows[0]?.foreign_keys, 1);
+    assert.strictEqual(
+      (yield* sql`INSERT INTO sources VALUES ('orphan','{}','missing',1,0)`.pipe(Effect.result))
+        ._tag,
+      "Failure",
+    );
+    assert.deepStrictEqual(yield* sql`PRAGMA foreign_key_check`, []);
+  }).pipe(Effect.provide(db)),
+);
