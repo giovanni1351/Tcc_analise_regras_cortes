@@ -15,6 +15,7 @@ export interface ProbedMedia {
   readonly path: string;
   readonly hash: MediaHash;
   readonly probe: Probe;
+  readonly sourceStat: { readonly size: number; readonly mtimeMs: number };
 }
 
 export interface Scene {
@@ -118,6 +119,7 @@ export class ProviderError extends Schema.TaggedError<
   httpStatus: Schema.NullOr(Schema.Number),
   retryAfterMs: Schema.NullOr(Schema.Number),
   message: Schema.String,
+  responseBody: Schema.optional(Schema.Unknown),
 }) {}
 
 export class MediaProbe extends Context.Service<

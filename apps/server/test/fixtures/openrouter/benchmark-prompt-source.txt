@@ -1,0 +1,30 @@
+    messages: [
+      {
+        role: "system",
+        content:
+          "You detect soccer highlight events in one clipped video segment. Return exactly one top-level JSON object matching the requested schema. Never wrap the object in an array and never repeat the schema.",
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: [
+              `Allowed event classes: ${targetEventClasses.join(", ")}.`,
+              "Use timestamp_seconds relative to the start of this video segment.",
+              "If there are no allowed events, return segment_kind Non-highlight and an empty events array.",
+              "If there is one allowed event, return segment_kind Single-highlight.",
+              "If there are multiple allowed events, return segment_kind Multi-highlight.",
+            ].join("\n"),
+          },
+          {
+            type: "video_url",
+            video_url: {
+              url: input.videoDataUrl,
+            },
+          },
+        ],
+      },
+    ],
+  };
+}

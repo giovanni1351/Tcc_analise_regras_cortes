@@ -1,0 +1,7 @@
+export const targetEventClasses = [
+  "Goal",
+  "Shot on target",
+  "Shot off target",
+  "Foul",
+  "Offside",
+] as const;

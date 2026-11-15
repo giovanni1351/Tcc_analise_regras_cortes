@@ -90,7 +90,7 @@ export const Api = HttpApi.make("HighlightsApi").add(
     }),
     HttpApiEndpoint.get("getBlob", "/blobs/:hash", {
       params: { hash: MediaHash },
-      success: Schema.Uint8Array,
+      success: Schema.Uint8Array.pipe(HttpApiSchema.asUint8Array()),
       error: errors,
     }),
     HttpApiEndpoint.get("budget", "/budget", { success: Budget, error: errors }),
