@@ -235,6 +235,8 @@ export const makeRepository = Effect.gen(function* () {
     );
   });
   const recover = Effect.fn("Jobs.recover")(function* () {
+    yield* sql`DELETE FROM retry_permissions`.pipe(persistence("recover"));
+    yield* sql`UPDATE job_options SET retry_ambiguous=0`.pipe(persistence("recover"));
     const rows = yield* sql<{ id: string }>`SELECT id FROM jobs WHERE status='Running'`.pipe(
       persistence("recover"),
     );

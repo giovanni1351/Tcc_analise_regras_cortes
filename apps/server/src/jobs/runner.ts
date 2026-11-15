@@ -44,6 +44,14 @@ export const makeRunner = Effect.gen(function* () {
             .change(job.id, { _tag: "Progress", stage, done, total })
             .pipe(Effect.asVoid, Effect.orDie),
       });
+      if (stage === "verdicts") {
+        yield* sql`DELETE FROM retry_permissions WHERE job_id=${job.id}`.pipe(
+          persistence("clearRetryPermissions"),
+        );
+        yield* sql`UPDATE job_options SET retry_ambiguous=0 WHERE job_id=${job.id}`.pipe(
+          persistence("clearResumeOptions"),
+        );
+      }
       inputs.push(output);
       if (output.coverage) coverage = output.coverage;
       partial = output.partial ?? partial;
@@ -102,6 +110,11 @@ export const makeRunner = Effect.gen(function* () {
           yield* sql`INSERT INTO job_options VALUES (${id},${retryAmbiguous ? 1 : 0}) ON CONFLICT(job_id) DO UPDATE SET retry_ambiguous=excluded.retry_ambiguous`.pipe(
             persistence("resume"),
           );
+          yield* sql`DELETE FROM retry_permissions WHERE job_id=${id}`.pipe(persistence("resume"));
+          if (retryAmbiguous)
+            yield* sql`INSERT INTO retry_permissions SELECT ${id},id FROM llm_attempts WHERE state='Ambiguous'`.pipe(
+              persistence("resume"),
+            );
           return updated;
         }),
       )

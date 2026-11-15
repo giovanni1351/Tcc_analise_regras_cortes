@@ -53,6 +53,10 @@ const initial = Effect.gen(function* () {
 export const migrate = SqliteMigrator.run({
   loader: SqliteMigrator.fromRecord({
     "001_initial": initial,
+    "006_retry_permissions": Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
+      yield* sql`CREATE TABLE retry_permissions (job_id TEXT NOT NULL REFERENCES jobs(id), attempt_id TEXT NOT NULL REFERENCES llm_attempts(id), PRIMARY KEY(job_id,attempt_id))`;
+    }),
     "005_source_refs": Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
       yield* sql`DROP INDEX sources_media`;

@@ -57,8 +57,9 @@ export const llmStepLayer = (accountCapUsd: number) =>
                 SELECT a.id FROM llm_attempts a JOIN segments s ON s.id=a.segment_id
                 WHERE a.state IN ('Sent','Ambiguous') AND a.model=${model}
                 AND a.prompt_version=${input.job.spec.llm.promptVersion}
-                AND s.blob_hash=${segment.blob} AND a.inference_json='{"maxTokens":4096}' LIMIT 1`;
-              if (unresolved.length && !model.endsWith(":free") && !input.retryAmbiguous) {
+                AND s.blob_hash=${segment.blob} AND a.inference_json='{"maxTokens":4096}'
+                AND NOT (a.state='Ambiguous' AND ${input.retryAmbiguous ? 1 : 0}=1 AND EXISTS (SELECT 1 FROM retry_permissions p WHERE p.job_id=${input.job.id} AND p.attempt_id=a.id)) LIMIT 1`;
+              if (unresolved.length && !model.endsWith(":free")) {
                 coverage.ambiguous++;
                 continue;
               }

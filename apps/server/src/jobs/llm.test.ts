@@ -7,11 +7,12 @@ import { BlobStore, OpenRouter } from "../services.ts";
 import { attemptLedgerLayer } from "../llm/ledger.ts";
 import { fixtureServices } from "./fixtures.testkit.ts";
 import { defaultSpec, Repository } from "./repository.ts";
+import { Runner } from "./runner.ts";
 import { Sources } from "./sources.ts";
 import { LlmStep } from "./stages.ts";
 import { llmStepLayer } from "./llm.ts";
 
-for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted"] as const)
+for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery"] as const)
   it.effect(`clips with ${state} attempts are protected across jobs and segment ids`, () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
@@ -25,7 +26,7 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted"] as const)
           Effect.gen(function* () {
             calls++;
             yield* Deferred.succeed(started, undefined);
-            if (state === "Interrupted") return yield* Effect.never;
+            if (state === "Interrupted" || state === "Recovery") return yield* Effect.never;
             return {
               httpStatus: 200,
               body: {
@@ -81,9 +82,23 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted"] as const)
         const temp = yield* blobs.tempPath("bin");
         yield* fs.writeFileString(temp, "video");
         yield* blobs.publish(temp, "bin");
+        if (state === "Recovery") {
+          yield* repo.change(first.id, { _tag: "Start" });
+          yield* repo.change(first.id, {
+            _tag: "Complete",
+            state: {
+              _tag: "Partial",
+              coverage: { segments: 1, valid: 0, invalid: 0, ambiguous: 1, notSent: 0 },
+              reason: { _tag: "AmbiguousAttempts", count: 1 },
+            },
+          });
+          yield* sql`INSERT INTO llm_attempts (id,job_id,segment_id,model,prompt_version,attempt_number,state,reserved_usd,created_at,updated_at) VALUES ('old',${first.id},'segment','paid',${first.spec.llm.promptVersion},1,'Ambiguous',0,'old','old')`;
+          yield* (yield* Runner).resume(first.id, true);
+          yield* repo.claim();
+        }
         const media = yield* (yield* Sources).check(source.id, "verdicts");
         const step = yield* LlmStep;
-        for (const [index, job] of [first, second].entries()) {
+        for (const [index, job] of [first, state === "Recovery" ? first : second].entries()) {
           if (index === 1) {
             yield* sql`INSERT INTO stage_runs (key,stage,version,params_json,status) VALUES ('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb','verdicts','test','{}','Running')`;
             yield* sql`INSERT INTO segments VALUES ('segment2',${key},'window',${source.mediaHash},0,20)`;
@@ -98,15 +113,31 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted"] as const)
               job,
               media,
               inputs: [{ stage: "segments", key, artifactPath }],
-              retryAmbiguous: false,
+              retryAmbiguous:
+                state === "Recovery" &&
+                (yield* sql<{
+                  retry_ambiguous: number;
+                }>`SELECT retry_ambiguous FROM job_options WHERE job_id=${first.id}`)[0]
+                  ?.retry_ambiguous === 1,
               progress: () => Effect.void,
             },
             index === 0 ? key : yield* Schema.decodeEffect(StageRunKey)("b".repeat(64)),
           );
-          if (index === 0 && state === "Interrupted") {
+          if (index === 0 && (state === "Interrupted" || state === "Recovery")) {
             const fiber = yield* Effect.forkChild(run);
             yield* Deferred.await(started);
             yield* Fiber.interrupt(fiber);
+            if (state === "Recovery") {
+              yield* sql`UPDATE llm_attempts SET state='Sent' WHERE id<>'old'`;
+              yield* repo.recover();
+              assert.strictEqual(
+                (yield* sql<{
+                  retry_ambiguous: number;
+                }>`SELECT retry_ambiguous FROM job_options WHERE job_id=${first.id}`)[0]
+                  ?.retry_ambiguous,
+                0,
+              );
+            }
           } else {
             const result = yield* run;
             assert.strictEqual(
@@ -121,12 +152,21 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted"] as const)
         }
         assert.strictEqual(calls, 1);
         const rows = yield* sql<{
+          id: string;
           job_id: string;
           state: string;
-        }>`SELECT job_id,state FROM llm_attempts`;
+        }>`SELECT id,job_id,state FROM llm_attempts`;
         assert.deepStrictEqual(
-          rows.map((r) => ({ ...r })),
-          [{ job_id: first.id, state: state === "Interrupted" ? "Ambiguous" : state }],
+          rows
+            .filter((r) => state !== "Recovery" || r.job_id === first.id)
+            .filter((r) => r.id !== "old")
+            .map((r) => ({ job_id: r.job_id, state: r.state })),
+          [
+            {
+              job_id: first.id,
+              state: state === "Interrupted" || state === "Recovery" ? "Ambiguous" : state,
+            },
+          ],
         );
       }).pipe(Effect.provide(llm));
     }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
