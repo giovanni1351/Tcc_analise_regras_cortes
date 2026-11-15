@@ -133,6 +133,8 @@ const makeComparison = Effect.gen(function* () {
               true,
             );
             yield* repo.change(job.id, { _tag: "Cancel" });
+            if (options.retryAmbiguous)
+              yield* sql`INSERT INTO retry_permissions SELECT ${job.id},id FROM llm_attempts WHERE state='Ambiguous'`;
             return job;
           }),
         );
