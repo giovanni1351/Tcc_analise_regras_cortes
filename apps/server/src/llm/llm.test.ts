@@ -225,3 +225,11 @@ it.effect("times out an unresponsive provider using TestClock", () =>
     assert.strictEqual((yield* Fiber.join(fiber)).category, "Timeout");
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
+
+it.effect("seeds the daily free quota from persisted attempts", () =>
+  Effect.gen(function* () {
+    const limiter = yield* FreeModelLimiter;
+    const denied = yield* limiter.acquire.pipe(Effect.flip);
+    assert.strictEqual(denied.period, "day");
+  }).pipe(Effect.provide(freeModelLimiterLayer(50, 50))),
+);

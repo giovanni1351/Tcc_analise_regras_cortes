@@ -1,5 +1,5 @@
-import { Effect, FileSystem, Option, Schema, Stream } from "effect";
-import { ChildProcess, ChildProcessSpawner } from "effect/process";
+import { Context, Effect, FileSystem, Layer, Schema } from "effect";
+import { SqliteClient } from "@effect/sql-sqlite-node";
 
 export class DataDirectoryLocked extends Schema.TaggedError<
   DataDirectoryLocked,
@@ -10,27 +10,16 @@ export const acquireDataDirectoryLock = Effect.fn("DataDirectory.lock")(function
   directory: string,
 ) {
   const fs = yield* FileSystem.FileSystem;
-  const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
   yield* fs.makeDirectory(directory, { recursive: true });
   const path = `${directory}/server.lock`;
-  // flock releases on process exit; stdin EOF also releases it if the server crashes.
-  const child = yield* spawner
-    .spawn(
-      ChildProcess.make("flock", [
-        "--nonblock",
-        "--conflict-exit-code",
-        "73",
-        path,
-        "sh",
-        "-c",
-        "printf locked; cat",
-      ]),
-    )
-    .pipe(Effect.mapError((cause) => new DataDirectoryLocked({ path, cause })));
-  const ready = yield* Stream.runHead(child.stdout).pipe(
-    Effect.mapError((cause) => new DataDirectoryLocked({ path, cause })),
-  );
-  if (Option.isNone(ready))
-    return yield* new DataDirectoryLocked({ path, cause: "Exclusive lock unavailable" });
-  return child;
+  const context = yield* Layer.build(
+    SqliteClient.layer({ filename: path, disableWAL: true, busyTimeout: 0 }),
+  ).pipe(Effect.mapError((cause) => new DataDirectoryLocked({ path, cause })));
+  const sql = Context.get(context, SqliteClient.SqliteClient);
+  yield* Effect.gen(function* () {
+    yield* sql`PRAGMA locking_mode=EXCLUSIVE`;
+    yield* sql`BEGIN EXCLUSIVE`;
+    yield* sql`CREATE TABLE IF NOT EXISTS server_lock (id INTEGER PRIMARY KEY)`;
+    yield* sql`COMMIT`;
+  }).pipe(Effect.mapError((cause) => new DataDirectoryLocked({ path, cause })));
 });

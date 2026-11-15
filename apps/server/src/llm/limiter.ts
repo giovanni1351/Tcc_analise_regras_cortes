@@ -13,13 +13,13 @@ export class FreeModelLimiter extends Context.Service<
     readonly acquire: Effect.Effect<void, FreeLimit>;
   }
 >()("@tcc/server/llm/limiter/FreeModelLimiter") {}
-export const freeModelLimiterLayer = (dailyCap = 50) =>
+export const freeModelLimiterLayer = (dailyCap = 50, initialDaily = 0) =>
   Layer.effect(
     FreeModelLimiter,
     Effect.gen(function* () {
       const state = yield* Ref.make<{ day: number; daily: number; recent: number[] }>({
-        day: -1,
-        daily: 0,
+        day: Math.floor((yield* Clock.currentTimeMillis) / 86_400_000),
+        daily: initialDaily,
         recent: [],
       });
       const acquire = Effect.fn("FreeModelLimiter.acquire")(function* () {
