@@ -92,6 +92,7 @@ export const Coverage = Schema.Struct({
   notSent: Count,
 });
 export const PartialReason = Schema.Union([
+  Schema.TaggedStruct("FreeDailyLimit", { retryAfterMs: NonNegative }),
   Schema.TaggedStruct("BudgetExceeded", { capUsd: NonNegative, committedUsd: NonNegative }),
   Schema.TaggedStruct("AmbiguousAttempts", { count: Count }),
 ]);

@@ -96,6 +96,7 @@ export const openRouterLayer = (apiKey: string, timeoutMs = 120_000) =>
                     httpStatus: null,
                     retryAfterMs: limit.retryAfterMs,
                     message: `Free model ${limit.period} limit`,
+                    quotaPeriod: limit.period,
                     sent: false,
                   }),
               ),

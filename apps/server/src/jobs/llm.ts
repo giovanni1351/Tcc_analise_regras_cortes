@@ -145,6 +145,11 @@ export const llmStepLayer = (accountCapUsd: number) =>
                   break;
                 }
                 yield* ledger.fail(id, error);
+                if (error.quotaPeriod === "day") {
+                  coverage.notSent++;
+                  partial = { _tag: "FreeDailyLimit", retryAfterMs: error.retryAfterMs ?? 0 };
+                  break;
+                }
                 const ambiguous =
                   error.sent !== false &&
                   !(error.category === "Upstream" && error.httpStatus === 200) &&

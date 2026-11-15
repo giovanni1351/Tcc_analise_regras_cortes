@@ -3,7 +3,7 @@ import { assert, it } from "@effect/vitest";
 import { Deferred, Effect, Fiber, FileSystem, Layer, Schema } from "effect";
 import { SqlClient } from "effect/sql";
 import { StageRunKey } from "@tcc/contracts";
-import { BlobStore, OpenRouter } from "../services.ts";
+import { BlobStore, OpenRouter, ProviderError } from "../services.ts";
 import { attemptLedgerLayer } from "../llm/ledger.ts";
 import { fixtureServices } from "./fixtures.testkit.ts";
 import { defaultSpec, Repository } from "./repository.ts";
@@ -12,7 +12,7 @@ import { Sources } from "./sources.ts";
 import { LlmStep } from "./stages.ts";
 import { llmStepLayer } from "./llm.ts";
 
-for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery"] as const)
+for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery", "Daily"] as const)
   it.effect(`clips with ${state} attempts are protected across jobs and segment ids`, () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
@@ -25,6 +25,16 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery"]
         complete: () =>
           Effect.gen(function* () {
             calls++;
+            if (state === "Daily")
+              return yield* new ProviderError({
+                category: "RateLimited",
+                httpStatus: null,
+                retryAfterMs: 86_400_000,
+                message: "Free model day limit",
+                sent: false,
+                quotaPeriod: "day",
+              });
+
             yield* Deferred.succeed(started, undefined);
             if (state === "Interrupted" || state === "Recovery") return yield* Effect.never;
             return {
@@ -78,6 +88,17 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery"]
             },
           ]),
         );
+        if (state === "Daily") {
+          yield* sql`INSERT INTO segments VALUES ('remaining',${key},'window',${source.mediaHash},0,20)`;
+          const text = yield* fs.readFileString(artifactPath);
+          yield* fs.writeFileString(
+            artifactPath,
+            text.slice(0, -1) +
+              "," +
+              text.slice(1, -1).replace('"id":"segment"', '"id":"remaining"') +
+              "]",
+          );
+        }
         const blobs = yield* BlobStore;
         const temp = yield* blobs.tempPath("bin");
         yield* fs.writeFileString(temp, "video");
@@ -140,13 +161,21 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery"]
             }
           } else {
             const result = yield* run;
+            if (state === "Daily")
+              assert.deepStrictEqual(result.partial, {
+                _tag: "FreeDailyLimit",
+                retryAfterMs: 86_400_000,
+              });
             assert.strictEqual(
-              index === 1 && state !== "Answered"
-                ? result.coverage?.ambiguous
-                : result.coverage?.valid,
-              1,
+              state === "Daily"
+                ? result.coverage?.notSent
+                : index === 1 && state !== "Answered"
+                  ? result.coverage?.ambiguous
+                  : result.coverage?.valid,
+              state === "Daily" ? 2 : 1,
             );
           }
+          if (state === "Daily") break;
           if (index === 0 && (state === "Sent" || state === "Ambiguous"))
             yield* sql`UPDATE llm_attempts SET state=${state},cost_usd=NULL,verdict_json=NULL`;
         }
@@ -164,7 +193,12 @@ for (const state of ["Answered", "Sent", "Ambiguous", "Interrupted", "Recovery"]
           [
             {
               job_id: first.id,
-              state: state === "Interrupted" || state === "Recovery" ? "Ambiguous" : state,
+              state:
+                state === "Daily"
+                  ? "Failed"
+                  : state === "Interrupted" || state === "Recovery"
+                    ? "Ambiguous"
+                    : state,
             },
           ],
         );
