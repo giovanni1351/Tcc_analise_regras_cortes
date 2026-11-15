@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Local HTTP API that turns a soccer broadcast into timestamped highlights: scene cuts and object detection on your machine, a rule filter, and a multimodal LLM for the final call.">
+<title>Highlights API</title>
+<style>
+:root {
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --sunken: #efede6;
+  --ink: #1b1d1a;
+  --muted: #5d625a;
+  --line: #dcd9cf;
+  --accent: #1f7a4d;
+  --accent-soft: #e2f1e8;
+  --warn: #9a5b00;
+  --warn-soft: #fbeed6;
+  --get: #1f6fb2;
+  --post: #1f7a4d;
+  --code-bg: #f1efe8;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121411;
+    --surface: #1a1d19;
+    --sunken: #161814;
+    --ink: #e8e9e3;
+    --muted: #9da397;
+    --line: #2c302a;
+    --accent: #5cc98f;
+    --accent-soft: #1d3326;
+    --warn: #e6b05c;
+    --warn-soft: #33281a;
+    --get: #6fb2ec;
+    --post: #5cc98f;
+    --code-bg: #10120f;
+    --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121411; --surface: #1a1d19; --sunken: #161814; --ink: #e8e9e3; --muted: #9da397;
+  --line: #2c302a; --accent: #5cc98f; --accent-soft: #1d3326; --warn: #e6b05c; --warn-soft: #33281a;
+  --get: #6fb2ec; --post: #5cc98f; --code-bg: #10120f; --shadow: none;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+code, pre, kbd { font-family: var(--mono); font-size: 0.875em; }
+:not(pre) > code { background: var(--code-bg); border: 1px solid var(--line); border-radius: 4px; padding: 0.05em 0.35em; overflow-wrap: anywhere; }
+.layout { display: grid; grid-template-columns: 232px minmax(0, 1fr); max-width: 1180px; margin: 0 auto; gap: 48px; padding: 0 24px; }
+nav.toc { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; padding: 40px 0 24px; font-size: 14px; }
+nav.toc .brand { display: block; font-weight: 700; color: var(--ink); text-decoration: none; font-size: 15px; margin-bottom: 20px; }
+nav.toc .brand span { color: var(--muted); font-weight: 500; }
+nav.toc h4 { margin: 18px 0 6px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+nav.toc a { display: block; color: var(--muted); text-decoration: none; padding: 3px 0 3px 10px; border-left: 2px solid transparent; }
+nav.toc a:hover { color: var(--ink); border-left-color: var(--line); }
+nav.toc a .m { font: 600 10px var(--mono); margin-right: 6px; }
+nav.toc a .m.get { color: var(--get); } nav.toc a .m.post { color: var(--post); }
+main { padding: 40px 0 96px; min-width: 0; }
+header.hero { padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.eyebrow { font: 600 12px var(--mono); color: var(--accent); letter-spacing: 0.04em; text-transform: uppercase; }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.1; margin: 8px 0 14px; letter-spacing: -0.02em; }
+.lede { font-size: 18px; color: var(--muted); max-width: 64ch; margin: 0 0 20px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.facts li { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--muted); }
+.facts li b { color: var(--ink); font-weight: 600; }
+section { padding-top: 40px; }
+h2 { font-size: 24px; letter-spacing: -0.01em; margin: 0 0 12px; }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+p, li { max-width: 72ch; }
+.muted { color: var(--muted); }
+.pipeline { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 20px 0 10px; }
+.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 10px 9px; position: relative; box-shadow: var(--shadow); }
+.stage b { display: block; font: 600 13px var(--mono); }
+.stage span { display: block; font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.stage.remote { border-color: var(--warn); background: var(--warn-soft); }
+.stage.remote b { color: var(--warn); }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); margin-right: 6px; vertical-align: -1px; }
+.legend i.remote { border-color: var(--warn); background: var(--warn-soft); }
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; line-height: 1.55; margin: 10px 0 16px; position: relative; }
+pre .c { color: var(--muted); }
+.copy { position: absolute; top: 8px; right: 8px; font: 500 11px var(--sans); color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 2px 8px; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+pre:hover .copy, .copy:focus-visible { opacity: 1; }
+.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+.steps > li { counter-increment: step; position: relative; padding-left: 40px; margin-bottom: 18px; max-width: none; }
+.steps > li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 700 13px/26px var(--sans); text-align: center; }
+.steps > li > b { display: block; margin-bottom: 2px; }
+.callout { border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--surface); border-radius: 6px; padding: 12px 16px; margin: 16px 0; font-size: 15px; }
+.callout.warn { border-left-color: var(--warn); }
+.callout p { margin: 0; }
+.table-wrap { overflow-x: auto; margin: 10px 0 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; background: var(--sunken); }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.endpoint { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px 6px; margin: 16px 0; box-shadow: var(--shadow); }
+.endpoint h3 { margin: 0 0 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 16px; }
+.endpoint h3 code { background: none; border: 0; padding: 0; font-size: 15px; }
+.verb { font: 700 11px var(--mono); padding: 3px 7px; border-radius: 4px; letter-spacing: 0.03em; color: #fff; }
+.verb.get { background: var(--get); } .verb.post { background: var(--post); }
+.status { font: 500 12px var(--mono); color: var(--muted); margin-left: auto; }
+.endpoint p { margin: 6px 0 10px; }
+.endpoint dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; margin: 8px 0 12px; font-size: 14px; }
+.endpoint dt { color: var(--muted); }
+.endpoint dd { margin: 0; }
+.states { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 14px 0; font: 600 13px var(--mono); }
+.states .s { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); }
+.states .arrow { color: var(--muted); font-weight: 400; }
+.states .s.ok { border-color: var(--accent); color: var(--accent); }
+.states .s.part { border-color: var(--warn); color: var(--warn); }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.stat .v { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat .k { font-size: 13px; color: var(--muted); }
+footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.theme { position: fixed; top: 14px; right: 16px; font: 500 12px var(--sans); background: var(--surface); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; z-index: 2; }
+@media (max-width: 920px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0 16px; }
+  nav.toc { display: none; }
+  .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .endpoint { padding: 14px 14px 4px; }
+  .endpoint dl { grid-template-columns: minmax(0, 1fr); gap: 0 0; }
+  .endpoint dt { margin-top: 6px; }
+  .status { margin-left: 0; width: 100%; }
+}
+</style>
+</head>
+<body>
+<button class="theme" type="button" id="theme" aria-label="Toggle color theme">Theme</button>
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <a class="brand" href="#top">Highlights API <span>v1</span></a>
+  <h4>Start</h4>
+  <a href="#overview">Overview</a>
+  <a href="#local">Run it locally</a>
+  <a href="#config">Configuration</a>
+  <a href="#cli">CLI</a>
+  <h4>Concepts</h4>
+  <a href="#sources">Sources</a>
+  <a href="#jobs">Jobs and caching</a>
+  <a href="#states">Job states</a>
+  <a href="#money">Paid calls and budget</a>
+  <h4>Endpoints</h4>
+  <a href="#ep-register-source"><span class="m post">POST</span>/sources</a>
+  <a href="#ep-get-source"><span class="m get">GET</span>/sources/:id</a>
+  <a href="#ep-create-job"><span class="m post">POST</span>/jobs</a>
+  <a href="#ep-list-jobs"><span class="m get">GET</span>/jobs</a>
+  <a href="#ep-get-job"><span class="m get">GET</span>/jobs/:id</a>
+  <a href="#ep-cancel"><span class="m post">POST</span>/jobs/:id/cancel</a>
+  <a href="#ep-resume"><span class="m post">POST</span>/jobs/:id/resume</a>
+  <a href="#ep-result"><span class="m get">GET</span>/jobs/:id/result</a>
+  <a href="#ep-blob"><span class="m get">GET</span>/blobs/:hash</a>
+  <a href="#ep-budget"><span class="m get">GET</span>/budget</a>
+  <a href="#ep-eval"><span class="m get">GET</span>evaluation</a>
+  <h4>Reference</h4>
+  <a href="#errors">Errors</a>
+  <a href="#schemas">Schemas</a>
+  <a href="#measured">Measured results</a>
+</nav>
+
+<main id="top">
+<header class="hero" id="overview">
+  <div class="eyebrow">TCC · soccer highlight detection</div>
+  <h1>Highlights API</h1>
+  <p class="lede">A local HTTP service that turns a soccer broadcast into timestamped highlights. Scene cuts and object detection run on your machine. A rule filter drops the stretches with nothing going on, and a multimodal LLM labels what's left.</p>
+  <ul class="facts">
+    <li>Base URL <b>http://127.0.0.1:3000</b></li>
+    <li>JSON over HTTP</li>
+    <li>No auth, localhost only</li>
+    <li>TypeScript + Effect</li>
+  </ul>
+</header>
+
+<section aria-labelledby="pipeline-h">
+  <h2 id="pipeline-h">How a job runs</h2>
+  <p>Every job goes through seven stages. Each stage's output is cached under a key built from its inputs, its parameters and the model weights. A later job reuses every stage whose inputs haven't changed.</p>
+  <div class="pipeline" role="list">
+    <div class="stage" role="listitem"><b>probe</b><span>hash and ffprobe the file</span></div>
+    <div class="stage" role="listitem"><b>scenes</b><span>TransNetV2 scene cuts</span></div>
+    <div class="stage" role="listitem"><b>detections</b><span>YOLO player, ball and referee counts</span></div>
+    <div class="stage" role="listitem"><b>windows</b><span>rule filter (config C)</span></div>
+    <div class="stage" role="listitem"><b>segments</b><span>40 s clips, 5 s overlap</span></div>
+    <div class="stage remote" role="listitem"><b>verdicts</b><span>multimodal LLM via OpenRouter</span></div>
+    <div class="stage" role="listitem"><b>highlights</b><span>merge overlaps, map to video time</span></div>
+  </div>
+  <div class="legend"><span><i></i>runs on your machine</span><span><i class="remote"></i>runs on OpenRouter</span></div>
+  <p>Changing only the rule reruns <code>windows</code> and everything after it. Scene cuts and detections, the slow part, are reused, and so is any LLM answer for a clip with identical bytes.</p>
+</section>
+
+<section id="local" aria-labelledby="local-h">
+  <h2 id="local-h">Run it locally</h2>
+  <p>Everything except the LLM call runs on your machine: the API server, its SQLite store, ffmpeg, and the CV worker that runs TransNetV2 and YOLO on the GPU or CPU.</p>
+
+  <h3>Requirements</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Tool</th><th>Version</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Linux x86-64</td><td>any recent</td><td>The Python environment pins CUDA 12.6 builds of PyTorch, so macOS isn't supported yet.</td></tr>
+      <tr><td><a href="https://mise.jdx.dev">mise</a></td><td>any</td><td>Installs the pinned Node and pnpm from <code>mise.toml</code>. You can install those by hand instead.</td></tr>
+      <tr><td>Node.js</td><td>26.13.1</td><td>Runs the server. Node 26 runs the TypeScript directly, so there's no build step.</td></tr>
+      <tr><td>pnpm</td><td>12.14.0</td><td>JavaScript dependencies.</td></tr>
+      <tr><td><a href="https://docs.astral.sh/uv/">uv</a></td><td>0.12 or later</td><td>Creates the Python environment for the CV worker. It needs Python 3.14, which uv can download for you.</td></tr>
+      <tr><td>ffmpeg and ffprobe</td><td>on <code>PATH</code></td><td>Probing, timestamps and clip encoding.</td></tr>
+      <tr><td>NVIDIA GPU</td><td>optional</td><td>CUDA runs a 45-minute half in about 5 minutes. The CPU works, just much slower.</td></tr>
+    </tbody>
+  </table></div>
+
+  <ol class="steps">
+    <li><b>Get the code</b>
+<pre><code>git clone https://github.com/giovanni1351/Tcc_analise_regras_cortes.git
+cd Tcc_analise_regras_cortes
+git checkout feat/design-video-analysis-api   <span class="c"># until PR #3 is merged</span></code></pre></li>
+    <li><b>Install dependencies</b>
+<pre><code>mise install            <span class="c"># Node 26.13.1 and pnpm 12.14.0</span>
+pnpm install
+uv sync --frozen        <span class="c"># Python env for the CV worker: torch, ultralytics, transnetv2-pytorch</span></code></pre>
+      <p class="muted">The YOLO weights (<code>best.pt</code>) are in the repository root. The TransNetV2 weights come with the <code>transnetv2-pytorch</code> package. Both are hashed into the cache keys, so swapping either one reruns only the stages that use it.</p></li>
+    <li><b>Try the API without a GPU or a key</b>
+<pre><code>TCC_DEV_FAKE_STAGES=true pnpm start serve</code></pre>
+      <p class="muted">Dev mode replaces probing and every pipeline stage with instant fakes. It's for building a client against the real contract. Any file works as a source.</p></li>
+    <li><b>Run the real server</b>
+<pre><code>export OPENROUTER_API_KEY=sk-or-...   <span class="c"># used only for the verdicts stage</span>
+pnpm start serve                      <span class="c"># listens on 127.0.0.1:3000</span></code></pre>
+      <p class="muted">The server starts the CV worker on demand. It uses the GPU when <code>torch.cuda.is_available()</code>, and you can force a device with <code>CV_DEVICE=cpu</code> or <code>CV_DEVICE=cuda</code>. The default model is a free OpenRouter model, so jobs cost $0 unless you choose a paid model.</p></li>
+    <li><b>Analyze a video</b>
+<pre><code><span class="c"># any local file</span>
+pnpm start analyze /videos/match.mkv
+
+<span class="c"># a SoccerNet half: league/season/game/half/resolution</span>
+TCC_SOCCERNET_ROOT=/data/soccernet \
+  pnpm start analyze "soccernet:england_epl/2014-2015/2015-04-11 - 19-30 Burnley 0 - 1 Arsenal/2/224p"
+
+pnpm start jobs              <span class="c"># list jobs and their state</span>
+pnpm start result &lt;job-id&gt;   <span class="c"># highlights once the job finishes</span></code></pre>
+      <p class="muted">SoccerNet halves resolve to <code>&lt;root&gt;/&lt;league&gt;/&lt;season&gt;/&lt;game&gt;/&lt;half&gt;_&lt;resolution&gt;.mkv</code>, the layout the official downloader writes.</p></li>
+    <li><b>Check your setup</b>
+<pre><code>pnpm test        <span class="c"># unit and integration tests</span>
+pnpm typecheck
+pnpm lint
+
+<span class="c"># CV parity: the worker against the reference Python on a 60 s clip (needs CUDA)</span>
+TCC_CV_TEST_VIDEO=/data/soccernet/.../2_224p.mkv pnpm test apps/server/src/cv</code></pre>
+      <p class="muted">The parity test skips itself without CUDA or a test video.</p></li>
+  </ol>
+
+  <div class="callout warn"><p><b>Paid models are opt-in.</b> The CLI refuses a paid model unless you pass it as an explicit argument, for example <code>pnpm start analyze match.mkv google/gemini-3.1-flash-lite</code>. With <code>OPENROUTER_BUDGET_USD</code> at its default of 0, the server refuses every paid call. For a hard ceiling, use a dedicated OpenRouter key with its own credit limit, at least $1.00 above what you plan to spend: OpenRouter won't run a video request below $1.00 of remaining credit.</p></div>
+</section>
+
+<section id="config" aria-labelledby="config-h">
+  <h2 id="config-h">Configuration</h2>
+  <p>All configuration comes from environment variables, read when the server starts.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Variable</th><th>Default</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>TCC_PORT</code></td><td><code>3000</code></td><td>Port on 127.0.0.1. The CLI uses it to find the server too.</td></tr>
+      <tr><td><code>TCC_DATA_DIR</code></td><td><code>~/.local/share/tcc-highlights</code></td><td>SQLite database and blob store. Only one server can hold a data directory at a time.</td></tr>
+      <tr><td><code>TCC_SOCCERNET_ROOT</code></td><td>set it</td><td>Root of the SoccerNet download, for <code>SoccerNetHalf</code> sources.</td></tr>
+      <tr><td><code>OPENROUTER_API_KEY</code></td><td>required</td><td>Used only by the verdicts stage. Not needed in dev mode.</td></tr>
+      <tr><td><code>OPENROUTER_BUDGET_USD</code></td><td><code>0</code></td><td>Account-wide spending limit for paid models, checked before every paid call.</td></tr>
+      <tr><td><code>OPENROUTER_FREE_DAILY_CAP</code></td><td><code>50</code></td><td>Daily request cap for free models. Use 1000 if your account has bought $10 or more in credits.</td></tr>
+      <tr><td><code>OPENROUTER_RESERVATION_USD_PER_SECOND</code></td><td><code>0.001</code></td><td>Cost bound per video second for a paid model with no recorded calls yet.</td></tr>
+      <tr><td><code>OPENROUTER_OUTPUT_USD_PER_TOKEN</code></td><td><code>0.00001</code></td><td>Output price used to bound each reservation.</td></tr>
+      <tr><td><code>TCC_MODEL</code></td><td>free Nemotron VL</td><td>Default model for <code>analyze</code>. It must be a free model; pass a paid model as an argument instead.</td></tr>
+      <tr><td><code>CV_DEVICE</code></td><td><code>auto</code></td><td><code>auto</code>, <code>cuda</code> or <code>cpu</code>.</td></tr>
+      <tr><td><code>TCC_DEV_FAKE_STAGES</code></td><td><code>false</code></td><td>Swap the media and pipeline stages for instant fakes.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="cli" aria-labelledby="cli-h">
+  <h2 id="cli-h">CLI</h2>
+  <p>The CLI is a thin client generated from the same contract as the server. Except for <code>serve</code>, every command talks to a running server.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>pnpm start serve</code></td><td>Start the server and its job runner.</td></tr>
+      <tr><td><code>pnpm start analyze &lt;path | soccernet:…&gt; [model] [--force]</code></td><td>Register a source and create a job. <code>--force</code> reruns a job whose spec matches an existing one.</td></tr>
+      <tr><td><code>pnpm start jobs</code></td><td>List jobs.</td></tr>
+      <tr><td><code>pnpm start result &lt;job-id&gt;</code></td><td>Print a job's highlights.</td></tr>
+      <tr><td><code>pnpm start budget</code></td><td>Paid spend: committed, reserved and ambiguous.</td></tr>
+      <tr><td><code>node apps/server/src/eval/score-job-cli.ts --job &lt;id&gt;</code></td><td>Score a SoccerNet job against its Labels-v2 annotations (F1 at a 5 s tolerance).</td></tr>
+      <tr><td><code>node apps/server/src/eval/tune-cli.ts …</code></td><td>Run a segmentation grid on study halves, with a dry-run cost estimate. See <code>apps/server/src/eval/README.md</code>.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="sources" aria-labelledby="sources-h">
+  <h2 id="sources-h">Sources</h2>
+  <p>A source is a video you register once. The server hashes and probes it. Two references to the same bytes share one media record, so they share every cached stage too.</p>
+<pre><code><span class="c">// a file on disk</span>
+{ "_tag": "LocalFile", "path": "/videos/match.mkv" }
+
+<span class="c">// a SoccerNet half, resolved under TCC_SOCCERNET_ROOT</span>
+{ "_tag": "SoccerNetHalf", "league": "england_epl", "season": "2014-2015",
+  "game": "2015-04-11 - 19-30 Burnley 0 - 1 Arsenal", "half": 2, "resolution": "224p" }</code></pre>
+  <p>A SoccerNet source tells the server which half it is, so its highlights carry <code>half</code>. For a local file, <code>half</code> is <code>null</code>.</p>
+</section>
+
+<section id="jobs" aria-labelledby="jobs-h">
+  <h2 id="jobs-h">Jobs and caching</h2>
+  <p>A job is one source plus one spec. Creating a job is idempotent: the same source and spec return the existing job unless you pass <code>force</code>. Leave the spec out to get the defaults.</p>
+<pre><code>{
+  "rule": { "_tag": "Zero", "short": 25, "zero": 0, "cluster": 1,
+            "preceding": true, "use_zero": true, "before": 10, "after": 16 },
+  "llm": { "model": "nvidia/nemotron-3.5-super-vl:free",
+           "promptVersion": "benchmark-v1", "maxCostUsd": 0.1 },
+  "clips": true,
+  "segmentation": { "maxSec": 40, "overlapSec": 5 }
+}</code></pre>
+  <ul>
+    <li><b>rule</b> is the pre-LLM filter. The default is the thesis's config C, which keeps about two thirds of a half. <code>Context</code> is the other rule family.</li>
+    <li><b>llm.maxCostUsd</b> caps this job's paid spend. The job stops as <code>Partial</code> before a call that would cross it.</li>
+    <li><b>clips</b> keeps an MP4 for each highlight, served from <code>/blobs</code>.</li>
+    <li><b>segmentation</b> sets the clip length sent to the LLM: <code>maxSec</code> between 10 and 120, and <code>overlapSec</code> under half of it. 40/5 was chosen by tuning; 20/4 scored lower.</li>
+  </ul>
+</section>
+
+<section id="states" aria-labelledby="states-h">
+  <h2 id="states-h">Job states</h2>
+  <div class="states" aria-label="Job state flow">
+    <span class="s">Queued</span><span class="arrow">→</span><span class="s">Running</span><span class="arrow">→</span>
+    <span class="s ok">Succeeded</span><span class="arrow">|</span><span class="s part">Partial</span><span class="arrow">|</span><span class="s">Failed</span><span class="arrow">|</span><span class="s">Cancelled</span>
+  </div>
+  <p><code>Running</code> carries the current stage and its progress. A single runner works through jobs one at a time. At startup, jobs left <code>Running</code> go back to <code>Queued</code> and skip every stage that already finished.</p>
+  <p><code>Partial</code> means the job finished, but some segments got no answer. <code>coverage</code> says how many, and <code>reason</code> says why:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Reason</th><th>What happened</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td><code>BudgetExceeded</code></td><td>The next call would cross the job cap or the account budget.</td><td>Raise the cap or budget, then resume.</td></tr>
+      <tr><td><code>FreeDailyLimit</code></td><td>The free model's daily quota ran out.</td><td>Resume after <code>retryAfterMs</code>.</td></tr>
+      <tr><td><code>CreditExhausted</code></td><td>OpenRouter refused for lack of credit.</td><td>Top up, then resume.</td></tr>
+      <tr><td><code>AmbiguousAttempts</code></td><td>A paid call was sent but its reply never arrived, so we can't know whether it was billed.</td><td>Resume with <code>retryAmbiguous: true</code> to send it again on purpose.</td></tr>
+    </tbody>
+  </table></div>
+  <p><code>coverage</code> counts the segments: <code>valid</code> answers, <code>invalid</code> answers (well-formed replies that broke the schema or were cut off, which count as data), <code>ambiguous</code>, and <code>notSent</code>.</p>
+</section>
+
+<section id="money" aria-labelledby="money-h">
+  <h2 id="money-h">Paid calls and budget</h2>
+  <p>A paid call can charge money and then fail before its reply reaches the database. So every attempt is written down before it's sent:</p>
+  <div class="states" aria-label="Attempt state flow">
+    <span class="s">Reserved</span><span class="arrow">→</span><span class="s">Sent</span><span class="arrow">→</span>
+    <span class="s ok">Answered</span><span class="arrow">|</span><span class="s">Failed</span><span class="arrow">|</span><span class="s part">Ambiguous</span>
+  </div>
+  <ul>
+    <li><b>Reserved:</b> admission is checked, and a pessimistic cost is held, in one transaction.</li>
+    <li><b>Sent:</b> recorded just before the request leaves.</li>
+    <li><b>Answered:</b> the reply is stored, and the reservation is replaced by its real cost.</li>
+    <li><b>Ambiguous:</b> the request was sent but no reply arrived, because of a timeout, a cancel or a crash. The reservation is kept. The call is never retried automatically, and no other job sends the same clip to the same model with the same prompt while it's unresolved.</li>
+  </ul>
+  <p>Free models reserve $0 and retry freely. Paid calls run one at a time.</p>
+</section>
+
+<section aria-labelledby="endpoints-h">
+  <h2 id="endpoints-h">Endpoints</h2>
+  <p class="muted">Requests and responses are JSON. Every endpoint can return the <a href="#errors">errors</a> below.</p>
+
+  <div class="endpoint" id="ep-register-source">
+    <h3><span class="verb post">POST</span><code>/sources</code><span class="status">200 Source</span></h3>
+    <p>Register a video. It's idempotent by reference, so registering the same path again returns the same source.</p>
+    <dl><dt>Body</dt><dd><a href="#sources">SourceRef</a></dd><dt>Errors</dt><dd>400 if the file is missing, the media can't be probed, or a SoccerNet path component is invalid. 409 if the file changed while it was being hashed.</dd></dl>
+<pre><code>curl -s localhost:3000/sources -H 'content-type: application/json' \
+  -d '{"_tag":"LocalFile","path":"/videos/match.mkv"}'
+
+{ "id": "d154e959-c0a8-468b-8357-a8fa01246770",
+  "ref": { "_tag": "LocalFile", "path": "/videos/match.mkv" },
+  "mediaHash": "7a86080c081872aaec5d52a9a6cf8c20d94b79a989e5088bef393d3ad320135f",
+  "probe": { "duration": 2923.003, "fps": 25, "size": 201389318, "frameCount": 73075 } }</code></pre>
+  </div>
+
+  <div class="endpoint" id="ep-get-source">
+    <h3><span class="verb get">GET</span><code>/sources/:id</code><span class="status">200 Source</span></h3>
+    <p>A source with its media hash and probe.</p>
+  </div>
+
+  <div class="endpoint" id="ep-create-job">
+    <h3><span class="verb post">POST</span><code>/jobs</code><span class="status">202 Job</span></h3>
+    <p>Queue an analysis. The same <code>sourceId</code> and <code>spec</code> return the existing job unless <code>force</code> is true.</p>
+    <dl><dt>Body</dt><dd><code>{ sourceId, spec?, force? }</code>, where <code>spec</code> is a <a href="#jobs">JobSpec</a> and is filled from the defaults when left out.</dd></dl>
+<pre><code>curl -s localhost:3000/jobs -H 'content-type: application/json' \
+  -d '{"sourceId":"d154e959-c0a8-468b-8357-a8fa01246770"}'</code></pre>
+  </div>
+
+  <div class="endpoint" id="ep-list-jobs">
+    <h3><span class="verb get">GET</span><code>/jobs</code><span class="status">200 { jobs, total }</span></h3>
+    <p>A paged list of jobs.</p>
+    <dl><dt>Query</dt><dd><code>offset</code> ≥ 0, <code>limit</code> from 1 to 100, and <code>state</code>, one of <code>Queued Running Succeeded Partial Failed Cancelled</code>. Out-of-range values return 400.</dd></dl>
+  </div>
+
+  <div class="endpoint" id="ep-get-job">
+    <h3><span class="verb get">GET</span><code>/jobs/:id</code><span class="status">200 Job</span></h3>
+    <p>The job's state, per-stage progress, the device each CV stage ran on, its coverage, and its cost committed and reserved. Poll this endpoint for progress.</p>
+<pre><code>{ "id": "1e1b2272-cdb2-4ea3-aebc-564b56341e08",
+  "state": { "_tag": "Running", "stage": "verdicts", "done": 1, "total": 56 },
+  "stages": [ { "stage": "detections", "key": "068dd7bc…", "done": 1, "total": 1, "device": "cuda" }, … ],
+  "coverage": { "segments": 56, "valid": 1, "invalid": 0, "ambiguous": 0, "notSent": 0 },
+  "committedUsd": 0.0012, "reservedUsd": 0.08,  <span class="c">// abridged</span>
+  "spec": { … }, "sourceId": "…", "createdAt": "…", "updatedAt": "…" }</code></pre>
+  </div>
+
+  <div class="endpoint" id="ep-cancel">
+    <h3><span class="verb post">POST</span><code>/jobs/:id/cancel</code><span class="status">200 Job</span></h3>
+    <p>Stop a queued or running job. The CV and ffmpeg subprocesses are killed with it. Stages that already finished stay in the cache for the next job. 409 if the job has already finished.</p>
+  </div>
+
+  <div class="endpoint" id="ep-resume">
+    <h3><span class="verb post">POST</span><code>/jobs/:id/resume</code><span class="status">200 Job</span></h3>
+    <p>Requeue a <code>Partial</code> or <code>Failed</code> job. It picks up where it stopped: finished stages and answered calls are reused.</p>
+    <dl><dt>Body</dt><dd><code>{ retryAmbiguous?: boolean }</code>. It authorizes resending only the attempts that are ambiguous right now. The permission is used once, and is cleared on recovery or when the stage finishes.</dd></dl>
+  </div>
+
+  <div class="endpoint" id="ep-result">
+    <h3><span class="verb get">GET</span><code>/jobs/:id/result</code><span class="status">200 JobResult</span></h3>
+    <p>The highlights, in video time. Each one points back to the segment and the LLM attempt that produced it, so you can audit it.</p>
+<pre><code>{ "jobId": "5bf34980-98b4-4f3c-a97e-95aba0b04983",
+  "highlights": [
+    { "id": "9bcadda7-301a-4995-82d4-83a1d66d550a",
+      "class": "Goal", "half": null, "videoSeconds": 175.52, "confidence": 0.95,
+      "segmentId": "cab825c8…:5", "attemptId": "09aa3d27-90f8-4278-8f2b-533ee2533b2d",
+      "clipUrl": "/blobs/2cb5a2de9c40b10659b8613dc09fb3973280660bb1edbfba5fc808036a59d338" }
+  ],
+  "coverage": { "segments": 9, "valid": 6, "invalid": 3, "ambiguous": 0, "notSent": 0 } }</code></pre>
+    <p class="muted">Classes: <code>Goal</code>, <code>Shot on target</code>, <code>Shot off target</code>, <code>Foul</code> and <code>Offside</code>, the same five as the thesis benchmark.</p>
+  </div>
+
+  <div class="endpoint" id="ep-blob">
+    <h3><span class="verb get">GET</span><code>/blobs/:hash</code><span class="status">200 bytes</span></h3>
+    <p>Content-addressed files: highlight clips as <code>video/mp4</code> and stage artifacts as <code>application/json</code>. It supports <code>Range</code> requests, so a <code>&lt;video&gt;</code> tag can seek.</p>
+  </div>
+
+  <div class="endpoint" id="ep-budget">
+    <h3><span class="verb get">GET</span><code>/budget</code><span class="status">200 Budget</span></h3>
+    <p>Account-wide paid spend. The ambiguous amount is money that may or may not have been charged.</p>
+<pre><code>{ "limitUsd": 0.8, "committedUsd": 0.516, "reservedUsd": 0, "ambiguousUsd": 0 }</code></pre>
+  </div>
+
+  <div class="endpoint" id="ep-eval">
+    <h3><span class="verb get">GET</span><code>/jobs/:id/evaluation</code> · <code>/evaluation/model-rate?model=</code><span class="status">200</span></h3>
+    <p>Used by the evaluation tools. The first returns the windows the rule kept, <code>{ windows: [{ start, end }] }</code>, for computing the recall ceiling. The second returns the highest recorded cost per video second for a model, <code>{ usdPerSecond }</code>, which is <code>null</code> before the model's first call.</p>
+  </div>
+</section>
+
+<section id="errors" aria-labelledby="errors-h">
+  <h2 id="errors-h">Errors</h2>
+  <p>Errors are JSON with a <code>_tag</code>. They're the same tagged errors the generated TypeScript client decodes.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Status</th><th>Tag</th><th>When</th></tr></thead>
+    <tbody>
+      <tr><td>400</td><td><code>BadRequest</code></td><td>The input is invalid: a missing file, media that can't be probed, a bad SoccerNet path, or pagination out of range.</td></tr>
+      <tr><td>404</td><td><code>NotFound</code></td><td>No such source, job or blob.</td></tr>
+      <tr><td>409</td><td><code>Conflict</code></td><td>The state doesn't allow this transition, for example resuming a running job, or the source changed during registration.</td></tr>
+      <tr><td>500</td><td><code>PersistenceError</code></td><td>A real server fault.</td></tr>
+    </tbody>
+  </table></div>
+<pre><code>{ "_tag": "NotFound", "resource": "job", "id": "nope" }
+{ "_tag": "BadRequest", "operation": "listJobs",
+  "message": "offset must be nonnegative and limit between 1 and 100" }</code></pre>
+  <p>A failed job carries its own error in <code>state.error</code>, with its stage and a category: <code>SourceChanged</code>, <code>Inference</code>, <code>Process</code>, <code>Provider</code>, <code>Persistence</code> or <code>InvalidInput</code>.</p>
+</section>
+
+<section id="schemas" aria-labelledby="schemas-h">
+  <h2 id="schemas-h">Schemas</h2>
+  <p>The source of truth is Effect Schema in <code>packages/contracts</code>. The server, the CLI and any future web UI import the same definitions, and the HTTP client is generated from them.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Type</th><th>Shape</th></tr></thead>
+    <tbody>
+      <tr><td><code>Source</code></td><td><code>{ id, ref: SourceRef, mediaHash, probe: { duration, fps, size, frameCount } }</code></td></tr>
+      <tr><td><code>Job</code></td><td><code>{ id, sourceId, spec, state, stages[], coverage, committedUsd, reservedUsd, createdAt, updatedAt }</code></td></tr>
+      <tr><td><code>JobState</code></td><td><code>Queued | Running{stage,done,total} | Succeeded{coverage} | Partial{coverage,reason} | Failed{stage,error} | Cancelled</code></td></tr>
+      <tr><td><code>Highlight</code></td><td><code>{ id, class, half: 1|2|null, videoSeconds, confidence: 0..1, segmentId, attemptId, clipUrl|null }</code></td></tr>
+      <tr><td><code>Coverage</code></td><td><code>{ segments, valid, invalid, ambiguous, notSent }</code></td></tr>
+      <tr><td><code>Budget</code></td><td><code>{ limitUsd, committedUsd, reservedUsd, ambiguousUsd }</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="measured" aria-labelledby="measured-h">
+  <h2 id="measured-h">Measured results</h2>
+  <p>End to end on three held-out SoccerNet halves, with flash-lite as the model and 40/5 segments, scored against Labels-v2 at a 5 s tolerance.</p>
+  <div class="grid2">
+    <div class="stat"><div class="v">0.39</div><div class="k">F1@5s across 3 held-out halves (precision 0.30, recall 0.57)</div></div>
+    <div class="stat"><div class="v">88%</div><div class="k">of labeled events kept by the rule filter (the recall ceiling)</div></div>
+    <div class="stat"><div class="v">$0.07</div><div class="k">LLM cost per 45-minute half, with google/gemini-3.1-flash-lite</div></div>
+    <div class="stat"><div class="v">~5 min</div><div class="k">of CV per 224p half on CUDA (95 s scene cuts, 204 s detection)</div></div>
+  </div>
+  <p class="muted">Three halves are enough to show the system works end to end. They're too few to quote as a stable score. Most errors are false positives, and "Shot on target" alone causes over half of them. On the same 100 benchmark segments, GLM 5.3 Flash scored F1 0.31 against flash-lite's 0.56, so flash-lite is the paid model.</p>
+</section>
+
+<footer>
+  Part of a TCC on soccer highlight detection. The source and the design doc are on <a href="https://github.com/giovanni1351/Tcc_analise_regras_cortes">GitHub</a>, in <code>docs/design/video-analysis-api.md</code>.
+</footer>
+</main>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const key = "highlights-api-theme";
+  try { const saved = localStorage.getItem(key); if (saved) root.dataset.theme = saved; } catch {}
+  document.getElementById("theme").addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem(key, root.dataset.theme); } catch {}
+  });
+  for (const pre of document.querySelectorAll("pre")) {
+    const button = document.createElement("button");
+    button.type = "button"; button.className = "copy"; button.textContent = "Copy";
+    button.addEventListener("click", async () => {
+      const text = pre.querySelector("code").innerText;
+      try { await navigator.clipboard.writeText(text); button.textContent = "Copied"; } catch { button.textContent = "Select"; }
+      setTimeout(() => (button.textContent = "Copy"), 1400);
+    });
+    pre.append(button);
+  }
+})();
+</script>
+</body>
+</html>
