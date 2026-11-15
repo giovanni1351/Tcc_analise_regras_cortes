@@ -53,7 +53,7 @@ export const attemptLedgerLayer = Layer.effect(
               job_id: string;
               committed: number;
               reserved: number;
-            }>`SELECT job_id, COALESCE(SUM(cost_usd),0) AS committed, COALESCE(SUM(CASE WHEN cost_usd IS NULL AND state IN ('Reserved','Sent','Ambiguous') THEN reserved_usd ELSE 0 END),0) AS reserved FROM llm_attempts GROUP BY job_id`;
+            }>`SELECT job_id, COALESCE(SUM(cost_usd),0) AS committed, COALESCE(SUM(CASE WHEN cost_usd IS NULL AND state IN ('Reserved','Sent','Ambiguous','Answered') THEN reserved_usd ELSE 0 END),0) AS reserved FROM llm_attempts GROUP BY job_id`;
             const job = totals.find((row) => row.job_id === input.jobId);
             if (
               !admit({
@@ -102,7 +102,7 @@ export const attemptLedgerLayer = Layer.effect(
             ? reply.body.usage
             : null;
         const rows =
-          yield* sql`UPDATE llm_attempts SET state=${reply.costUsd === null ? "Ambiguous" : "Answered"},cost_usd=${reply.costUsd},http_status=${reply.httpStatus},response_json=${JSON.stringify(reply.body)},verdict_json=${parsed._tag === "Valid" ? JSON.stringify(parsed.verdict) : null},parse_error_json=${parsed._tag === "Invalid" ? JSON.stringify(parsed.reason) : null},usage_json=${JSON.stringify(usage)},generation_id=${reply.generationId},latency_ms=${reply.latencyMs},updated_at=${now} WHERE id=${id} AND state IN ('Sent','Ambiguous') RETURNING id`;
+          yield* sql`UPDATE llm_attempts SET state='Answered',cost_usd=${reply.costUsd},http_status=${reply.httpStatus},response_json=${JSON.stringify(reply.body)},verdict_json=${parsed._tag === "Valid" ? JSON.stringify(parsed.verdict) : null},parse_error_json=${parsed._tag === "Invalid" ? JSON.stringify(parsed.reason) : null},usage_json=${JSON.stringify(usage)},generation_id=${reply.generationId},latency_ms=${reply.latencyMs},updated_at=${now} WHERE id=${id} AND state IN ('Sent','Ambiguous') RETURNING id`;
         if (rows.length !== 1)
           return yield* new LedgerError({
             operation: "answer",

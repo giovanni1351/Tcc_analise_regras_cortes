@@ -116,7 +116,7 @@ it.effect("fails unsent attempts and rejects invalid transitions", () =>
   }).pipe(Effect.provide(services)),
 );
 
-it.effect("retains unknown charges and network failures as ambiguous", () =>
+it.effect("keeps the reservation of an answer with unknown cost without marking it ambiguous", () =>
   Effect.gen(function* () {
     yield* seed;
     const ledger = yield* AttemptLedger;
@@ -124,8 +124,17 @@ it.effect("retains unknown charges and network failures as ambiguous", () =>
     yield* ledger.reserve(reservation);
     yield* ledger.markSent("one");
     yield* ledger.answer("one", { ...successful, costUsd: null }, parseVerdict(successful, 10));
-    assert.strictEqual((yield* budget.get).ambiguousUsd, 0.4);
-    yield* ledger.answer("one", successful, parseVerdict(successful, 10));
+    const after = yield* budget.get;
+    assert.strictEqual(after.reservedUsd, 0.4);
+    assert.strictEqual(after.ambiguousUsd, 0);
+  }).pipe(Effect.provide(services)),
+);
+
+it.effect("retains a network failure after sending as ambiguous", () =>
+  Effect.gen(function* () {
+    yield* seed;
+    const ledger = yield* AttemptLedger;
+    const budget = yield* BudgetService;
     yield* ledger.reserve({ ...reservation, id: "two", attemptNumber: 2 });
     yield* ledger.markSent("two");
     yield* ledger.fail(

@@ -56,6 +56,7 @@ export function classifyError(
     httpStatus: status,
     retryAfterMs: Number.isFinite(delay) ? Math.max(0, delay) : null,
     message,
+    responseBody: body,
   });
 }
 export const isRetryable = (error: ProviderError) =>
