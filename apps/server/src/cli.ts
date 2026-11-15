@@ -13,6 +13,18 @@ import { sourcesLayer } from "./jobs/sources.ts";
 import { Runner, runnerLayer } from "./jobs/runner.ts";
 import { stageRunsLayer } from "./jobs/stages.ts";
 import { devMediaLayer, devProbeLayer, devStagesLayer } from "./jobs/dev.ts";
+import { blobStoreLayer, mediaProbeLayer, clipEncoderLayer } from "./media/index.ts";
+import { cvLayer } from "./cv/index.ts";
+import { processLayer } from "./process.ts";
+import { pipelineLayer } from "./jobs/pipeline.ts";
+import { mergeOverlaps, toVideoSeconds, pipelineFunctions } from "./jobs/functions.ts";
+import { makeHighlightStage } from "./jobs/highlights.ts";
+import { llmStepLayer } from "./jobs/llm.ts";
+import { AttemptLedger, attemptLedgerLayer } from "./llm/ledger.ts";
+import { openRouterLayer } from "./llm/openrouter.ts";
+import { freeModelLimiterLayer } from "./llm/limiter.ts";
+import { defaultSpec } from "./jobs/repository.ts";
+import { SqlClient } from "effect/sql";
 
 export class CliError extends Schema.TaggedError<CliError, { readonly brand: unique symbol }>()(
   "CliError",
@@ -48,7 +60,23 @@ const main = Effect.gen(function* () {
           : { _tag: "LocalFile", path: argument },
       );
       const source = yield* client.highlights.registerSource({ payload: ref });
-      return yield* client.highlights.createJob({ payload: { sourceId: source.id } });
+      const requestedModel = process.argv.slice(4).find((argument) => argument !== "--force");
+      const model =
+        requestedModel ??
+        (yield* Config.String("TCC_MODEL").pipe(
+          Config.withDefault("nvidia/nemotron-3.5-super-vl:free"),
+        ));
+      if (!model.endsWith(":free") && !requestedModel)
+        return yield* new CliError({
+          message: "Paid models must be explicitly passed as the model argument",
+        });
+      return yield* client.highlights.createJob({
+        payload: {
+          sourceId: source.id,
+          force: process.argv.includes("--force"),
+          spec: { ...defaultSpec, llm: { model, promptVersion: "benchmark-v1", maxCostUsd: 0.1 } },
+        },
+      });
     });
     yield* Console.log(JSON.stringify(result, null, 2));
     return;
@@ -69,17 +97,41 @@ const main = Effect.gen(function* () {
   yield* Schema.decodeEffect(NonNegative)(limit);
   yield* acquireDataDirectoryLock(dataDir);
   const dev = yield* Config.Boolean("TCC_DEV_FAKE_STAGES").pipe(Config.withDefault(false));
-  if (!dev)
-    return yield* new CliError({
-      message:
-        "Stage adapters await S1–S3 integration. Set TCC_DEV_FAKE_STAGES=true for the local API verification fixture.",
-    });
   const root = yield* Config.String("TCC_SOCCERNET_ROOT").pipe(
     Config.withDefault("/home/pedro/tcc/benchmark/downloads"),
   );
   const database = databaseLayer(path.join(dataDir, "highlights.sqlite"));
   const repo = repositoryLayer.pipe(Layer.provideMerge(database));
-  const media = Layer.mergeAll(devMediaLayer(dataDir), devProbeLayer, devStagesLayer);
+  const apiKey = dev ? "" : yield* Config.String("OPENROUTER_API_KEY");
+  const realMedia = Layer.mergeAll(
+    mediaProbeLayer,
+    blobStoreLayer(dataDir),
+    cvLayer(process.cwd()),
+  ).pipe(Layer.provideMerge(processLayer));
+  const encoders = clipEncoderLayer.pipe(Layer.provideMerge(realMedia));
+  const limiter = Layer.unwrap(
+    Effect.gen(function* () {
+      const sql = yield* SqlClient.SqlClient;
+      const rows = yield* sql<{
+        total: number;
+      }>`SELECT COUNT(*) AS total FROM llm_attempts WHERE model LIKE '%:free' AND state<>'Reserved' AND created_at>=strftime('%Y-%m-%dT00:00:00.000Z','now')`;
+      return freeModelLimiterLayer(50, rows[0]?.total ?? 0);
+    }),
+  ).pipe(Layer.provide(database));
+  const llm = llmStepLayer(limit).pipe(
+    Layer.provideMerge(openRouterLayer(apiKey).pipe(Layer.provide(limiter))),
+    Layer.provideMerge(attemptLedgerLayer.pipe(Layer.provideMerge(database))),
+    Layer.provideMerge(encoders),
+  );
+  const logic = Layer.unwrap(
+    Effect.gen(function* () {
+      const highlights = yield* makeHighlightStage(mergeOverlaps, toVideoSeconds);
+      return pipelineLayer({ ...pipelineFunctions, highlights });
+    }),
+  ).pipe(Layer.provideMerge(repo), Layer.provideMerge(encoders));
+  const media = dev
+    ? Layer.mergeAll(devMediaLayer(dataDir), devProbeLayer, devStagesLayer)
+    : Layer.mergeAll(logic, llm);
   const sources = sourcesLayer(root).pipe(Layer.provideMerge(repo), Layer.provideMerge(media));
   const runs = stageRunsLayer.pipe(Layer.provideMerge(sources));
   const runner = runnerLayer.pipe(Layer.provideMerge(runs));
@@ -87,6 +139,10 @@ const main = Effect.gen(function* () {
   const running = Layer.effectDiscard(
     Effect.gen(function* () {
       const service = yield* Runner;
+      if (!dev)
+        yield* AttemptLedger.use((ledger) => ledger.recoverOnStartup).pipe(
+          Effect.provide(attemptLedgerLayer.pipe(Layer.provide(database))),
+        );
       yield* service.start;
     }),
   ).pipe(Layer.provideMerge(services));

@@ -14,6 +14,7 @@ export class LedgerError extends Schema.TaggedError<
 }) {}
 export interface Reservation {
   readonly id: string;
+  readonly verdictKey?: string;
   readonly jobId: string;
   readonly segmentId: string;
   readonly model: string;
@@ -72,7 +73,7 @@ export const attemptLedgerLayer = Layer.effect(
               })
             )
               return false;
-            yield* sql`INSERT INTO llm_attempts (id,job_id,segment_id,model,prompt_version,attempt_number,state,reserved_usd,created_at,updated_at) VALUES (${input.id},${input.jobId},${input.segmentId},${input.model},${input.promptVersion},${input.attemptNumber},'Reserved',${input.reservation},${now},${now})`;
+            yield* sql`INSERT INTO llm_attempts (id,job_id,segment_id,model,prompt_version,attempt_number,state,reserved_usd,created_at,updated_at,verdict_key) VALUES (${input.id},${input.jobId},${input.segmentId},${input.model},${input.promptVersion},${input.attemptNumber},'Reserved',${input.reservation},${now},${now},${input.verdictKey ?? null})`;
             return true;
           }),
         )
@@ -129,6 +130,7 @@ export const attemptLedgerLayer = Layer.effect(
       function* () {
         const now = DateTime.formatIso(yield* DateTime.now);
         yield* sql`UPDATE llm_attempts SET state='Ambiguous',updated_at=${now} WHERE state='Sent'`;
+        yield* sql`UPDATE llm_attempts SET state='Failed',updated_at=${now} WHERE state='Reserved'`;
       },
       Effect.mapError(wrap("recover", "llm_attempts")),
     );
