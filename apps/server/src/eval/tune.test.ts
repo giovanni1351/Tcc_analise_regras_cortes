@@ -1,33 +1,40 @@
+import { gzipSync } from "node:zlib";
 import { NodeServices } from "@effect/platform-node";
 import { assert, it } from "@effect/vitest";
 import { ConfigProvider, Deferred, Effect, Fiber, FileSystem, Schema } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { TestClock } from "effect/testing";
-import { JobId } from "@tcc/contracts";
+import { defaultRuleConfig, JobId } from "@tcc/contracts";
 import { defaultSpec, emptyCoverage } from "../jobs/repository.ts";
 import { makeEvaluationClient } from "./score-job.ts";
 import { makeTunePlan, parseGrid, runTune, waitForJob, pairedBootstrap } from "./tune.ts";
+import { computeWindows } from "../domain/rules.ts";
+import { planSegments } from "../domain/segments.ts";
+import { studyInputs, type StudyVideo } from "./rules.ts";
 
 const options = {
+  studyDir: new URL("./fixtures/missing-study", import.meta.url).pathname,
   halves: 2,
   model: "example:free",
   grid: "40/5,20/4",
   maxUsd: 0,
   usdPerSecond: null,
 };
-it("plans deterministic paired train halves and requires paid pricing", () => {
-  const plan = makeTunePlan(options);
-  assert.deepStrictEqual(plan, makeTunePlan(options));
-  assert.strictEqual(plan.jobs.length, 4);
-  assert.deepStrictEqual(plan.jobs[0]?.half, plan.jobs[2]?.half);
-  assert.strictEqual(plan.estimatedUsd, 0);
-  assert.throws(() => makeTunePlan({ ...options, model: "paid/model" }));
-  assert.throws(() => parseGrid("20/10"));
-  assert.throws(() => makeTunePlan({ ...options, halves: 0 }));
-  const paid = makeTunePlan({ ...options, model: "paid/model", usdPerCall: 0.01 });
-  assert.strictEqual(paid.admitted, false);
-  assert.ok(paid.estimatedUsd > 0);
-});
+it.effect("plans deterministic paired train halves and requires paid pricing", () =>
+  Effect.gen(function* () {
+    const plan = yield* makeTunePlan(options);
+    assert.deepStrictEqual(plan, yield* makeTunePlan(options));
+    assert.strictEqual(plan.jobs.length, 4);
+    assert.deepStrictEqual(plan.jobs[0]?.half, plan.jobs[2]?.half);
+    assert.strictEqual(plan.estimatedUsd, 0);
+    yield* makeTunePlan({ ...options, model: "paid/model" }).pipe(Effect.flip);
+    assert.throws(() => parseGrid("20/10"));
+    yield* makeTunePlan({ ...options, halves: 0 }).pipe(Effect.flip);
+    const paid = yield* makeTunePlan({ ...options, model: "paid/model", usdPerCall: 0.01 });
+    assert.strictEqual(paid.admitted, false);
+    assert.ok(paid.estimatedUsd > 0);
+  }).pipe(Effect.provide(NodeServices.layer)),
+);
 
 it.effect("dry runs send no HTTP requests, and reject costs before creating jobs", () =>
   Effect.gen(function* () {
@@ -39,7 +46,7 @@ it.effect("dry runs send no HTTP requests, and reject costs before creating jobs
     const client = (yield* makeEvaluationClient(3000).pipe(
       Effect.provideService(HttpClient.HttpClient, http),
     )).highlights;
-    const plan = makeTunePlan(options);
+    const plan = yield* makeTunePlan(options);
     const result = yield* runTune(
       client,
       plan,
@@ -49,7 +56,7 @@ it.effect("dry runs send no HTTP requests, and reject costs before creating jobs
     assert.deepStrictEqual(result, { plan });
     const refusal = yield* runTune(
       client,
-      makeTunePlan({ ...options, model: "paid/model", usdPerCall: 0.01 }),
+      yield* makeTunePlan({ ...options, model: "paid/model", usdPerCall: 0.01 }),
       { dryRun: true, includeNotShown: false },
       () => Effect.void,
     ).pipe(Effect.flip);
@@ -110,12 +117,14 @@ it("paired bootstrap uses halves and produces a zero interval for identical scor
   assert.strictEqual(result.resamples, 10000);
 });
 
-it("held-out evaluation requires one frozen configuration", () => {
-  assert.throws(() => makeTunePlan({ ...options, split: "test" }));
-  const plan = makeTunePlan({ ...options, split: "test", grid: "30/5" });
-  assert.strictEqual(plan.split, "test");
-  assert.strictEqual(plan.jobs.length, 2);
-});
+it.effect("held-out evaluation requires one frozen configuration", () =>
+  Effect.gen(function* () {
+    yield* makeTunePlan({ ...options, split: "test" }).pipe(Effect.flip);
+    const plan = yield* makeTunePlan({ ...options, split: "test", grid: "30/5" });
+    assert.strictEqual(plan.split, "test");
+    assert.strictEqual(plan.jobs.length, 2);
+  }).pipe(Effect.provide(NodeServices.layer)),
+);
 
 it.effect("waits through queued state using the clock and returns completion", () =>
   Effect.gen(function* () {
@@ -161,7 +170,7 @@ it.effect("executes a held-out plan through HTTP and scores local half labels", 
   Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem;
     const root = yield* fs.makeTempDirectoryScoped();
-    const plan = makeTunePlan({ ...options, split: "test", halves: 1, grid: "30/5" });
+    const plan = yield* makeTunePlan({ ...options, split: "test", halves: 1, grid: "30/5" });
     const half = plan.jobs[0]!.half;
     const directory = `${root}/${half.league}/${half.season}/${half.game}`;
     yield* fs.makeDirectory(directory, { recursive: true });
@@ -257,5 +266,107 @@ it.effect("executes a held-out plan through HTTP and scores local half labels", 
       assert.strictEqual(report.configs[0]?.f1, 1);
       assert.strictEqual(report.configs[0]?.bootstrap, null);
     }
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);
+
+it.effect("prices the rule's planned segments and labels missing exports as upper bounds", () =>
+  Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem;
+    const directory = yield* fs.makeTempDirectoryScoped();
+    const half = (yield* makeTunePlan(options)).jobs[0]!.half;
+    const video: StudyVideo = {
+      video_id: "fixture",
+      metadata: {
+        competition: half.league,
+        season: half.season,
+        game: half.game,
+        half: half.half,
+        height: Number.parseInt(half.resolution),
+        duration_sec: 150,
+        fps: 25,
+        yolo_stride: 25,
+      },
+      scenes: [
+        { scene_id: 0, start_sec: 0, duration_sec: 20 },
+        { scene_id: 1, start_sec: 20, duration_sec: 5 },
+        { scene_id: 2, start_sec: 25, duration_sec: 125 },
+      ],
+      samples: [
+        ...[5, 10, 15].map((time_sec) => ({ scene_id: 0, time_sec, player_count: 8 })),
+        ...[20, 21, 22].map((time_sec) => ({ scene_id: 1, time_sec, player_count: 0 })),
+        { scene_id: 2, time_sec: 149, player_count: 8 },
+      ],
+      events: [],
+    };
+    yield* fs.writeFileString(
+      `${directory}/manifest.json`,
+      JSON.stringify({ files: ["fixture.json.gz", "missing.json.gz"] }),
+    );
+    yield* fs.writeFile(`${directory}/fixture.json.gz`, gzipSync(JSON.stringify(video)));
+    const paidOptions = {
+      ...options,
+      studyDir: directory,
+      model: "paid/model",
+      usdPerCall: 0.0013,
+      maxUsd: 10,
+    };
+    const plan = yield* makeTunePlan(paidOptions);
+    const { scenes, samples, meta } = studyInputs(video);
+    const windows = computeWindows(scenes, samples, meta, defaultRuleConfig);
+    assert.strictEqual(windows.length, 1);
+    for (const job of plan.jobs) {
+      if (job.half.workbook === half.workbook) {
+        const segments = planSegments(windows, job.segmentation);
+        assert.strictEqual(job.segments, segments.length);
+        assert.strictEqual(job.estimate, "study windows");
+        assert.strictEqual(job.estimatedUsd, segments.length * paidOptions.usdPerCall);
+        const seconds = segments.reduce((sum, segment) => sum + segment.end - segment.start, 0);
+        assert.strictEqual(job.durationSec, seconds);
+        const perSecond = yield* makeTunePlan({
+          ...options,
+          studyDir: directory,
+          model: "paid/model",
+          maxUsd: 10,
+          usdPerSecond: 0.002,
+        });
+        assert.strictEqual(
+          perSecond.jobs.find(
+            (j) => j.half === job.half && j.segmentation.maxSec === job.segmentation.maxSec,
+          )?.estimatedUsd,
+          seconds * 0.002,
+        );
+      } else {
+        assert.strictEqual(job.estimate, "upper bound");
+        assert.strictEqual(
+          job.segments,
+          Math.ceil(job.half.duration / (job.segmentation.maxSec - job.segmentation.overlapSec)) +
+            job.half.scenes,
+        );
+      }
+    }
+    assert.strictEqual(plan.jobs[0]!.segments, 1);
+    assert.strictEqual(plan.jobs[2]!.segments, 2);
+    assert.strictEqual(
+      (yield* makeTunePlan({ ...paidOptions, maxUsd: plan.estimatedUsd })).admitted,
+      true,
+    );
+    const refused = yield* makeTunePlan({ ...paidOptions, maxUsd: plan.estimatedUsd - 0.0001 });
+    assert.strictEqual(refused.admitted, false);
+    const http = HttpClient.make(() => Effect.die("Refused plan sent an HTTP request"));
+    const client = (yield* makeEvaluationClient(3000).pipe(
+      Effect.provideService(HttpClient.HttpClient, http),
+    )).highlights;
+    const error = yield* runTune(
+      client,
+      refused,
+      { dryRun: true, includeNotShown: false },
+      () => Effect.void,
+    ).pipe(Effect.flip);
+    assert.strictEqual(error._tag, "EvaluationError");
+    if (error._tag === "EvaluationError") assert.strictEqual(error.operation, "admit");
+    yield* fs.remove(`${directory}/fixture.json.gz`);
+    assert.ok(
+      (yield* makeTunePlan(paidOptions)).jobs.every((job) => job.estimate === "upper bound"),
+    );
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );

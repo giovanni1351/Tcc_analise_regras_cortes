@@ -16,6 +16,7 @@ NodeRuntime.runMain(
           model: { type: "string" },
           grid: { type: "string", default: "40/5,30/5,20/4" },
           port: { type: "string", default: "3000" },
+          "study-dir": { type: "string", default: ".scratch/study" },
           "max-usd": { type: "string", default: "0" },
           "usd-per-call": { type: "string" },
           "dry-run": { type: "boolean", default: false },
@@ -46,20 +47,17 @@ NodeRuntime.runMain(
       model.endsWith(":free") || values["usd-per-call"] !== undefined
         ? null
         : (yield* client.modelRate({ query: { model } })).usdPerSecond;
-    const plan = yield* Effect.try({
-      try: () =>
-        makeTunePlan({
-          split,
-          halves: Number(values.halves),
-          model,
-          grid: values.grid,
-          maxUsd: Number(values["max-usd"]),
-          usdPerSecond,
-          ...(values["usd-per-call"] === undefined
-            ? {}
-            : { usdPerCall: Number(values["usd-per-call"]) }),
-        }),
-      catch: (cause) => new EvaluationError({ operation: "plan", resource: "argv", cause }),
+    const plan = yield* makeTunePlan({
+      split,
+      halves: Number(values.halves),
+      model,
+      grid: values.grid,
+      maxUsd: Number(values["max-usd"]),
+      usdPerSecond,
+      studyDir: values["study-dir"],
+      ...(values["usd-per-call"] === undefined
+        ? {}
+        : { usdPerCall: Number(values["usd-per-call"]) }),
     });
     yield* Console.log(JSON.stringify(plan, null, 2));
     const fs = yield* FileSystem.FileSystem;

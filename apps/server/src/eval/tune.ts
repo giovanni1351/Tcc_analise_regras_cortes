@@ -1,7 +1,12 @@
-import { Effect, Schedule, Schema } from "effect";
+import { gunzipSync } from "node:zlib";
+import { Effect, FileSystem, Path, Schedule, Schema } from "effect";
 import { defaultRuleConfig, Segmentation, SourceRef, type JobId } from "@tcc/contracts";
 import { EvaluationError, metrics, scoreJob, type EvaluationClient } from "./score-job.ts";
 import { studySplit, type StudyHalf } from "./split.ts";
+
+import { StudyVideo, studyInputs } from "./rules.ts";
+import { computeWindows } from "../domain/rules.ts";
+import { planSegments } from "../domain/segments.ts";
 
 export const tuningSeed = 42;
 export function random(seed = tuningSeed) {
@@ -40,7 +45,58 @@ export function sampleHalves(halves: ReadonlyArray<StudyHalf>, n: number) {
   }
   return shuffled.slice(0, n);
 }
-export function makeTunePlan(options: {
+const studyWindows = Effect.fn("Evaluation.studyWindows")(function* (
+  directory: string,
+  halves: ReadonlyArray<StudyHalf>,
+) {
+  const fs = yield* FileSystem.FileSystem;
+  const path = yield* Path.Path;
+  const windows = new Map<string, ReturnType<typeof computeWindows>>();
+  const read = (file: string) =>
+    fs.readFile(file).pipe(
+      Effect.catchIf(
+        (error) => error.reason._tag === "NotFound",
+        () => Effect.void,
+      ),
+    );
+  const manifest = yield* read(path.join(directory, "manifest.json"));
+  const files = manifest
+    ? (yield* Schema.decodeEffect(
+        Schema.fromJsonString(Schema.Struct({ files: Schema.Array(Schema.String) })),
+      )(new TextDecoder().decode(manifest))).files
+    : yield* fs.readDirectory(directory).pipe(
+        Effect.map((entries) => entries.filter((file) => file.endsWith(".json.gz")).sort()),
+        Effect.catchIf(
+          (error) => error.reason._tag === "NotFound",
+          () => Effect.succeed([]),
+        ),
+      );
+  for (const file of files) {
+    const compressed = yield* read(path.join(directory, file));
+    if (!compressed) continue;
+    const json = yield* Effect.try({
+      try: () => gunzipSync(compressed).toString("utf8"),
+      catch: (cause) => new EvaluationError({ operation: "decompress", resource: file, cause }),
+    });
+    const video = yield* Schema.decodeEffect(Schema.fromJsonString(StudyVideo))(json);
+    const m = video.metadata;
+    const half = halves.find(
+      (half) =>
+        half.league === m.competition &&
+        half.season === m.season &&
+        half.game === m.game &&
+        half.half === m.half &&
+        half.resolution === `${m.height}p`,
+    );
+    if (!half) continue;
+    const { scenes, samples, meta } = studyInputs(video);
+    windows.set(half.workbook, computeWindows(scenes, samples, meta, defaultRuleConfig));
+    if (windows.size === halves.length) break;
+  }
+  return windows;
+});
+
+export const makeTunePlan = Effect.fn("Evaluation.makeTunePlan")(function* (options: {
   split?: "train" | "test";
   halves: number;
   model: string;
@@ -48,32 +104,49 @@ export function makeTunePlan(options: {
   maxUsd: number;
   usdPerCall?: number;
   usdPerSecond: number | null;
+  studyDir?: string;
 }) {
-  if (!options.model.trim()) throw new Error("--model is required");
-  if (!Number.isFinite(options.maxUsd) || options.maxUsd < 0)
-    throw new Error("--max-usd must be nonnegative");
-  if (
-    options.usdPerCall !== undefined &&
-    (!Number.isFinite(options.usdPerCall) || options.usdPerCall < 0)
-  )
-    throw new Error("--usd-per-call must be nonnegative");
-  const free = options.model.endsWith(":free");
-  const rate = options.usdPerCall ?? options.usdPerSecond;
-  if (!free && (rate === null || !Number.isFinite(rate) || rate <= 0))
-    throw new Error("Paid model requires recorded pricing or --usd-per-call > 0");
-  const split = options.split ?? "train";
-  const halves = sampleHalves(studySplit[split], options.halves);
-  const grid = parseGrid(options.grid, split);
+  const { free, split, halves, grid } = yield* Effect.try({
+    try: () => {
+      if (!options.model.trim()) throw new Error("--model is required");
+      if (!Number.isFinite(options.maxUsd) || options.maxUsd < 0)
+        throw new Error("--max-usd must be nonnegative");
+      if (
+        options.usdPerCall !== undefined &&
+        (!Number.isFinite(options.usdPerCall) || options.usdPerCall < 0)
+      )
+        throw new Error("--usd-per-call must be nonnegative");
+      const free = options.model.endsWith(":free");
+      const rate = options.usdPerCall ?? options.usdPerSecond;
+      if (!free && (rate === null || !Number.isFinite(rate) || rate <= 0))
+        throw new Error("Paid model requires recorded pricing or --usd-per-call > 0");
+      const split = options.split ?? "train";
+      const halves = sampleHalves(studySplit[split], options.halves);
+      const grid = parseGrid(options.grid, split);
+      return { free, split, halves, grid };
+    },
+    catch: (cause) => new EvaluationError({ operation: "plan", resource: "options", cause }),
+  });
+  const windows = yield* studyWindows(options.studyDir ?? ".scratch/study", halves);
   const jobs = grid.flatMap((segmentation) =>
     halves.map((half) => {
+      const halfWindows = windows.get(half.workbook);
+      const planned =
+        halfWindows === undefined ? undefined : planSegments(halfWindows, segmentation);
       const segments =
+        planned?.length ??
         Math.ceil(half.duration / (segmentation.maxSec - segmentation.overlapSec)) + half.scenes;
+      const durationSec =
+        planned === undefined
+          ? segments * segmentation.maxSec
+          : planned.reduce((sum, segment) => sum + segment.end - segment.start, 0);
+      const estimate = planned === undefined ? "upper bound" : "study windows";
       const estimatedUsd = free
         ? 0
         : options.usdPerCall !== undefined
           ? segments * options.usdPerCall
-          : segments * segmentation.maxSec * (options.usdPerSecond ?? 0);
-      return { half, segmentation, segments, estimatedUsd };
+          : durationSec * (options.usdPerSecond ?? 0);
+      return { half, segmentation, segments, durationSec, estimatedUsd, estimate };
     }),
   );
   const estimatedUsd = jobs.reduce((sum, j) => sum + j.estimatedUsd, 0);
@@ -84,11 +157,13 @@ export function makeTunePlan(options: {
     maxUsd: options.maxUsd,
     estimatedUsd,
     admitted: estimatedUsd <= options.maxUsd,
-    estimate: "upper estimate from study duration and scene count",
+    estimate: jobs.every((job) => job.estimate === "study windows")
+      ? "study windows"
+      : "includes upper bounds",
     jobs,
   };
-}
-export type TunePlan = ReturnType<typeof makeTunePlan>;
+});
+export type TunePlan = Effect.Success<ReturnType<typeof makeTunePlan>>;
 export const waitForJob = Effect.fn("Evaluation.waitForJob")(function* (
   client: Pick<EvaluationClient, "getJob">,
   id: JobId,

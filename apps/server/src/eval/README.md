@@ -28,12 +28,18 @@ Paid models require an explicit --model. Pricing uses the API's highest recorded
 cost per video second, or an explicit --usd-per-call. Unknown paid pricing is
 refused. Both dry runs and real runs refuse estimates above --max-usd.
 
-Before windows exist, segment count is conservatively estimated as
-ceil(study duration / (maxSec - overlapSec)) + study scene count. A per-second
-rate prices each estimated segment at maxSec. This overestimates typical merged
-windows. It is an estimate based on the study, not a guarantee for different CV
-outputs or provider pricing. The resulting per-job admission caps sum to at most
---max-usd. The server's own budget and free quota still apply.
+Segment estimates use the study exports in --study-dir, defaulting to
+.scratch/study. Generate them with `uv run python scripts/export_study.py`.
+The planner runs the default TypeScript rule and the server's segment planner
+for each half and grid point. Pricing uses --usd-per-call per segment or the
+recorded per-second rate multiplied by each segment's actual duration.
+
+If a half's export is missing, its estimate is labelled "upper bound" and uses
+ceil(study duration / (maxSec - overlapSec)) + study scene count, priced at
+maxSec per segment for per-second rates. Invalid exports fail planning.
+Study estimates are not guarantees for different CV outputs or provider pricing.
+The resulting per-job admission caps sum to at most --max-usd.
+The server's own budget and free quota still apply.
 
 The report checkpoints pending job IDs and completed scores to --out. Rerunning
 uses the server's job and stage caches.
