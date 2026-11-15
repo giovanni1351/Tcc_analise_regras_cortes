@@ -196,3 +196,8 @@ export type Probe = typeof Probe.Type;
 export type Source = typeof Source.Type;
 export type StageProgress = typeof StageProgress.Type;
 export type Job = typeof Job.Type;
+
+export const EvaluationContext = Schema.Struct({
+  windows: Schema.Array(Schema.Struct({ start: NonNegative, end: NonNegative })),
+});
+export const ModelRate = Schema.Struct({ usdPerSecond: Schema.NullOr(NonNegative) });

@@ -2,6 +2,8 @@ import { Schema } from "effect";
 import { HttpApi, HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "effect/http-api";
 import {
   Budget,
+  EvaluationContext,
+  ModelRate,
   Count,
   Job,
   JobId,
@@ -91,6 +93,17 @@ export const Api = HttpApi.make("HighlightsApi").add(
     HttpApiEndpoint.get("getBlob", "/blobs/:hash", {
       params: { hash: MediaHash },
       success: Schema.Uint8Array.pipe(HttpApiSchema.asUint8Array()),
+      error: errors,
+    }),
+
+    HttpApiEndpoint.get("evaluationContext", "/jobs/:id/evaluation", {
+      params: { id: JobId },
+      success: EvaluationContext,
+      error: errors,
+    }),
+    HttpApiEndpoint.get("modelRate", "/evaluation/model-rate", {
+      query: { model: Schema.String },
+      success: ModelRate,
       error: errors,
     }),
     HttpApiEndpoint.get("budget", "/budget", { success: Budget, error: errors }),

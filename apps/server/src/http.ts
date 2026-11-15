@@ -30,6 +30,8 @@ export const handlersLayer = HttpApiBuilder.group(Api, "highlights", (handlers) 
       )
       .handle("getResult", ({ params }) => repo.result(params.id))
       .handleRaw("getBlob", ({ params, request }) => getBlob(params.hash, request.headers.range))
+      .handle("evaluationContext", ({ params }) => repo.evaluationContext(params.id))
+      .handle("modelRate", ({ query }) => repo.modelRate(query.model))
       .handle("budget", () => budget.get);
   }),
 );

@@ -4,6 +4,8 @@ import { SqlClient } from "effect/sql";
 import { SecureRandom } from "effect/crypto";
 import {
   Conflict,
+  EvaluationContext,
+  ModelRate,
   BadRequest,
   Coverage,
   Job,
@@ -267,7 +269,37 @@ export const makeRepository = Effect.gen(function* () {
       )
       .pipe(persistence("claim")),
   );
-  return { source, job, change, create, list, result, register, recover, claim };
+
+  const evaluationContext = Effect.fn("Jobs.evaluationContext")(function* (id: JobId) {
+    yield* job(id);
+    const windows =
+      yield* sql`SELECT w.start_sec AS start,w.end_sec AS end FROM windows w JOIN job_stages j ON j.stage_run_key=w.stage_run_key WHERE j.job_id=${id} AND j.stage='windows' ORDER BY w.start_sec`.pipe(
+        persistence("evaluationWindows"),
+      );
+    return yield* Schema.decodeUnknownEffect(EvaluationContext)({ windows }).pipe(
+      persistence("evaluationContext"),
+    );
+  });
+  const modelRate = Effect.fn("Jobs.modelRate")(function* (model: string) {
+    const rows =
+      yield* sql`SELECT MAX(a.cost_usd / s.duration_sec) AS usdPerSecond FROM llm_attempts a JOIN segments s ON s.id=a.segment_id WHERE a.model=${model} AND s.duration_sec>0 AND a.cost_usd IS NOT NULL`.pipe(
+        persistence("modelRate"),
+      );
+    return yield* Schema.decodeUnknownEffect(ModelRate)(rows[0]).pipe(persistence("modelRate"));
+  });
+  return {
+    source,
+    job,
+    change,
+    create,
+    list,
+    result,
+    register,
+    recover,
+    claim,
+    evaluationContext,
+    modelRate,
+  };
 });
 export class Repository extends Context.Service<
   Repository,
