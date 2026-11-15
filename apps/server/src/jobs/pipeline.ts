@@ -7,6 +7,7 @@ import {
   VideoSeconds,
   type StageRunKey,
   type StageName,
+  type JobSpec,
 } from "@tcc/contracts";
 import {
   ClipEncoder,
@@ -55,9 +56,12 @@ export const segmentArtifact = Schema.Array(
 );
 export interface PipelineFunctions {
   readonly version: (stage: StageName) => string;
-  readonly params: (stage: StageName) => unknown;
+  readonly params: (stage: StageName, spec?: JobSpec) => unknown;
   readonly computeWindows: typeof computeWindows;
-  readonly planSegments: (windows: ReadonlyArray<CandidateWindow>) => ReadonlyArray<PlannedSegment>;
+  readonly planSegments: (
+    windows: ReadonlyArray<CandidateWindow>,
+    spec?: JobSpec,
+  ) => ReadonlyArray<PlannedSegment>;
   readonly highlights: (input: StageInput) => Effect.Effect<StageOutput, JobError>;
 }
 export const pipelineLayer = (functions: PipelineFunctions) =>
@@ -158,7 +162,7 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
                 category: "InvalidInput",
                 message: "Missing windows",
               });
-            const planned = functions.planSegments(windows);
+            const planned = functions.planSegments(windows, input.job.spec);
             const encoded = yield* Effect.forEach(planned, (segment, index) =>
               clips.encode(input.media, segment.start, segment.end).pipe(
                 Effect.mapError(inferenceError),
@@ -193,7 +197,7 @@ export const pipelineLayer = (functions: PipelineFunctions) =>
       return {
         version: functions.version,
         params: (stage, job) => ({
-          config: functions.params(stage),
+          config: functions.params(stage, job.spec),
           ...(stage === "scenes" || stage === "detections" ? cvStageParams(stage, provenance) : {}),
           ...(stage === "windows" ? { rule: job.spec.rule } : {}),
           ...(stage === "verdicts"

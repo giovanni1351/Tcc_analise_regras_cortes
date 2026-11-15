@@ -1,5 +1,5 @@
 import { Option, Schema } from "effect";
-import { ClipSeconds, VideoSeconds } from "@tcc/contracts";
+import { ClipSeconds, VideoSeconds, defaultSegmentation } from "@tcc/contracts";
 import { computeWindows } from "../domain/rules.ts";
 import {
   planSegments,
@@ -21,14 +21,14 @@ export const pipelineFunctions = {
       verdicts: "verdicts-v1",
       highlights: "highlights-v1",
     })[stage],
-  params: (stage) =>
+  params: (stage, spec: import("@tcc/contracts").JobSpec | undefined = undefined) =>
     stage === "segments"
-      ? { maxSec: 40, overlapSec: 5, encodeArgsHash }
+      ? { ...(spec?.segmentation ?? defaultSegmentation), encodeArgsHash }
       : stage === "highlights"
         ? { overlapMergeVersion: "nearest-v1" }
         : {},
   computeWindows,
-  planSegments: (windows) => planSegments(windows, { maxSec: 40, overlapSec: 5 }),
+  planSegments: (windows, spec) => planSegments(windows, spec?.segmentation ?? defaultSegmentation),
 } satisfies Omit<PipelineFunctions, "highlights">;
 
 export const mergeOverlaps: MergeHighlights = (predictions, segments) => {

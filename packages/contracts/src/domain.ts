@@ -65,6 +65,14 @@ export const defaultRuleConfig = {
   before: 10,
   after: 16,
 } satisfies RuleConfig;
+export const Segmentation = Schema.Struct({
+  maxSec: NonNegative.check(Schema.isGreaterThanOrEqualTo(10), Schema.isLessThanOrEqualTo(120)),
+  overlapSec: NonNegative,
+}).check(
+  Schema.makeFilter((s) => s.overlapSec < s.maxSec / 2 || "overlapSec must be less than maxSec/2"),
+);
+export type Segmentation = typeof Segmentation.Type;
+export const defaultSegmentation = { maxSec: 40, overlapSec: 5 } satisfies Segmentation;
 export const JobSpec = Schema.Struct({
   rule: RuleConfig,
   llm: Schema.Struct({
@@ -73,6 +81,7 @@ export const JobSpec = Schema.Struct({
     maxCostUsd: NonNegative,
   }),
   clips: Schema.Boolean,
+  segmentation: Schema.optionalKey(Segmentation),
 });
 export type JobSpec = typeof JobSpec.Type;
 export const StageName = Schema.Literals([
