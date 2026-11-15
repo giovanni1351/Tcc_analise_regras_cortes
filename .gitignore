@@ -37,3 +37,17 @@ __pycache__/
 # Downloads temporários, checkpoints e índice Git isolado do pipeline
 .pipeline_state/
 *.partial.xlsx
+
+# Notas locais de agentes
+.audit/
+.scratch/
+
+# Workspace TypeScript
+node_modules/
+dist/
+*.tsbuildinfo
+
+# TypeScript source files are not MPEG transport-stream videos.
+!apps/**/*.ts
+!packages/**/*.ts
+!vitest.config.ts

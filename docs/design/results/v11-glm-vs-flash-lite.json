@@ -1,0 +1,7659 @@
+{
+  "run": "e34821e361ad30df2c33aaa4",
+  "models": {
+    "glm": "z-ai/glm-5.3-flash",
+    "baseline": "google/gemini-3.1-flash-lite"
+  },
+  "promptVersion": "benchmark-v1",
+  "seed": 11011,
+  "strata": {
+    "Multi-highlight:Foul": 10,
+    "Multi-highlight:Goal": 9,
+    "Multi-highlight:Offside": 9,
+    "Multi-highlight:Shot off target": 9,
+    "Multi-highlight:Shot on target": 9,
+    "Non-highlight": 9,
+    "Single-highlight:Foul": 9,
+    "Single-highlight:Goal": 9,
+    "Single-highlight:Offside": 9,
+    "Single-highlight:Shot off target": 9,
+    "Single-highlight:Shot on target": 9
+  },
+  "report": {
+    "dryRun": false,
+    "ledgerJobId": "a6f2a203-b2df-4748-b370-e23802a01b35",
+    "chargedThisRunUsd": 0.0870842755,
+    "reservationEstimateUsd": 8.080000000000009,
+    "coverage": {
+      "segments": 100,
+      "valid": 57,
+      "invalid": 42,
+      "ambiguous": 1,
+      "notSent": 0
+    },
+    "partial": {
+      "_tag": "AmbiguousAttempts",
+      "count": 1
+    },
+    "missingOutputsScoredAsEmpty": true,
+    "glm": {
+      "tp": 34,
+      "fp": 43,
+      "fn": 106,
+      "precision": 0.44155844155844154,
+      "recall": 0.24285714285714285,
+      "f1": 0.31336405529953915,
+      "validOutputRate": 0.57,
+      "perClass": {
+        "Goal": {
+          "tp": 15,
+          "fp": 6,
+          "fn": 9,
+          "precision": 0.7142857142857143,
+          "recall": 0.625,
+          "f1": 0.6666666666666666
+        },
+        "Shot on target": {
+          "tp": 7,
+          "fp": 11,
+          "fn": 33,
+          "precision": 0.3888888888888889,
+          "recall": 0.175,
+          "f1": 0.2413793103448276
+        },
+        "Shot off target": {
+          "tp": 4,
+          "fp": 13,
+          "fn": 24,
+          "precision": 0.23529411764705882,
+          "recall": 0.14285714285714285,
+          "f1": 0.17777777777777778
+        },
+        "Foul": {
+          "tp": 7,
+          "fp": 10,
+          "fn": 23,
+          "precision": 0.4117647058823529,
+          "recall": 0.23333333333333334,
+          "f1": 0.2978723404255319
+        },
+        "Offside": {
+          "tp": 1,
+          "fp": 3,
+          "fn": 17,
+          "precision": 0.25,
+          "recall": 0.05555555555555555,
+          "f1": 0.09090909090909091
+        }
+      },
+      "knownCostUsd": 0.08708427550000007,
+      "unknownCostSegments": 1,
+      "totalCostUsd": null,
+      "meanCostPerSegmentUsd": null
+    },
+    "baseline": {
+      "tp": 73,
+      "fp": 50,
+      "fn": 67,
+      "precision": 0.5934959349593496,
+      "recall": 0.5214285714285715,
+      "f1": 0.5551330798479087,
+      "validOutputRate": 1,
+      "perClass": {
+        "Goal": {
+          "tp": 24,
+          "fp": 5,
+          "fn": 0,
+          "precision": 0.8275862068965517,
+          "recall": 1,
+          "f1": 0.9056603773584906
+        },
+        "Shot on target": {
+          "tp": 21,
+          "fp": 29,
+          "fn": 19,
+          "precision": 0.42,
+          "recall": 0.525,
+          "f1": 0.4666666666666667
+        },
+        "Shot off target": {
+          "tp": 3,
+          "fp": 2,
+          "fn": 25,
+          "precision": 0.6,
+          "recall": 0.10714285714285714,
+          "f1": 0.18181818181818182
+        },
+        "Foul": {
+          "tp": 13,
+          "fp": 13,
+          "fn": 17,
+          "precision": 0.5,
+          "recall": 0.43333333333333335,
+          "f1": 0.4642857142857143
+        },
+        "Offside": {
+          "tp": 12,
+          "fp": 1,
+          "fn": 6,
+          "precision": 0.9230769230769231,
+          "recall": 0.6666666666666666,
+          "f1": 0.7741935483870968
+        }
+      },
+      "knownCostUsd": 0.12872040000000015,
+      "unknownCostSegments": 0,
+      "totalCostUsd": 0.12872040000000015,
+      "meanCostPerSegmentUsd": 0.0012872040000000014
+    },
+    "bootstrap": {
+      "deltaF1": -0.24176902454836957,
+      "lower": -0.3304645849200304,
+      "upper": -0.15661767156617679,
+      "resamples": 10000,
+      "seed": 11011
+    },
+    "segments": [
+      {
+        "segmentId": "9a103dfcf9aa0c9bd7c33de7",
+        "blob": "60e13b048fcf25eb0b424901587c3c084d4d73bd170f5ccc0c0db3d910f348d4",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000987615,
+        "baselineCostUsd": 0.001454,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 2,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "7639e439c0dd93ca80362575",
+        "blob": "3d428a406db7738805454ad41ff68c8554386c1f17293ea94e2b424e50acca97",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000597915,
+        "baselineCostUsd": 0.001031,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "fc7ffb0dd16027cf2de7ffa2",
+        "blob": "ac750df94f8390ff9ffc7b77c3c233430af064112f916a1504be5d129956ed4f",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "76da086ca4e597755636f8af",
+        "blob": "dc1959a5d2c9fbcf671c8cfa0edfae317716ebc75c173fb3c738e9b2c0ae34fb",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000707308,
+        "baselineCostUsd": 0.00109275,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "ea0346d9d463c37f8af9a7d8",
+        "blob": "33baddcb124c22e8a98e1bd6d09034766201a2c595ae19caf79b1b614ca3ecca",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000649395,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "808a0e1dcf4dfe4836cea0f5",
+        "blob": "c48f7fef4c1522847ba1d6131dbb01dc26e4978264326e2e9a94f4a10b6069e0",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000491715,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "5ff5e53220cbf99ef6614241",
+        "blob": "cfd057b6d7a1cbeb8613fd783c234d0870c52193a5e0d8d991eb3aec79f28f63",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "486b1d8d61aef8b49307857d",
+        "blob": "aad0b8ecd2c6e2261b8471b2d2f2dbff6be896fbc347777f866be322b7bd581d",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000502335,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "506926cf105ddad15eb5d845",
+        "blob": "641e114929b5397fd2f26056e1cf5548c74a535b6930ff86eb455097eb4192da",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "176aa9f42a8119057191e2a9",
+        "blob": "25c178cd5c33e51c22d338638fde9359ee6bc8ddd82271be111c07ac249a98ad",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001034,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "eec00ee68f2565fb39b99bc3",
+        "blob": "6afcab7142676084be47e25e8f8c67c2b31ea3cb4ba27b4e1d110a680918f2d2",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000588588,
+        "baselineCostUsd": 0.001454,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "01a23d62ee46f8583df7d383",
+        "blob": "ce2afab8de6a51c0141738c2b375c1e4d4ad5205af5724012e8f7a7c53e27394",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000439628,
+        "baselineCostUsd": 0.0010325,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "d200e5ddd1b55830eb77a951",
+        "blob": "da50364db231e2d86a0438d2dff30219018f9c9718a3e2177d47dfbe6c14918d",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000805868,
+        "baselineCostUsd": 0.00102775,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "2721024d4b995f1abc82a792",
+        "blob": "3d19a2612892d7107cc245f2a21eff49d7955978686de1da79cc9b0afd809737",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000581308,
+        "baselineCostUsd": 0.0010205,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 3,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 2,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "6604185315a52e076afdc4fa",
+        "blob": "ce773ddbb96c911160cbe21b2c6db3de43c94c7e8e1428aedc6a96673d6523e2",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001041348,
+        "baselineCostUsd": 0.0010295,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 3,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 3,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 3,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "4c55e24d81235d280178530f",
+        "blob": "4c80394e89ae0ad2b06cddb6cfeef58948db921a3ddf8dd61553d34f4df77adf",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001451,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "8f80471cb8d890a7ff1b3bd8",
+        "blob": "582137a8e591baef13c10036d925ae924dacdb523f3c57a5ab8ccfc55aca0b91",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000904708,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "8725b2746351a3c55b3296b5",
+        "blob": "cd554bb96d1ab7ac414dad5e1b4cad132f3502e888e06d1b4f8fe61af8d7261b",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000716268,
+        "baselineCostUsd": 0.0015125,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 2,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "d5d3bf4f71b73edb28dff7aa",
+        "blob": "a171dbac4ab24f528a278d02ba9dbbedec5c2620d2ac34fc4750d6793f42e3fa",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000341348,
+        "baselineCostUsd": 0.001031,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "ddcfe780d2ee3cbe32fd1161",
+        "blob": "5f267c58d4b20e5b830dbe787485b00577867866ba6dc5eb64496fb70e275e57",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000941668,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 2,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "7b3683b615788079d8e24c17",
+        "blob": "e05d8c2d2d599fd85bbb0a5b6c8f55a69a115e44e3707d97f34368c6da1ebd9d",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000470988,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "6224c34102433d301336263a",
+        "blob": "b2fdc74b829473a3d0e3ad4dd292d0144e177812888ca93aa9b0ad5dc3903a14",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.0008925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "2905d17b3543f3df29054c24",
+        "blob": "24471f2fbe5aa3ff8510f3bfc97ed59af152f8f3000364f002ac3cdb4b760f10",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0010325,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "8b3afc942608d644e83f9f58",
+        "blob": "688fc81e18e681a093dbb264d4743667d5c6511d6b95013f0e59d26e8db2b61d",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000454275,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "f9015a2d720cfd95a89fb917",
+        "blob": "4216192b2009cb8a655d038723b8d3a9a33520687ec8be09308c630c4e32f0ce",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000664695,
+        "baselineCostUsd": 0.001454,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "60810ce378592fe334f066c6",
+        "blob": "1b9896edf264c7dfde1332287865a959b7cf07af75deb33febc5270141c7e347",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0014525,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "2bdf6b53d372b9208f18dca9",
+        "blob": "b206f827b2b7ed45f61034db19c6691f844467d951c953a1574b03c036456fe6",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001033155,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "bdbfb0c17f660da779498690",
+        "blob": "7ea3798105b2517f7645a6a59fbed7c3c99c8735652bc72ccad6ace22749b092",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000605115,
+        "baselineCostUsd": 0.001328,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "13d03050643748a5f33729c6",
+        "blob": "e3c6747c0c4001e1700173877afbdc4e8d004451f33e71f50241c8c1c96f13d5",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001094,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "cf0e86a34a4cca9a95858744",
+        "blob": "3407f8b27bb7ad6b268ec9977a5ddb99df15224e133e7156656386f68a9e5084",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000420795,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "9c8d2358a157d91e580ae435",
+        "blob": "e9a43ce7cc8cf03a13ed2a175d1797ef55d724db1932059ce5e77aa996e7c3ba",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "4106d948253f1036688d5690",
+        "blob": "5b188371c29d2bb67413bca2e9b4bd917d1b0593aa9ada58a9b35700c68ae567",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001205148,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "b78c467d19ced7ec4de16c61",
+        "blob": "f3eefc515b522ff76c7479d8f8eeee0bcc52184ffb1b7b614a5590ce72675b5a",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000847575,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "490efd023ca694663a0c858b",
+        "blob": "fb3c07aba636bd48a86fddb5cd80558535e1b90180f50d58215284552b2d7f3b",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0014525,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "5d8927891e50aafe1c40778c",
+        "blob": "1becf9b17487a2446e2535745911678038647b7009c5a231341bfac8487164c3",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001451,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "c497a1665c4d458b067fbcde",
+        "blob": "0327c4a43569236fa2f50f35c8c1993eae436acf6a5c20c3f60818792597189a",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000689355,
+        "baselineCostUsd": 0.0015035,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 3,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 3,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "b9a1fd2d69e990c42b18a598",
+        "blob": "e144b4ac702d311462167cc6e4cd0e644b18e918626996d2a8444fae35932d11",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "42a62bc7485dcf06481741d7",
+        "blob": "71cfd2471fef9de6978ca3fdb0dffdd81317f44e7293967e4bdd999f9b4b233a",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 3,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "e429c4938085dbe82c1a5225",
+        "blob": "7f444fec3d78aa8fa1f09d792ee9899152326b0934bccc2e961acdbb218bda64",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "f3c374675e5ec5d4dc32bb06",
+        "blob": "6563212d2b8853b25bb025d6b77e29261598c22f158a737927ac2d1703f4296d",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001328,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "fa4fbbf177f054a65345ef68",
+        "blob": "e1afa0155ca7734f3e249c0bb30e02fd6fde9c6f88be3d1bbff7cddefa388393",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001062135,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "5a1af2154d1dccb3438e155e",
+        "blob": "b46f5a074878d6b9afa77af3bb1d4906f0517e9fb9e52284b6f0fb9bb7ce5edb",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Ambiguous",
+        "glmCostUsd": null,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "13846acb171cd89da9a12ca9",
+        "blob": "473bdf864d1437a32475398e92382fc05109e88fe88f06c7233ab4f0ecf10809",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001034,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "071bb54308657ab0e1db81bb",
+        "blob": "0eb741523578044bb2c529722e46e6d56bd519f2c1eb2d4895e61d06d04c3bbc",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000496935,
+        "baselineCostUsd": 0.00103425,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "d41810dab00714247c5226c5",
+        "blob": "d18ee799675392cac6c933740bb265b722751a8a54f201c81f2971ec821e2427",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "750a17a07756fa05cd44cffe",
+        "blob": "fdcf0f9adfc248d3f8408bf74f62a4058448ff3ea094b6211d47d9d2dafbce66",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001031,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "85d8aeb871f3dd9de2295dab",
+        "blob": "34af2aedf078e7ba65a657227fd44a697daea7ad37ca6e32726cbff586011a10",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "d87ffa23540e923d5be7cbbb",
+        "blob": "8402ace009d738b235b9caca7783b8b384b2c903fec83628544914459ba5c710",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0014525,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 2,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "97a05e7dcf4f5a416da384b6",
+        "blob": "7ac20c262309905058971a27688aaa2c9f453b05f273385f2183603e98f38747",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000614628,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "f6bcef7b9b901df994f5272b",
+        "blob": "02f092c6e8324d3eedc9b91522717d8ac093e89f56d217f70c12ea827a8189ee",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000736148,
+        "baselineCostUsd": 0.000894,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "1882e345a5b1ed5d6b887c73",
+        "blob": "23b466828e59564d13951a615db6eed7750883f9682e83440e0a564aa4c8cf8e",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.0010265,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "0cddfe91dff2b3762def6723",
+        "blob": "b0582ddd880970b9422511dcdf71d728ab98eb7214bcccd3f65c23b2fa084884",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000302428,
+        "baselineCostUsd": 0.001031,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "602f2c0b39c816bc3111054f",
+        "blob": "8891d05ccb2011516b3aa4b83e8c94d1271e4c04cef844116c2cc456e736307c",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "af1ab3f216526b80bc31eb9b",
+        "blob": "59393bed754d9284a736a580e7f43e061ce6ac631ca16cd588c8c090bd6e19f6",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000497295,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "09d875f3489c0618ace0c05c",
+        "blob": "569a874d00798bf44510d282a19712f9c7956cff628521659de6ab841894a0f1",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000553455,
+        "baselineCostUsd": 0.001034,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "b813b5094e6f5c6b3c4517b7",
+        "blob": "2a735eca9f695f2b515bc3c4dd40a69e12e93015863219c201de1a5277dda73f",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "723655a820a65165f77ebf99",
+        "blob": "209f990b668f42c789783328705b72759379d51fd8cc36d1a7398d873645a0d9",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000490815,
+        "baselineCostUsd": 0.001031,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "7241709f1c9afe5037f43101",
+        "blob": "1c39974336477bec83e9fea36d89f925c438012692c903d9ca976edd1215db27",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.001094,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "710c80c0a3847c1646be2368",
+        "blob": "22c93ee32d8ed3a76d06e12aa63c26e1ecb0d454e10a2aac6088f5c7d8a813f5",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001272908,
+        "baselineCostUsd": 0.001094,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 2,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "ebc78e5c7b634df5f127f365",
+        "blob": "f86b059ea82c90d07306c75f8309d56bbf55ac2c22aebf836270abcf8045ade4",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.0004590495,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "8195ab7e0702c59b1c0a3e6a",
+        "blob": "690b0c2186883bfbedaedf7e255c8e19179a53711794c2e2b63d8588f0da5be1",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "56641314fbc4d747dd23048f",
+        "blob": "507186a3406c76df534ca2846a557cf81f8d21449ad910d74b419cada9085ef7",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000535948,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "16697fb35112bc625bc15b0d",
+        "blob": "8b36d596a2024386f089061461fbc10279c78ec5a9189bdec46bd3e92b74a2c5",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000395108,
+        "baselineCostUsd": 0.001031,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "561918faf120c8f2618fc3dd",
+        "blob": "1e8bcffaf19556c82ff8389be3f052cc8e52c7f961bae752b490a4ed6e0adcb8",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000614628,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "79fbc4f218410d003c068dab",
+        "blob": "aecc0ea89bcd6c5e336522d2327e8c209e5d5e547bb873e569f69ed6b249e739",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "db16f19fdd444be3679cd8e7",
+        "blob": "faa0fc6f16dc336d37bfc3d091ac51af8160bced42af67cdc10b115fd697c83a",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "8e486a7e1303f0a93f1b427a",
+        "blob": "c73460f0499aa1b1de3e53df7da2577600a1363119f587f8cd42ff075ac23e70",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000378868,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "4ed94fa46903719afc3f9c7a",
+        "blob": "4075bca8b22f2c75948747b72b31db46439027315cecd7cdf3e85760454dcd59",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "4b02c4758515ded73ec69559",
+        "blob": "909ad4a0dd18fd50746d0f5cc37b756639640dbe5f8187de0a35df7400a51c83",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "05f002d27876e95eefb6fd27",
+        "blob": "0d5d8b58daa80633f84271446a09e932dc35ec70bcff63580f945a04f70e9c22",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001034,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "e32052c38de9eff49fd8167a",
+        "blob": "5089891b55ad7e45db60af50dfefc0cae116373a466c16f6cfca46ff3d8b254e",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000600348,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "36c723c2156b453167ea742a",
+        "blob": "60116d82627e274644ee334f2f3369f35bd46ca3521f6a9f0bde55d40f1624a8",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000334068,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "9fab6c4270ad4c9366140c4b",
+        "blob": "41cf7ab037d6faf45f31ef21e5a96a7c8fe08de78d203d8f2763e677da3b0bdf",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000398468,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "5e62094df05356a571541d19",
+        "blob": "c8d7de92cfb0c175fb697e14f96418f2eea8bde687130c7c3e021c074012dfc9",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000458388,
+        "baselineCostUsd": 0.001388,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "a3f04faf74ed1df8cbe6757c",
+        "blob": "f1c0eb51edb855a859b3eefc79eeebfbe86effd7c86ca952a36c4de6aa09fd82",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000371588,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "2379af0ae9cdebd9f7138aee",
+        "blob": "6e076b182e579a4ba56bb4ed2316395e816f1952021a0aa731826ef9eed04b88",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001034,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "e33c98eda425dfe43a334172",
+        "blob": "cca8ca7de07e84ad8bdd3f7aa6362c1d650e3dd3d07d7a3143c25d2f47dc3934",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001284556,
+        "baselineCostUsd": 0.00093,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "7198fefaca0cf4eb1c5d15b6",
+        "blob": "feca22379fed435e7f0694ae038b7104c9ae411f806b3d15195872975adbb164",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000360108,
+        "baselineCostUsd": 0.0010325,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "3be37d551f709f54b5c4e2f9",
+        "blob": "3dab0e448ce3d634ce1c015c62419a853619781de1a04db5bf205b09654975b9",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001448,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "39e5c5280965cd95cfb43e09",
+        "blob": "38a33263a97cea1c5aea76aff5e419ddd8f82923c9854768a947ca9d50f54049",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000865788,
+        "baselineCostUsd": 0.001454,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "0a334183aa9b12d710fca273",
+        "blob": "27f40f5d71f30a1d49e3b047d5cdb875ada9c5e3e735618f974d5943582fc8e4",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001094,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "c27f35a4e911a51aa8fe6cec",
+        "blob": "19bcea015c1b81ae682861b40d8b63657fa3eda99f32f902161f3c4f92b7fe7d",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000377468,
+        "baselineCostUsd": 0.0014495,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "54b23fd7cd0792d54838903e",
+        "blob": "3fb471cdb745db01cc383cef63683db8f9d2110d3a03b994e3f6cd9400a28d42",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000450828,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "d5d35fc0b2591a9bfb951768",
+        "blob": "77d063b067a1c32951e31065cef92bb8a7cc406309488be28b14d4145db6af0c",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.0006277895,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 2,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "c73c35fc7cf8a78210892c5d",
+        "blob": "c16321bb1d94bc272960635448ca1fe492dc3be027a1fa56122bba07d4776341",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "2adc369c0922331e6e45fed0",
+        "blob": "b65e115345b9486863878ca84b477ce701b2836d0d417b64022a9b187d5014c0",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000444388,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "dd55492d4abf04a3f70868e0",
+        "blob": "3d5afaefea5447f16a3bebcfad38f594d571f81eaf76db634a4fd974f53117e9",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000751268,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 3,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "d0eab9c8e50996fbef477268",
+        "blob": "8dfcddcc19e916d4e509f8b02be600cbc77c2ea43f2a01f5868b142dd86be13f",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000396788,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "e065234a5371e1e66d18b5cd",
+        "blob": "0bcf6139b7a5e0ed4e0fb2d2539af178eb069deddabb86a526677cb19596c486",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001280468,
+        "baselineCostUsd": 0.001451,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "c1935d41dd1ce0e1f3cb51d1",
+        "blob": "1dd581e8d30acd8d545655184b8ea2a106e234f24974c3ed6993f69c8c2f1821",
+        "stratum": "Multi-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000560028,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "5564b3a432214bceef05d79a",
+        "blob": "3d6899694e969c133096f676d594fce602c37d1595f6c8e39ce3bff57c82e40b",
+        "stratum": "Multi-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001454,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "7028bec235978c4c43a08900",
+        "blob": "41268a7787ef91a3a0da7d135e0777b2a5b6958d55f3be5b5a89f7c6114ee6ad",
+        "stratum": "Multi-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.0010325,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "33297ac6769f35a75f9ac389",
+        "blob": "8f5e6e3fe8b4853416cafab7d5440dc342181abe8fde375455d067ca036aa479",
+        "stratum": "Multi-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "2d7e838b49dfe6b1e41c4068",
+        "blob": "f7a8e46c6c2fff8870f0de8de1ef501037dd0df388219439fd36bd4efd437166",
+        "stratum": "Non-highlight",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000371028,
+        "baselineCostUsd": 0.001391,
+        "glm": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "a374b0ce981225d76454c569",
+        "blob": "825e3321d7fa2478531e08d2748ee6d8b0595d4a2ab161504e655d2ed86f10e1",
+        "stratum": "Single-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.0013925,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "f38b75487c56d15ad40917a8",
+        "blob": "9914fe0b16a6deaaedf4ffd4be0e229119325ac185affdec9c33921ef21479dc",
+        "stratum": "Single-highlight:Goal",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000783468,
+        "baselineCostUsd": 0.0014495,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "14c642b041c7e10b1564d8a7",
+        "blob": "80471aec902e0b71943ad7c16be7518e68db605a80143c35ae733efcf99e8b38",
+        "stratum": "Single-highlight:Offside",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.000323708,
+        "baselineCostUsd": 0.0010325,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "89cf279b2409ff4f76d6334f",
+        "blob": "7e6f6392f285d86b6629801639e8a363139a508ef413a1f16ce92ec49cfd3a95",
+        "stratum": "Single-highlight:Shot off target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.0006699745,
+        "baselineCostUsd": 0.001394,
+        "glm": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 0,
+          "fp": 1,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "e930502cd35838a2b5612840",
+        "blob": "a083e16d7a068513e0762782a9162210fadfdec573b3d9b395dfbe19453c82b4",
+        "stratum": "Single-highlight:Shot on target",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001369228,
+        "baselineCostUsd": 0.0014525,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 1,
+              "fp": 1,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      },
+      {
+        "segmentId": "f7653977ce938d60eb3c63da",
+        "blob": "6a1b47ea9afecf92d6c041ef954838d1e130fd9b7d1b2f9c6f8fe67a6aece2fd",
+        "stratum": "Multi-highlight:Foul",
+        "includeNotShown": true,
+        "glmState": "Answered",
+        "glmCostUsd": 0.001090035,
+        "baselineCostUsd": 0.00041165,
+        "glm": {
+          "valid": false,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        },
+        "baseline": {
+          "valid": true,
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "perClass": {
+            "Goal": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot on target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Shot off target": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "Foul": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "Offside": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          }
+        }
+      }
+    ]
+  }
+}

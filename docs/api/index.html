@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Reference for the Highlights API: endpoints, types, job states, errors, and configuration.">
+<title>Highlights API reference</title>
+<style>
+:root {
+	--bg: #fafafa;
+	--fg: #171717;
+	--muted: #5c5c5c;
+	--surface: #f0f0f0;
+	--line: #e2e2e2;
+	--accent: #0b6bcb;
+	--remote: #a15c00;
+	--mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	--sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #000;
+		--fg: #fff;
+		--muted: #a3a3a3;
+		--surface: #141414;
+		--line: #262626;
+		--accent: #6cb6ff;
+		--remote: #f0b35a;
+	}
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 var(--sans); }
+main { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+a { color: var(--accent); }
+h1 { font-size: 26px; line-height: 1.2; margin: 0 0 8px; }
+h2 { font-size: 19px; margin: 40px 0 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+h3 { font-size: 15px; margin: 24px 0 6px; font-family: var(--mono); font-weight: 600; }
+h3 .verb { display: inline-block; min-width: 3.4em; color: var(--muted); }
+p, li { max-width: 74ch; }
+p { margin: 6px 0 10px; }
+ul { padding-left: 20px; margin: 6px 0 10px; }
+.sub { color: var(--muted); margin: 0 0 16px; }
+code, pre { font-family: var(--mono); font-size: 13px; }
+:not(pre) > code { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; tab-size: 2; line-height: 1.5; margin: 8px 0 12px; }
+.scroll { overflow-x: auto; margin: 8px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+td:first-child, th:first-child { padding-left: 0; }
+td code { white-space: nowrap; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; margin: 12px 0 0; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+nav.toc a { text-decoration: none; }
+dl.fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 14px; margin: 6px 0 12px; font-size: 14px; }
+dl.fields dt { color: var(--muted); }
+dl.fields dd { margin: 0; }
+.flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; list-style: none; padding: 0; margin: 10px 0 6px; font-size: 13px; }
+.flow li { display: flex; align-items: center; }
+.flow li + li::before { content: "\2192"; color: var(--muted); padding: 0 6px; }
+.flow span { border: 1px solid var(--line); background: var(--surface); border-radius: 5px; padding: 4px 8px; font-family: var(--mono); }
+.flow .remote span { border-color: var(--remote); color: var(--remote); }
+.legend { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+.legend b { color: var(--remote); font-weight: 600; }
+svg.diagram { display: block; width: 100%; max-width: 560px; height: auto; margin: 10px 0 12px; }
+svg.diagram .box { fill: var(--surface); stroke: var(--line); }
+svg.diagram .box.ok { stroke: var(--accent); }
+svg.diagram .box.warn { stroke: var(--remote); }
+svg.diagram text { fill: var(--fg); font: 600 15px var(--mono); }
+svg.diagram text.label { fill: var(--muted); font: 14px var(--sans); }
+svg.diagram .edge { stroke: var(--muted); fill: none; stroke-width: 1.2; }
+svg.diagram .head { fill: var(--muted); }
+@media (max-width: 600px) {
+	dl.fields { grid-template-columns: minmax(0, 1fr); }
+	dl.fields dt { margin-top: 6px; }
+}
+</style>
+</head>
+<body>
+<main>
+<h1>Highlights API reference</h1>
+<p class="sub">The Highlights API is a local HTTP service. It takes a soccer video and returns timestamped highlights. It listens on <code>http://127.0.0.1:3000</code>, takes and returns JSON, and has no authentication. To install and start it, see <a href="run-locally/">Run the Highlights API locally</a>.</p>
+<nav class="toc" aria-label="Contents">
+	<a href="#pipeline">Pipeline</a>
+	<a href="#endpoints">Endpoints</a>
+	<a href="#types">Types</a>
+	<a href="#job-states">Job states</a>
+	<a href="#attempts">Paid-call attempts</a>
+	<a href="#errors">Errors</a>
+	<a href="#configuration">Configuration</a>
+	<a href="#cli">CLI</a>
+</nav>
+
+<h2 id="pipeline">Pipeline</h2>
+<p>A job runs seven stages in order. Every stage runs on your machine except <code>verdicts</code>.</p>
+<ol class="flow" aria-label="Stages in order">
+	<li><span>probe</span></li>
+	<li><span>scenes</span></li>
+	<li><span>detections</span></li>
+	<li><span>windows</span></li>
+	<li><span>segments</span></li>
+	<li class="remote"><span>verdicts</span></li>
+	<li><span>highlights</span></li>
+</ol>
+<p class="legend"><b>verdicts</b> calls a multimodal model on OpenRouter.</p>
+<p>The server caches each stage's output under a key. The key hashes the stage name, its version, its parameters, and its inputs. A job reuses every stage whose key already has a finished output.</p>
+<div class="scroll"><table>
+	<thead><tr><th>Stage</th><th>Output</th><th>The key changes when</th></tr></thead>
+	<tbody>
+		<tr><td><code>probe</code></td><td>Media hash, duration, frame rate, and frame count, from ffprobe.</td><td>The file's bytes change.</td></tr>
+		<tr><td><code>scenes</code></td><td>Scene cuts from TransNetV2.</td><td>The media or the TransNetV2 weights change.</td></tr>
+		<tr><td><code>detections</code></td><td>YOLO counts of players, goalkeepers, referees, and the ball, on every 5th frame.</td><td>The media or the YOLO weights in <code>best.pt</code> change.</td></tr>
+		<tr><td><code>windows</code></td><td>Time ranges that the rule keeps.</td><td><code>spec.rule</code> changes.</td></tr>
+		<tr><td><code>segments</code></td><td>MP4 clips cut from the windows.</td><td><code>spec.segmentation</code> or the encoder settings change.</td></tr>
+		<tr><td><code>verdicts</code></td><td>One model answer per clip.</td><td>The model or the prompt version changes. An answer for a clip with the same bytes is reused across jobs.</td></tr>
+		<tr><td><code>highlights</code></td><td>Events in video time, merged across clip overlaps.</td><td>The verdicts, the windows, or the source's half change.</td></tr>
+	</tbody>
+</table></div>
+
+<h2 id="endpoints">Endpoints</h2>
+<div class="scroll"><table>
+	<thead><tr><th>Method</th><th>Path</th><th>Success</th><th>Does</th></tr></thead>
+	<tbody>
+		<tr><td>POST</td><td><a href="#post-sources"><code>/sources</code></a></td><td>200 <code>Source</code></td><td>Registers a video.</td></tr>
+		<tr><td>GET</td><td><a href="#get-source"><code>/sources/:id</code></a></td><td>200 <code>Source</code></td><td>Reads a source.</td></tr>
+		<tr><td>POST</td><td><a href="#post-jobs"><code>/jobs</code></a></td><td>202 <code>Job</code></td><td>Queues an analysis.</td></tr>
+		<tr><td>GET</td><td><a href="#get-jobs"><code>/jobs</code></a></td><td>200 <code>{ jobs, total }</code></td><td>Lists jobs.</td></tr>
+		<tr><td>GET</td><td><a href="#get-job"><code>/jobs/:id</code></a></td><td>200 <code>Job</code></td><td>Reads a job and its progress.</td></tr>
+		<tr><td>POST</td><td><a href="#cancel"><code>/jobs/:id/cancel</code></a></td><td>200 <code>Job</code></td><td>Cancels a job.</td></tr>
+		<tr><td>POST</td><td><a href="#resume"><code>/jobs/:id/resume</code></a></td><td>200 <code>Job</code></td><td>Requeues a <code>Partial</code> or <code>Failed</code> job.</td></tr>
+		<tr><td>GET</td><td><a href="#result"><code>/jobs/:id/result</code></a></td><td>200 <code>JobResult</code></td><td>Reads the highlights.</td></tr>
+		<tr><td>GET</td><td><a href="#blobs"><code>/blobs/:hash</code></a></td><td>200 bytes</td><td>Downloads a clip or an artifact.</td></tr>
+		<tr><td>GET</td><td><a href="#evaluation"><code>/jobs/:id/evaluation</code></a></td><td>200 <code>{ windows }</code></td><td>Reads the kept windows.</td></tr>
+		<tr><td>GET</td><td><a href="#model-rate"><code>/evaluation/model-rate</code></a></td><td>200 <code>{ usdPerSecond }</code></td><td>Reads a model's recorded cost.</td></tr>
+		<tr><td>GET</td><td><a href="#budget"><code>/budget</code></a></td><td>200 <code>Budget</code></td><td>Reads paid spend.</td></tr>
+	</tbody>
+</table></div>
+<p>Every endpoint can return the <a href="#errors">errors</a> listed below.</p>
+
+<h3 id="post-sources"><span class="verb">POST</span>/sources</h3>
+<p>Registers a video. The server hashes and probes the file. The same reference returns the same source. Two references to the same bytes share one media record and its cached stages.</p>
+<dl class="fields">
+	<dt>Body</dt><dd><a href="#t-sourceref"><code>SourceRef</code></a></dd>
+	<dt>Returns</dt><dd><a href="#t-source"><code>Source</code></a></dd>
+	<dt>400</dt><dd>The file does not exist, ffprobe cannot read it, or a SoccerNet path component is invalid.</dd>
+	<dt>409</dt><dd>The file changed while the server hashed it.</dd>
+</dl>
+<pre><code>curl -s localhost:3000/sources -H 'content-type: application/json' \
+	-d '{"_tag":"LocalFile","path":"match.mkv"}'</code></pre>
+<pre><code>{
+	"id": "d154e959-c0a8-468b-8357-a8fa01246770",
+	"ref": { "_tag": "LocalFile", "path": "match.mkv" },
+	"mediaHash": "7a86080c081872aaec5d52a9a6cf8c20d94b79a989e5088bef393d3ad320135f",
+	"probe": { "duration": 2923.003, "fps": 25, "size": 201389318, "frameCount": 73075 }
+}</code></pre>
+
+<h3 id="get-source"><span class="verb">GET</span>/sources/:id</h3>
+<p>Returns the <a href="#t-source"><code>Source</code></a>. Returns 404 for an unknown id.</p>
+
+<h3 id="post-jobs"><span class="verb">POST</span>/jobs</h3>
+<p>Queues an analysis of one source with one spec. The same <code>sourceId</code> and <code>spec</code> return the existing job, unless <code>force</code> is <code>true</code>.</p>
+<dl class="fields">
+	<dt>Body</dt><dd><code>{ sourceId, spec?, force? }</code>. Without <code>spec</code>, the server uses the <a href="#t-jobspec">default spec</a>.</dd>
+	<dt>Returns</dt><dd>202 <a href="#t-job"><code>Job</code></a></dd>
+</dl>
+<pre><code>curl -s localhost:3000/jobs -H 'content-type: application/json' \
+	-d '{"sourceId":"d154e959-c0a8-468b-8357-a8fa01246770"}'</code></pre>
+
+<h3 id="get-jobs"><span class="verb">GET</span>/jobs</h3>
+<p>Returns <code>{ jobs: Job[], total }</code>, oldest first.</p>
+<dl class="fields">
+	<dt><code>offset</code></dt><dd>Integer, 0 or more. Default 0.</dd>
+	<dt><code>limit</code></dt><dd>Integer from 1 to 100. Default 50.</dd>
+	<dt><code>state</code></dt><dd>One of <code>Queued</code>, <code>Running</code>, <code>Succeeded</code>, <code>Partial</code>, <code>Failed</code>, and <code>Cancelled</code>.</dd>
+	<dt>400</dt><dd><code>offset</code> or <code>limit</code> is out of range.</dd>
+</dl>
+
+<h3 id="get-job"><span class="verb">GET</span>/jobs/:id</h3>
+<p>Returns the <a href="#t-job"><code>Job</code></a>: its state, the progress of each stage, the device each CV stage ran on, its coverage, and its paid cost. Clients poll this endpoint for progress.</p>
+<pre><code>{
+	"id": "1e1b2272-cdb2-4ea3-aebc-564b56341e08",
+	"state": { "_tag": "Running", "stage": "verdicts", "done": 1, "total": 56 },
+	"stages": [
+		{ "stage": "detections", "key": "068dd7bc…", "done": 1, "total": 1, "device": "cuda" }
+	],
+	"coverage": { "segments": 56, "valid": 1, "invalid": 0, "ambiguous": 0, "notSent": 0 },
+	"committedUsd": 0.0012,
+	"reservedUsd": 0.08
+}</code></pre>
+<p>The example leaves out <code>spec</code>, <code>sourceId</code>, <code>createdAt</code>, <code>updatedAt</code>, and six of the seven stages.</p>
+
+<h3 id="cancel"><span class="verb">POST</span>/jobs/:id/cancel</h3>
+<p>Cancels a <code>Queued</code> or <code>Running</code> job. The server kills the job's ffmpeg and CV subprocesses. Finished stage outputs stay in the cache. Returns 409 for a job that has already finished.</p>
+
+<h3 id="resume"><span class="verb">POST</span>/jobs/:id/resume</h3>
+<p>Requeues a <code>Partial</code> or <code>Failed</code> job. The job skips finished stages and reuses answered calls. Returns 409 for a job in any other state.</p>
+<dl class="fields">
+	<dt>Body</dt><dd><code>{ retryAmbiguous?: boolean }</code></dd>
+	<dt><code>retryAmbiguous</code></dt><dd>Allows the job to resend the paid calls that are <code>Ambiguous</code> at the time of the request. The permission covers those calls once. Startup recovery and the end of the <code>verdicts</code> stage clear it.</dd>
+</dl>
+
+<h3 id="result"><span class="verb">GET</span>/jobs/:id/result</h3>
+<p>Returns the <a href="#t-jobresult"><code>JobResult</code></a>, with highlights in video-time order. Each highlight names the segment and the model attempt that produced it.</p>
+<pre><code>{
+	"jobId": "5bf34980-98b4-4f3c-a97e-95aba0b04983",
+	"highlights": [
+		{
+			"id": "9bcadda7-301a-4995-82d4-83a1d66d550a",
+			"class": "Goal",
+			"half": null,
+			"videoSeconds": 175.52,
+			"confidence": 0.95,
+			"segmentId": "cab825c8…:5",
+			"attemptId": "09aa3d27-90f8-4278-8f2b-533ee2533b2d",
+			"clipUrl": "/blobs/2cb5a2de9c40b10659b8613dc09fb3973280660bb1edbfba5fc808036a59d338"
+		}
+	],
+	"coverage": { "segments": 9, "valid": 6, "invalid": 3, "ambiguous": 0, "notSent": 0 }
+}</code></pre>
+
+<h3 id="blobs"><span class="verb">GET</span>/blobs/:hash</h3>
+<p>Returns the file stored under a SHA-256 hash. Clips have type <code>video/mp4</code>. Stage artifacts have type <code>application/json</code>. The endpoint supports <code>Range</code> requests.</p>
+
+<h3 id="evaluation"><span class="verb">GET</span>/jobs/:id/evaluation</h3>
+<p>Returns <code>{ windows: [{ start, end }] }</code>, the time ranges in seconds that the rule kept. The evaluation tools use it to compute the recall ceiling.</p>
+
+<h3 id="model-rate"><span class="verb">GET</span>/evaluation/model-rate?model=</h3>
+<p>Returns <code>{ usdPerSecond }</code>, the highest recorded cost per video second for <code>model</code>. The value is <code>null</code> until the model has a recorded call.</p>
+
+<h3 id="budget"><span class="verb">GET</span>/budget</h3>
+<p>Returns the <a href="#t-budget"><code>Budget</code></a> for paid models across all jobs.</p>
+<pre><code>{ "limitUsd": 0.8, "committedUsd": 0.516, "reservedUsd": 0, "ambiguousUsd": 0 }</code></pre>
+
+<h2 id="types">Types</h2>
+<p>The types live in <code>packages/contracts</code> as Effect Schema. The server, the CLI, and the generated client share them.</p>
+
+<h3 id="t-sourceref">SourceRef</h3>
+<pre><code>{ "_tag": "LocalFile", "path": string }
+
+{
+	"_tag": "SoccerNetHalf",
+	"league": string, "season": string, "game": string,
+	"half": 1 | 2,
+	"resolution": "224p" | "720p"
+}</code></pre>
+<p>A <code>SoccerNetHalf</code> resolves to <code>&lt;TCC_SOCCERNET_ROOT&gt;/&lt;league&gt;/&lt;season&gt;/&lt;game&gt;/&lt;half&gt;_&lt;resolution&gt;.mkv</code>.</p>
+
+<h3 id="t-source">Source</h3>
+<pre><code>{
+	"id": string,
+	"ref": SourceRef,
+	"mediaHash": string,
+	"probe": { "duration": number, "fps": number, "size": number, "frameCount": number }
+}</code></pre>
+
+<h3 id="t-jobspec">JobSpec</h3>
+<p>The default spec:</p>
+<pre><code>{
+	"rule": {
+		"_tag": "Zero", "short": 25, "zero": 0, "cluster": 1,
+		"preceding": true, "use_zero": true, "before": 10, "after": 16
+	},
+	"llm": {
+		"model": "nvidia/nemotron-3.5-super-vl:free",
+		"promptVersion": "benchmark-v1",
+		"maxCostUsd": 0.1
+	},
+	"clips": true,
+	"segmentation": { "maxSec": 40, "overlapSec": 5 }
+}</code></pre>
+<div class="scroll"><table>
+	<thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+	<tbody>
+		<tr><td><code>rule</code></td><td>The filter that runs before the model. <code>Zero</code> is config C from the study. <code>Context</code> takes <code>min_previous</code> and <code>drop_fraction</code> in place of <code>zero</code>, <code>preceding</code>, and <code>use_zero</code>. <code>before</code> plus <code>after</code> must be above 0.</td></tr>
+		<tr><td><code>llm.model</code></td><td>An OpenRouter model id. Ids that end in <code>:free</code> cost nothing.</td></tr>
+		<tr><td><code>llm.promptVersion</code></td><td>The prompt and output schema. <code>benchmark-v1</code> is the only version.</td></tr>
+		<tr><td><code>llm.maxCostUsd</code></td><td>The paid-spend cap for this job.</td></tr>
+		<tr><td><code>clips</code></td><td>When <code>true</code>, each highlight has a <code>clipUrl</code>.</td></tr>
+		<tr><td><code>segmentation</code></td><td>Clip length and overlap in seconds. <code>maxSec</code> is from 10 to 120. <code>overlapSec</code> is under half of <code>maxSec</code>. Optional, default 40 and 5.</td></tr>
+	</tbody>
+</table></div>
+
+<h3 id="t-job">Job</h3>
+<pre><code>{
+	"id": string,
+	"sourceId": string,
+	"spec": JobSpec,
+	"state": JobState,
+	"stages": [{ "stage": string, "key": string, "done": number, "total": number, "device": string | null }],
+	"coverage": Coverage,
+	"committedUsd": number,
+	"reservedUsd": number,
+	"createdAt": string,
+	"updatedAt": string
+}</code></pre>
+
+<h3 id="t-coverage">Coverage</h3>
+<p>Counts the job's clips. <code>segments</code> equals the sum of the other four fields after the <code>verdicts</code> stage.</p>
+<div class="scroll"><table>
+	<thead><tr><th>Field</th><th>Counts clips that</th></tr></thead>
+	<tbody>
+		<tr><td><code>valid</code></td><td>Got an answer that matches the output schema.</td></tr>
+		<tr><td><code>invalid</code></td><td>Got an answer that breaks the schema or stops at the token limit.</td></tr>
+		<tr><td><code>ambiguous</code></td><td>Had a paid call sent with no reply received.</td></tr>
+		<tr><td><code>notSent</code></td><td>Had no call sent, because a budget, a quota, or the credit ran out.</td></tr>
+	</tbody>
+</table></div>
+
+<h3 id="t-highlight">Highlight</h3>
+<pre><code>{
+	"id": string,
+	"class": "Goal" | "Shot on target" | "Shot off target" | "Foul" | "Offside",
+	"half": 1 | 2 | null,
+	"videoSeconds": number,
+	"confidence": number,
+	"segmentId": string,
+	"attemptId": string,
+	"clipUrl": string | null
+}</code></pre>
+<p><code>half</code> is <code>null</code> for a <code>LocalFile</code> source. <code>confidence</code> is from 0 to 1.</p>
+
+<h3 id="t-jobresult">JobResult</h3>
+<pre><code>{ "jobId": string, "highlights": Highlight[], "coverage": Coverage }</code></pre>
+
+<h3 id="t-budget">Budget</h3>
+<div class="scroll"><table>
+	<thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+	<tbody>
+		<tr><td><code>limitUsd</code></td><td>The value of <code>OPENROUTER_BUDGET_USD</code>.</td></tr>
+		<tr><td><code>committedUsd</code></td><td>Cost that OpenRouter reported for answered calls.</td></tr>
+		<tr><td><code>reservedUsd</code></td><td>Cost held for calls with no reported cost yet.</td></tr>
+		<tr><td><code>ambiguousUsd</code></td><td>Cost held for sent calls with no reply. OpenRouter may or may not have charged these calls.</td></tr>
+	</tbody>
+</table></div>
+
+<h2 id="job-states">Job states</h2>
+<svg class="diagram" viewBox="0 0 520 250" role="img" aria-labelledby="js-title">
+	<title id="js-title">Job states: Queued goes to Running, Running ends in Succeeded, Partial, Failed, or Cancelled, and resume returns Partial or Failed to Queued.</title>
+	<defs><marker id="a1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0 0 8 4 0 8z"/></marker></defs>
+	<rect class="box" x="10" y="98" width="110" height="34" rx="5"/><text x="65" y="120" text-anchor="middle">Queued</text>
+	<rect class="box" x="170" y="98" width="110" height="34" rx="5"/><text x="225" y="120" text-anchor="middle">Running</text>
+	<rect class="box ok" x="370" y="10" width="140" height="34" rx="5"/><text x="440" y="32" text-anchor="middle">Succeeded</text>
+	<rect class="box warn" x="370" y="62" width="140" height="34" rx="5"/><text x="440" y="84" text-anchor="middle">Partial</text>
+	<rect class="box" x="370" y="114" width="140" height="34" rx="5"/><text x="440" y="136" text-anchor="middle">Failed</text>
+	<rect class="box" x="370" y="166" width="140" height="34" rx="5"/><text x="440" y="188" text-anchor="middle">Cancelled</text>
+	<path class="edge" d="M120 115H168" marker-end="url(#a1)"/>
+	<path class="edge" d="M280 115C320 115 330 27 368 27" marker-end="url(#a1)"/>
+	<path class="edge" d="M280 115C320 115 330 79 368 79" marker-end="url(#a1)"/>
+	<path class="edge" d="M280 115C320 115 330 131 368 131" marker-end="url(#a1)"/>
+	<path class="edge" d="M280 115C320 115 330 183 368 183" marker-end="url(#a1)"/>
+	<path class="edge" d="M510 79H516V236"/>
+	<path class="edge" d="M510 131H516"/>
+	<path class="edge" d="M516 236H65V134" marker-end="url(#a1)"/>
+	<text class="label" x="290" y="229" text-anchor="middle">resume</text>
+</svg>
+<ul>
+	<li>One runner takes one job at a time from the queue.</li>
+	<li><code>Running</code> carries the current stage and its progress as <code>{ stage, done, total }</code>.</li>
+	<li>At startup, the server moves jobs left in <code>Running</code> back to <code>Queued</code>.</li>
+	<li>Cancel moves a <code>Queued</code> or <code>Running</code> job to <code>Cancelled</code>.</li>
+	<li><code>Failed</code> carries <code>{ stage, error }</code>. <code>error.category</code> is one of <code>SourceChanged</code>, <code>Inference</code>, <code>Process</code>, <code>Provider</code>, <code>Persistence</code>, and <code>InvalidInput</code>.</li>
+</ul>
+<p>A job ends in <code>Partial</code> when it finishes with clips in <code>notSent</code> or <code>ambiguous</code>. The <code>reason</code> field gives the cause.</p>
+<div class="scroll"><table>
+	<thead><tr><th>Reason</th><th>Cause</th><th>Fields</th></tr></thead>
+	<tbody>
+		<tr><td><code>BudgetExceeded</code></td><td>The next paid call would pass <code>llm.maxCostUsd</code> or <code>OPENROUTER_BUDGET_USD</code>.</td><td><code>capUsd</code>, <code>committedUsd</code></td></tr>
+		<tr><td><code>FreeDailyLimit</code></td><td>The free-model daily quota ran out.</td><td><code>retryAfterMs</code></td></tr>
+		<tr><td><code>CreditExhausted</code></td><td>OpenRouter refused the call for lack of credit.</td><td><code>message</code></td></tr>
+		<tr><td><code>AmbiguousAttempts</code></td><td>Paid calls were sent and no reply arrived.</td><td><code>count</code></td></tr>
+	</tbody>
+</table></div>
+
+<h2 id="attempts">Paid-call attempts</h2>
+<p>The server records every model call in a ledger before it sends the call.</p>
+<svg class="diagram" viewBox="0 0 520 170" role="img" aria-labelledby="at-title">
+	<title id="at-title">Attempt states: Reserved goes to Sent, and Sent ends in Answered, Failed, or Ambiguous.</title>
+	<defs><marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0 0 8 4 0 8z"/></marker></defs>
+	<rect class="box" x="10" y="64" width="110" height="34" rx="5"/><text x="65" y="86" text-anchor="middle">Reserved</text>
+	<rect class="box" x="170" y="64" width="110" height="34" rx="5"/><text x="225" y="86" text-anchor="middle">Sent</text>
+	<rect class="box ok" x="370" y="10" width="140" height="34" rx="5"/><text x="440" y="32" text-anchor="middle">Answered</text>
+	<rect class="box" x="370" y="64" width="140" height="34" rx="5"/><text x="440" y="86" text-anchor="middle">Failed</text>
+	<rect class="box warn" x="370" y="118" width="140" height="34" rx="5"/><text x="440" y="140" text-anchor="middle">Ambiguous</text>
+	<path class="edge" d="M120 81H168" marker-end="url(#a2)"/>
+	<path class="edge" d="M280 81C320 81 330 27 368 27" marker-end="url(#a2)"/>
+	<path class="edge" d="M280 81H368" marker-end="url(#a2)"/>
+	<path class="edge" d="M280 81C320 81 330 135 368 135" marker-end="url(#a2)"/>
+</svg>
+<div class="scroll"><table>
+	<thead><tr><th>State</th><th>Meaning</th></tr></thead>
+	<tbody>
+		<tr><td><code>Reserved</code></td><td>The call passed the budget check. The ledger holds a cost bound for it.</td></tr>
+		<tr><td><code>Sent</code></td><td>The request left the server.</td></tr>
+		<tr><td><code>Answered</code></td><td>The reply is stored. The reported cost replaces the held amount.</td></tr>
+		<tr><td><code>Failed</code></td><td>OpenRouter returned an error status.</td></tr>
+		<tr><td><code>Ambiguous</code></td><td>The call was sent and no reply arrived, after a timeout, a cancel, or a crash. The ledger keeps the held amount.</td></tr>
+	</tbody>
+</table></div>
+<ul>
+	<li>The server never resends an <code>Ambiguous</code> paid call on its own. A resume with <code>retryAmbiguous</code> is the only way to resend one.</li>
+	<li>While a paid call is unresolved, no job sends the same clip bytes to the same model with the same prompt.</li>
+	<li>Paid calls run one at a time. Free-model calls hold $0 and retry on their own.</li>
+	<li>The held amount for a call is its video seconds times the model's highest recorded cost per second, plus 4,096 output tokens.</li>
+</ul>
+
+<h2 id="errors">Errors</h2>
+<p>An error response is a JSON object with a <code>_tag</code>. The generated TypeScript client decodes these tags.</p>
+<div class="scroll"><table>
+	<thead><tr><th>Status</th><th><code>_tag</code></th><th>Fields</th><th>Returned when</th></tr></thead>
+	<tbody>
+		<tr><td>400</td><td><code>BadRequest</code></td><td><code>operation</code>, <code>message</code></td><td>The input is invalid.</td></tr>
+		<tr><td>404</td><td><code>NotFound</code></td><td><code>resource</code>, <code>id</code></td><td>The source, job, or blob does not exist.</td></tr>
+		<tr><td>409</td><td><code>Conflict</code></td><td><code>operation</code>, <code>message</code></td><td>The job's state does not allow the change, or the source changed during registration.</td></tr>
+		<tr><td>500</td><td><code>PersistenceError</code></td><td><code>operation</code>, <code>message</code></td><td>The database or the blob store failed.</td></tr>
+	</tbody>
+</table></div>
+<pre><code>{ "_tag": "NotFound", "resource": "job", "id": "nope" }
+
+{ "_tag": "BadRequest", "operation": "listJobs", "message": "offset must be nonnegative and limit between 1 and 100" }</code></pre>
+
+<h2 id="configuration">Configuration</h2>
+<p>The server reads these environment variables at startup.</p>
+<div class="scroll"><table>
+	<thead><tr><th>Variable</th><th>Default</th><th>Meaning</th></tr></thead>
+	<tbody>
+		<tr><td><code>TCC_PORT</code></td><td><code>3000</code></td><td>The port on <code>127.0.0.1</code>. The CLI reads it too.</td></tr>
+		<tr><td><code>TCC_DATA_DIR</code></td><td><code>~/.local/share/tcc-highlights</code></td><td>The SQLite database and the blob store. One server at a time can hold a data directory.</td></tr>
+		<tr><td><code>TCC_SOCCERNET_ROOT</code></td><td>none</td><td>The SoccerNet download root. Required for <code>SoccerNetHalf</code> sources.</td></tr>
+		<tr><td><code>OPENROUTER_API_KEY</code></td><td>none</td><td>Required, except in dev mode.</td></tr>
+		<tr><td><code>OPENROUTER_BUDGET_USD</code></td><td><code>0</code></td><td>The paid-spend limit across all jobs. At 0, the server refuses every paid call.</td></tr>
+		<tr><td><code>OPENROUTER_FREE_DAILY_CAP</code></td><td><code>50</code></td><td>Free-model calls per day. OpenRouter allows 1,000 for accounts that have bought $10 or more in credits.</td></tr>
+		<tr><td><code>OPENROUTER_RESERVATION_USD_PER_SECOND</code></td><td><code>0.001</code></td><td>The cost bound per video second for a paid model with no recorded call.</td></tr>
+		<tr><td><code>OPENROUTER_OUTPUT_USD_PER_TOKEN</code></td><td><code>0.00001</code></td><td>The output-token price in the cost bound.</td></tr>
+		<tr><td><code>TCC_MODEL</code></td><td><code>nvidia/nemotron-3.5-super-vl:free</code></td><td>The model for <code>analyze</code> when no model argument is given. It must be a free model.</td></tr>
+		<tr><td><code>CV_DEVICE</code></td><td><code>auto</code></td><td><code>auto</code>, <code>cuda</code>, or <code>cpu</code>. <code>auto</code> picks CUDA when PyTorch finds a GPU.</td></tr>
+		<tr><td><code>TCC_DEV_FAKE_STAGES</code></td><td><code>false</code></td><td>When <code>true</code>, fakes probing and every stage. No GPU, ffmpeg, or key is needed.</td></tr>
+	</tbody>
+</table></div>
+
+<h2 id="cli">CLI</h2>
+<p>The CLI is an HTTP client generated from the same contract. Every command except <code>serve</code> needs a running server.</p>
+<div class="scroll"><table>
+	<thead><tr><th>Command</th><th>Does</th></tr></thead>
+	<tbody>
+		<tr><td><code>pnpm start serve</code></td><td>Starts the server and the job runner.</td></tr>
+		<tr><td><code>pnpm start analyze &lt;source&gt; [model] [--force]</code></td><td>Registers the source and queues a job. <code>&lt;source&gt;</code> is a file path or <code>soccernet:&lt;league&gt;/&lt;season&gt;/&lt;game&gt;/&lt;half&gt;/&lt;resolution&gt;</code>. A paid model must be given as <code>[model]</code>.</td></tr>
+		<tr><td><code>pnpm start jobs</code></td><td>Lists jobs.</td></tr>
+		<tr><td><code>pnpm start result &lt;job-id&gt;</code></td><td>Prints the job's highlights.</td></tr>
+		<tr><td><code>pnpm start budget</code></td><td>Prints the paid-spend totals.</td></tr>
+	</tbody>
+</table></div>
+</main>
+</body>
+</html>

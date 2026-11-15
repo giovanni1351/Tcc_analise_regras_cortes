@@ -1,0 +1,323 @@
+{
+  "plan": {
+    "split": "test",
+    "seed": 42,
+    "model": "google/gemini-3.1-flash-lite",
+    "maxUsd": 2,
+    "estimatedUsd": 1.689,
+    "admitted": true,
+    "estimate": "upper estimate from study duration and scene count",
+    "jobs": [
+      {
+        "half": {
+          "_tag": "SoccerNetHalf",
+          "league": "europe_uefa-champions-league",
+          "season": "2015-2016",
+          "game": "2015-09-16 - 21-45 AS Roma 1 - 1 Barcelona",
+          "half": 1,
+          "resolution": "224p",
+          "duration": 2700,
+          "scenes": 233,
+          "workbook": "europe_uefa-champions-league/2015-2016/2015-09-16 - 21-45 AS Roma 1 - 1 Barcelona/1_224p_analysis.xlsx"
+        },
+        "segmentation": {
+          "maxSec": 40,
+          "overlapSec": 5
+        },
+        "segments": 311,
+        "estimatedUsd": 0.4665
+      },
+      {
+        "half": {
+          "_tag": "SoccerNetHalf",
+          "league": "europe_uefa-champions-league",
+          "season": "2015-2016",
+          "game": "2015-11-03 - 22-45 Real Madrid 1 - 0 Paris SG",
+          "half": 2,
+          "resolution": "224p",
+          "duration": 2842,
+          "scenes": 408,
+          "workbook": "europe_uefa-champions-league/2015-2016/2015-11-03 - 22-45 Real Madrid 1 - 0 Paris SG/2_224p_analysis.xlsx"
+        },
+        "segmentation": {
+          "maxSec": 40,
+          "overlapSec": 5
+        },
+        "segments": 490,
+        "estimatedUsd": 0.735
+      },
+      {
+        "half": {
+          "_tag": "SoccerNetHalf",
+          "league": "europe_uefa-champions-league",
+          "season": "2015-2016",
+          "game": "2015-11-24 - 22-45 Barcelona 6 - 1 AS Roma",
+          "half": 1,
+          "resolution": "224p",
+          "duration": 2700,
+          "scenes": 247,
+          "workbook": "europe_uefa-champions-league/2015-2016/2015-11-24 - 22-45 Barcelona 6 - 1 AS Roma/1_224p_analysis.xlsx"
+        },
+        "segmentation": {
+          "maxSec": 40,
+          "overlapSec": 5
+        },
+        "segments": 325,
+        "estimatedUsd": 0.4875
+      }
+    ]
+  },
+  "scored": [
+    {
+      "config": "40/5",
+      "score": {
+        "jobId": "17ddda29-e4e8-4576-968e-37d0925d17f6",
+        "source": {
+          "_tag": "SoccerNetHalf",
+          "league": "europe_uefa-champions-league",
+          "season": "2015-2016",
+          "game": "2015-09-16 - 21-45 AS Roma 1 - 1 Barcelona",
+          "half": 1,
+          "resolution": "224p"
+        },
+        "includeNotShown": false,
+        "overall": {
+          "tp": 11,
+          "fp": 38,
+          "fn": 13,
+          "precision": 0.22448979591836735,
+          "recall": 0.4583333333333333,
+          "f1": 0.3013698630136986
+        },
+        "perClass": {
+          "Goal": {
+            "tp": 2,
+            "fp": 4,
+            "fn": 0,
+            "precision": 0.3333333333333333,
+            "recall": 1,
+            "f1": 0.5
+          },
+          "Shot on target": {
+            "tp": 2,
+            "fp": 19,
+            "fn": 3,
+            "precision": 0.09523809523809523,
+            "recall": 0.4,
+            "f1": 0.15384615384615385
+          },
+          "Shot off target": {
+            "tp": 2,
+            "fp": 4,
+            "fn": 4,
+            "precision": 0.3333333333333333,
+            "recall": 0.3333333333333333,
+            "f1": 0.3333333333333333
+          },
+          "Foul": {
+            "tp": 4,
+            "fp": 9,
+            "fn": 4,
+            "precision": 0.3076923076923077,
+            "recall": 0.5,
+            "f1": 0.38095238095238093
+          },
+          "Offside": {
+            "tp": 1,
+            "fp": 2,
+            "fn": 2,
+            "precision": 0.3333333333333333,
+            "recall": 0.3333333333333333,
+            "f1": 0.3333333333333333
+          }
+        },
+        "windowShare": 0.6626511155728347,
+        "ceiling": {
+          "labels": 24,
+          "reachable": 21,
+          "recall": 0.875
+        },
+        "coverage": {
+          "segments": 59,
+          "valid": 59,
+          "invalid": 0,
+          "ambiguous": 0,
+          "notSent": 0
+        },
+        "costUsd": 0.07054225
+      }
+    },
+    {
+      "config": "40/5",
+      "score": {
+        "jobId": "200b1395-d166-49a9-a035-fe7347320c6d",
+        "source": {
+          "_tag": "SoccerNetHalf",
+          "league": "europe_uefa-champions-league",
+          "season": "2015-2016",
+          "game": "2015-11-03 - 22-45 Real Madrid 1 - 0 Paris SG",
+          "half": 2,
+          "resolution": "224p"
+        },
+        "includeNotShown": false,
+        "overall": {
+          "tp": 16,
+          "fp": 39,
+          "fn": 11,
+          "precision": 0.2909090909090909,
+          "recall": 0.5925925925925926,
+          "f1": 0.3902439024390244
+        },
+        "perClass": {
+          "Goal": {
+            "tp": 0,
+            "fp": 1,
+            "fn": 0,
+            "precision": 0,
+            "recall": 0,
+            "f1": 0
+          },
+          "Shot on target": {
+            "tp": 1,
+            "fp": 23,
+            "fn": 3,
+            "precision": 0.041666666666666664,
+            "recall": 0.25,
+            "f1": 0.07142857142857142
+          },
+          "Shot off target": {
+            "tp": 3,
+            "fp": 4,
+            "fn": 3,
+            "precision": 0.42857142857142855,
+            "recall": 0.5,
+            "f1": 0.46153846153846156
+          },
+          "Foul": {
+            "tp": 10,
+            "fp": 10,
+            "fn": 3,
+            "precision": 0.5,
+            "recall": 0.7692307692307693,
+            "f1": 0.6060606060606061
+          },
+          "Offside": {
+            "tp": 2,
+            "fp": 1,
+            "fn": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.5,
+            "f1": 0.5714285714285714
+          }
+        },
+        "windowShare": 0.8016740306044717,
+        "ceiling": {
+          "labels": 27,
+          "reachable": 22,
+          "recall": 0.8148148148148148
+        },
+        "coverage": {
+          "segments": 78,
+          "valid": 77,
+          "invalid": 1,
+          "ambiguous": 0,
+          "notSent": 0
+        },
+        "costUsd": 0.0883215
+      }
+    },
+    {
+      "config": "40/5",
+      "score": {
+        "jobId": "624b744f-dfd9-4629-b310-d3bd4b9c0a3d",
+        "source": {
+          "_tag": "SoccerNetHalf",
+          "league": "europe_uefa-champions-league",
+          "season": "2015-2016",
+          "game": "2015-11-24 - 22-45 Barcelona 6 - 1 AS Roma",
+          "half": 1,
+          "resolution": "224p"
+        },
+        "includeNotShown": false,
+        "overall": {
+          "tp": 17,
+          "fp": 28,
+          "fn": 9,
+          "precision": 0.37777777777777777,
+          "recall": 0.6538461538461539,
+          "f1": 0.4788732394366197
+        },
+        "perClass": {
+          "Goal": {
+            "tp": 3,
+            "fp": 3,
+            "fn": 0,
+            "precision": 0.5,
+            "recall": 1,
+            "f1": 0.6666666666666666
+          },
+          "Shot on target": {
+            "tp": 2,
+            "fp": 16,
+            "fn": 3,
+            "precision": 0.1111111111111111,
+            "recall": 0.4,
+            "f1": 0.17391304347826086
+          },
+          "Shot off target": {
+            "tp": 2,
+            "fp": 3,
+            "fn": 1,
+            "precision": 0.4,
+            "recall": 0.6666666666666666,
+            "f1": 0.5
+          },
+          "Foul": {
+            "tp": 6,
+            "fp": 3,
+            "fn": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.75,
+            "f1": 0.7058823529411765
+          },
+          "Offside": {
+            "tp": 4,
+            "fp": 3,
+            "fn": 3,
+            "precision": 0.5714285714285714,
+            "recall": 0.5714285714285714,
+            "f1": 0.5714285714285714
+          }
+        },
+        "windowShare": 0.5768141739101774,
+        "ceiling": {
+          "labels": 26,
+          "reachable": 25,
+          "recall": 0.9615384615384616
+        },
+        "coverage": {
+          "segments": 54,
+          "valid": 54,
+          "invalid": 0,
+          "ambiguous": 0,
+          "notSent": 0
+        },
+        "costUsd": 0.05382825
+      }
+    }
+  ],
+  "configs": [
+    {
+      "config": "40/5",
+      "tp": 44,
+      "fp": 105,
+      "fn": 33,
+      "precision": 0.2953020134228188,
+      "recall": 0.5714285714285714,
+      "f1": 0.3893805309734513,
+      "costPerHalf": 0.07089733333333333,
+      "invalidRate": 0.005235602094240838,
+      "bootstrap": null
+    }
+  ]
+}

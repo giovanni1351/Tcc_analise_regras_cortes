@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Install and start the Highlights API server, run TransNetV2 and YOLO on your GPU or CPU, and analyze a video.">
+<title>Run the Highlights API locally</title>
+<style>
+:root {
+	--bg: #fafafa;
+	--fg: #171717;
+	--muted: #5c5c5c;
+	--surface: #f0f0f0;
+	--line: #e2e2e2;
+	--accent: #0b6bcb;
+	--warn: #a15c00;
+	--mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	--sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #000;
+		--fg: #fff;
+		--muted: #a3a3a3;
+		--surface: #141414;
+		--line: #262626;
+		--accent: #6cb6ff;
+		--warn: #f0b35a;
+	}
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 var(--sans); }
+main { max-width: 820px; margin: 0 auto; padding: 32px 16px 80px; }
+a { color: var(--accent); }
+h1 { font-size: 26px; line-height: 1.2; margin: 0 0 8px; }
+h2 { font-size: 19px; margin: 36px 0 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+p, li { max-width: 72ch; }
+p { margin: 6px 0 10px; }
+ul, ol { padding-left: 22px; margin: 6px 0 12px; }
+ol > li { margin-bottom: 14px; }
+ol > li::marker { color: var(--muted); font-weight: 600; }
+.sub { color: var(--muted); margin: 0 0 16px; }
+code, pre { font-family: var(--mono); font-size: 13px; }
+:not(pre) > code { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; overflow-x: auto; tab-size: 2; line-height: 1.5; margin: 8px 0 8px; }
+.out { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+.note { border-left: 3px solid var(--warn); padding: 2px 0 2px 12px; margin: 12px 0; }
+.scroll { overflow-x: auto; margin: 8px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<main>
+<h1>Run the Highlights API locally</h1>
+<p class="sub">This guide gets the API server running on <code>127.0.0.1:3000</code>, with TransNetV2 and YOLO on your GPU or CPU. The model calls go to OpenRouter. The default model is free. For endpoints, types, and settings, see the <a href="../">Highlights API reference</a>.</p>
+
+<h2>Check the requirements</h2>
+<p>You need these tools on the machine that runs the server:</p>
+<div class="scroll"><table>
+	<thead><tr><th>Tool</th><th>Version</th><th>Note</th></tr></thead>
+	<tbody>
+		<tr><td>Linux on x86-64</td><td></td><td>The Python environment pins CUDA 12.6 builds of PyTorch. macOS does not install.</td></tr>
+		<tr><td>Node.js</td><td>26.13.1</td><td>Node 26 runs the TypeScript sources directly. There is no build step.</td></tr>
+		<tr><td>pnpm</td><td>12.14.0</td><td></td></tr>
+		<tr><td><a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener noreferrer">uv</a></td><td>any recent</td><td>uv installs Python 3.14 if your machine lacks it.</td></tr>
+		<tr><td>ffmpeg and ffprobe</td><td>any recent</td><td>Both must be on <code>PATH</code>.</td></tr>
+		<tr><td>NVIDIA GPU</td><td>optional</td><td>A 45-minute 224p half takes about 5 minutes on CUDA: 95 s for scene cuts and 204 s for detection. The CPU works, with longer runs.</td></tr>
+		<tr><td>OpenRouter API key</td><td></td><td>A free account works with the default model.</td></tr>
+	</tbody>
+</table></div>
+
+<h2>Install the code and the dependencies</h2>
+<ol>
+	<li>Clone the repository and check out the API branch. The branch holds the API until pull request 3 is merged.
+<pre><code>git clone https://github.com/giovanni1351/Tcc_analise_regras_cortes.git
+cd Tcc_analise_regras_cortes
+git checkout feat/design-video-analysis-api</code></pre></li>
+	<li>Install Node and pnpm at the pinned versions. With <a href="https://mise.jdx.dev" target="_blank" rel="noopener noreferrer">mise</a>, one command reads them from <code>mise.toml</code>:
+<pre><code>mise install</code></pre>
+	<p>If you do not use mise, install Node 26.13.1 and pnpm 12.14.0 another way.</p></li>
+	<li>Install the JavaScript dependencies:
+<pre><code>pnpm install</code></pre></li>
+	<li>Create the Python environment for the CV worker:
+<pre><code>uv sync --frozen</code></pre>
+	<p>The command creates <code>.venv</code> with PyTorch, Ultralytics, and <code>transnetv2-pytorch</code>. The YOLO weights are <code>best.pt</code> in the repository root. The TransNetV2 weights come with the <code>transnetv2-pytorch</code> package.</p></li>
+	<li>Check whether PyTorch sees your GPU:
+<pre><code>uv run --no-sync python -c "import torch; print(torch.cuda.is_available())"</code></pre>
+	<p class="out">Prints <code>True</code> when CUDA works. If it prints <code>False</code>, the CV worker runs on the CPU.</p></li>
+</ol>
+
+<h2>Start the server</h2>
+<ol>
+	<li>Export your OpenRouter key and start the server:
+<pre><code>export OPENROUTER_API_KEY=sk-or-v1-...
+pnpm start serve</code></pre>
+	<p class="out">The server logs <code>Listening on http://127.0.0.1:3000</code>. It stores its database and clips in <code>~/.local/share/tcc-highlights</code>. To use another directory, set <code>TCC_DATA_DIR</code>.</p></li>
+	<li>In a second terminal, check that the server answers:
+<pre><code>curl -s localhost:3000/budget</code></pre>
+	<p class="out">Returns <code>{"limitUsd":0,"committedUsd":0,"reservedUsd":0,"ambiguousUsd":0}</code>.</p></li>
+</ol>
+<p>To build a client without a GPU, ffmpeg, or a key, start the server in dev mode. Dev mode keeps the real API and fakes probing and every stage, so jobs finish at once with no highlights:</p>
+<pre><code>TCC_DEV_FAKE_STAGES=true pnpm start serve</code></pre>
+<p>To force a device for the CV worker, set <code>CV_DEVICE</code> to <code>cuda</code> or <code>cpu</code> before you start the server.</p>
+
+<h2>Analyze a video</h2>
+<ol>
+	<li>Queue a job for a video file:
+<pre><code>pnpm start analyze match.mkv</code></pre>
+	<p class="out">Prints the new job, with <code>"state": { "_tag": "Queued" }</code> and its <code>id</code>.</p></li>
+	<li>Follow the job until its state is <code>Succeeded</code> or <code>Partial</code>:
+<pre><code>curl -s localhost:3000/jobs/&lt;job-id&gt;</code></pre>
+	<p class="out">While the job runs, <code>state</code> shows the stage and its progress, for example <code>{ "_tag": "Running", "stage": "detections", "done": 31000, "total": 73075 }</code>.</p></li>
+	<li>Print the highlights:
+<pre><code>pnpm start result &lt;job-id&gt;</code></pre></li>
+</ol>
+<p>To analyze a SoccerNet half, point <code>TCC_SOCCERNET_ROOT</code> at your SoccerNet download before you start the server. Then name the half as league, season, game, half, and resolution:</p>
+<pre><code>pnpm start analyze "soccernet:england_epl/2014-2015/2015-04-11 - 19-30 Burnley 0 - 1 Arsenal/2/224p"</code></pre>
+<p>The server reads that half from <code>&lt;root&gt;/england_epl/2014-2015/2015-04-11 - 19-30 Burnley 0 - 1 Arsenal/2_224p.mkv</code>, the layout that the SoccerNet downloader writes.</p>
+<p>To change the rule or the clip length, send a spec to <code>POST /jobs</code> as the <a href="../#post-jobs">reference</a> describes. The new job reuses the finished scene cuts and detections.</p>
+
+<h2>Use a paid model</h2>
+<p>The server refuses paid calls until you set a budget. To run a paid model:</p>
+<ol>
+	<li>Create an OpenRouter key with its own credit limit. Set the limit at least $1.00 above what you plan to spend. OpenRouter refuses video requests when less than $1.00 of credit remains.</li>
+	<li>Start the server with that key and a budget:
+<pre><code>export OPENROUTER_API_KEY=sk-or-v1-...
+export OPENROUTER_BUDGET_USD=0.50
+pnpm start serve</code></pre></li>
+	<li>Pass the model as the second argument:
+<pre><code>pnpm start analyze match.mkv google/gemini-3.1-flash-lite</code></pre>
+	<p class="out">A 45-minute half costs about $0.07 with this model.</p></li>
+	<li>Check what you have spent:
+<pre><code>pnpm start budget</code></pre></li>
+</ol>
+<p class="note">A job also stops at its own cap, <code>llm.maxCostUsd</code>, which defaults to $0.10. A job that hits a cap ends as <code>Partial</code>. Resume it with <code>POST /jobs/&lt;job-id&gt;/resume</code> after you raise the cap or the budget.</p>
+
+<h2>Run the checks</h2>
+<pre><code>pnpm test
+pnpm typecheck
+pnpm lint</code></pre>
+<p>One test compares the CV worker with the reference Python on a 60-second clip. It needs CUDA and a video, and skips without them. To run it, point <code>TCC_CV_TEST_VIDEO</code> at a SoccerNet half:</p>
+<pre><code>TCC_CV_TEST_VIDEO="&lt;root&gt;/england_epl/2016-2017/2017-01-02 - 18-00 Sunderland 2 - 2 Liverpool/2_224p.mkv" \
+	pnpm test apps/server/src/cv</code></pre>
+</main>
+</body>
+</html>
