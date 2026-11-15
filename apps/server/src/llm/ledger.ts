@@ -123,7 +123,9 @@ export const attemptLedgerLayer = Layer.effect(
         const notSent = Schema.is(ProviderError)(cause) && cause.sent === false;
         const status = Schema.is(ProviderError)(cause) ? cause.httpStatus : null;
         const refused =
-          Schema.is(ProviderError)(cause) && cause.httpStatus !== null && cause.httpStatus >= 400;
+          Schema.is(ProviderError)(cause) &&
+          cause.httpStatus !== null &&
+          (cause.httpStatus >= 400 || (cause.httpStatus === 200 && cause.category === "Upstream"));
         yield* sql`UPDATE llm_attempts SET state=CASE WHEN state='Sent' AND ${refused || notSent ? 0 : 1}=1 THEN 'Ambiguous' ELSE 'Failed' END,http_status=${status},parse_error_json=${JSON.stringify(cause)},updated_at=${now} WHERE id=${id} AND state IN ('Reserved','Sent')`;
       },
       Effect.mapError(

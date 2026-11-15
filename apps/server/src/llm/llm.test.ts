@@ -241,3 +241,40 @@ it.effect("seeds the minute free quota from persisted timestamps", () =>
     assert.strictEqual(denied.period, "minute");
   }).pipe(Effect.provide(freeModelLimiterLayer(50, Array(20).fill(0)))),
 );
+
+for (const body of [
+  { error: { message: "provider failed" } },
+  { choices: [{ finish_reason: "error", message: { content: "" } }] },
+])
+  it.effect(
+    "rejects HTTP 200 provider errors as retryable Upstream failures " + JSON.stringify(body),
+    () =>
+      Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem;
+        const dir = yield* fs.makeTempDirectoryScoped();
+        const path = `${dir}/clip.mp4`;
+        yield* fs.writeFileString(path, "clip");
+        const http = HttpClient.make((request) =>
+          Effect.succeed(HttpClientResponse.fromWeb(request, new Response(JSON.stringify(body)))),
+        );
+        const error = yield* Effect.gen(function* () {
+          return yield* (yield* OpenRouter)
+            .complete({
+              model: "paid",
+              promptVersion: "benchmark-v1",
+              maxTokens: 1,
+              clipPath: path,
+            })
+            .pipe(Effect.flip);
+        }).pipe(
+          Effect.provide(
+            openRouterLayer("test").pipe(
+              Layer.provide(Layer.succeed(HttpClient.HttpClient, http)),
+              Layer.provide(freeModelLimiterLayer()),
+            ),
+          ),
+        );
+        assert.strictEqual(error.category, "Upstream");
+        assert.isTrue(isRetryable(error));
+      }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+  );

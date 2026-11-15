@@ -65,7 +65,8 @@ export const isRetryable = (error: ProviderError) =>
   error.category === "Network" ||
   error.category === "Timeout" ||
   (error.category === "Upstream" &&
-    (error.httpStatus === 408 ||
+    (error.httpStatus === 200 ||
+      error.httpStatus === 408 ||
       error.httpStatus === 425 ||
       (error.httpStatus !== null && error.httpStatus >= 500)));
 
@@ -156,6 +157,24 @@ export const openRouterLayer = (apiKey: string, timeoutMs = 120_000) =>
               response.headers["retry-after"],
               now,
             );
+          const failure = Schema.decodeUnknownOption(
+            Schema.Struct({
+              error: Schema.optionalKey(Schema.Unknown),
+              choices: Schema.optionalKey(
+                Schema.Array(
+                  Schema.Struct({
+                    finish_reason: Schema.optionalKey(Schema.String),
+                  }),
+                ),
+              ),
+            }),
+          )(body);
+          if (
+            failure._tag === "Some" &&
+            ("error" in failure.value ||
+              failure.value.choices?.some((choice) => choice.finish_reason === "error"))
+          )
+            return yield* classifyError(response.status, body, undefined, now);
           const decoded = Schema.decodeUnknownOption(Envelope)(body);
           const envelope = decoded._tag === "Some" ? decoded.value : undefined;
           return {

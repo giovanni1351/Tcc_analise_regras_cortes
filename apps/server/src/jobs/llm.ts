@@ -146,6 +146,7 @@ export const llmStepLayer = (accountCapUsd: number) =>
                 yield* ledger.fail(id, error);
                 const ambiguous =
                   error.sent !== false &&
+                  !(error.category === "Upstream" && error.httpStatus === 200) &&
                   (error.httpStatus === null ||
                     (error.httpStatus >= 200 && error.httpStatus < 400));
                 if (ambiguous && !model.endsWith(":free")) {
