@@ -330,3 +330,37 @@ it.effect(
       }).pipe(Effect.provide(fixtureServices(directory)));
     }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
+
+it.live("runner records defects as Failed and continues with queued jobs", () =>
+  Effect.gen(function* () {
+    const { directory, path } = yield* setup;
+    const next = yield* Deferred.make<void>();
+    let failingId = "";
+    yield* Effect.gen(function* () {
+      const repo = yield* Repository;
+      const first = yield* create(path);
+      failingId = first.id;
+      yield* (yield* SqlClient.SqlClient)`UPDATE jobs SET created_at='2000' WHERE id=${first.id}`;
+      yield* repo.change(first.id, { _tag: "Start" });
+      yield* repo.change(first.id, { _tag: "Recover" });
+      yield* repo.create(first.sourceId, undefined, true);
+      yield* (yield* Runner).start;
+      yield* Deferred.await(next);
+      const state = (yield* repo.job(first.id)).state;
+      assert.strictEqual(state._tag, "Failed");
+      if (state._tag === "Failed") assert.include(state.error.message, "broken stage");
+    }).pipe(
+      Effect.provide(
+        fixtureServices(
+          directory,
+          ":memory:",
+          logic((_, input) =>
+            input.job.id === failingId
+              ? Effect.die("broken stage")
+              : Deferred.succeed(next, undefined).pipe(Effect.as(output)),
+          ),
+        ),
+      ),
+    );
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);

@@ -1,4 +1,4 @@
-import { Context, Effect, Fiber, Layer, Queue, Schema } from "effect";
+import { Cause, Context, Effect, Fiber, Layer, Queue, Schema } from "effect";
 import {
   Conflict,
   NotFound,
@@ -66,19 +66,25 @@ export const makeRunner = Effect.gen(function* () {
   const handled = Effect.fn("Runner.handled")((job: Job) =>
     run(job).pipe(
       Effect.scoped,
-      Effect.catch((cause) =>
-        Effect.gen(function* () {
-          const current = yield* repo.job(job.id);
-          if (current.state._tag !== "Running") return;
-          const stage = current.state.stage;
-          const error = Schema.is(JobError)(cause)
-            ? cause
-            : new JobError({ stage, category: "Persistence", message: String(cause) });
-          yield* sql`UPDATE stage_runs SET status='Failed',error_json=${JSON.stringify(error)} WHERE key=(SELECT stage_run_key FROM job_stages WHERE job_id=${job.id} AND stage=${stage}) AND status='Running'`.pipe(
-            persistence("failStage"),
-          );
-          yield* repo.change(job.id, { _tag: "Complete", state: { _tag: "Failed", stage, error } });
-        }).pipe(Effect.catchCause(Effect.logError)),
+      Effect.catchCause((failure) =>
+        Cause.hasInterruptsOnly(failure)
+          ? Effect.interrupt
+          : Effect.gen(function* () {
+              const cause = Cause.squash(failure);
+              const current = yield* repo.job(job.id);
+              if (current.state._tag !== "Running") return;
+              const stage = current.state.stage;
+              const error = Schema.is(JobError)(cause)
+                ? cause
+                : new JobError({ stage, category: "Persistence", message: String(cause) });
+              yield* sql`UPDATE stage_runs SET status='Failed',error_json=${JSON.stringify(error)} WHERE key=(SELECT stage_run_key FROM job_stages WHERE job_id=${job.id} AND stage=${stage}) AND status='Running'`.pipe(
+                persistence("failStage"),
+              );
+              yield* repo.change(job.id, {
+                _tag: "Complete",
+                state: { _tag: "Failed", stage, error },
+              });
+            }).pipe(Effect.catchCause(Effect.logError)),
       ),
     ),
   );
