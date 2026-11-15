@@ -87,7 +87,11 @@ const hashed = Effect.fn("Media.hash")(function* (path: string) {
 
 const Ffprobe = Schema.Struct({
   streams: Schema.Array(
-    Schema.Struct({ avg_frame_rate: Schema.String, nb_read_frames: Schema.String }),
+    Schema.Struct({
+      avg_frame_rate: Schema.String,
+      nb_read_frames: Schema.String,
+      start_time: Schema.optional(Schema.String),
+    }),
   ),
   format: Schema.Struct({ duration: Schema.String, start_time: Schema.optional(Schema.String) }),
 });
@@ -99,7 +103,7 @@ const probeFile = Effect.fn("Media.ffprobe")(function* (path: string) {
     "v:0",
     "-count_frames",
     "-show_entries",
-    "stream=avg_frame_rate,nb_read_frames:format=duration,start_time",
+    "stream=avg_frame_rate,nb_read_frames,start_time:format=duration,start_time",
     "-of",
     "json",
     path,
@@ -237,13 +241,16 @@ export const clipEncoderLayer = Layer.effect(
                 cause: "Empty clip",
               });
             const temp = yield* blobs.tempPath("mp4");
+            const source = yield* probeFile(media.path);
+            const seekOffset =
+              Number(source.streams[0]?.start_time ?? 0) - Number(source.format.start_time ?? 0);
             const encoded = yield* commandCapture("ffmpeg", [
               "-nostdin",
               "-y",
               "-ss",
-              String(start),
+              String(start + seekOffset),
               "-to",
-              String(end),
+              String(end + seekOffset),
               "-i",
               media.path,
               ...encodeArgs,
