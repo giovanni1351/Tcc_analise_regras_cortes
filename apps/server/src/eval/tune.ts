@@ -11,7 +11,7 @@ export function random(seed = tuningSeed) {
     return state / 4294967296;
   };
 }
-export function parseGrid(grid: string) {
+export function parseGrid(grid: string, split: "train" | "test" = "train") {
   const values = grid.split(",").map((point) => {
     const parts = point.split("/");
     if (parts.length !== 2 || parts.some((p) => !p.trim()))
@@ -23,7 +23,9 @@ export function parseGrid(grid: string) {
   });
   if (new Set(values.map(configKey)).size !== values.length)
     throw new Error("Duplicate grid points");
-  if (!values.some((s) => configKey(s) === "40/5"))
+  if (split === "test" && values.length !== 1)
+    throw new Error("Test split requires a single frozen grid point");
+  if (split === "train" && !values.some((s) => configKey(s) === "40/5"))
     throw new Error("Train grid requires the 40/5 baseline");
   return values;
 }
@@ -39,6 +41,7 @@ export function sampleHalves(halves: ReadonlyArray<StudyHalf>, n: number) {
   return shuffled.slice(0, n);
 }
 export function makeTunePlan(options: {
+  split?: "train" | "test";
   halves: number;
   model: string;
   grid: string;
@@ -58,8 +61,9 @@ export function makeTunePlan(options: {
   const rate = options.usdPerCall ?? options.usdPerSecond;
   if (!free && (rate === null || !Number.isFinite(rate) || rate <= 0))
     throw new Error("Paid model requires recorded pricing or --usd-per-call > 0");
-  const halves = sampleHalves(studySplit.train, options.halves);
-  const grid = parseGrid(options.grid);
+  const split = options.split ?? "train";
+  const halves = sampleHalves(studySplit[split], options.halves);
+  const grid = parseGrid(options.grid, split);
   const jobs = grid.flatMap((segmentation) =>
     halves.map((half) => {
       const segments =
@@ -74,6 +78,7 @@ export function makeTunePlan(options: {
   );
   const estimatedUsd = jobs.reduce((sum, j) => sum + j.estimatedUsd, 0);
   return {
+    split,
     seed: tuningSeed,
     model: options.model,
     maxUsd: options.maxUsd,
@@ -174,7 +179,11 @@ export const runTune = Effect.fn("Evaluation.runTune")(function* (
   const baseline = scored.filter((s) => s.config === "40/5").map((s) => s.score);
   const configs = [...new Set(scored.map((s) => s.config))].map((config) => {
     const scores = scored.filter((s) => s.config === config).map((s) => s.score);
-    return { config, ...aggregate(scores), bootstrap: pairedBootstrap(scores, baseline) };
+    return {
+      config,
+      ...aggregate(scores),
+      bootstrap: plan.split === "train" ? pairedBootstrap(scores, baseline) : null,
+    };
   });
   return { plan, scored, configs };
 });

@@ -92,6 +92,13 @@ it.live(
         (yield* client.highlights.getResult({ params: { id: job.id } })).highlights,
         [],
       );
+      assert.deepStrictEqual(
+        yield* client.highlights.evaluationContext({ params: { id: job.id } }),
+        { windows: [] },
+      );
+      assert.deepStrictEqual(yield* client.highlights.modelRate({ query: { model: "unknown" } }), {
+        usdPerSecond: null,
+      });
       yield* repo.change(job.id, { _tag: "Start" });
       yield* repo.change(job.id, {
         _tag: "Complete",

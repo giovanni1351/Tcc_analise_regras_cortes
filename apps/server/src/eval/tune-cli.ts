@@ -11,6 +11,7 @@ NodeRuntime.runMain(
     const { values } = yield* Effect.try(() =>
       parseArgs({
         options: {
+          split: { type: "string", default: "train" },
           halves: { type: "string", default: "5" },
           model: { type: "string" },
           grid: { type: "string", default: "40/5,30/5,20/4" },
@@ -25,6 +26,13 @@ NodeRuntime.runMain(
       }),
     );
     if (values["print-split"]) return yield* Console.log(JSON.stringify(studySplit, null, 2));
+    const split = values.split;
+    if (split !== "train" && split !== "test")
+      return yield* new EvaluationError({
+        operation: "arguments",
+        resource: "--split",
+        cause: "Expected train or test",
+      });
     const model = values.model ?? "nvidia/nemotron-3.5-super-vl:free";
     const port = Number(values.port);
     if (!Number.isInteger(port) || port < 1 || port > 65535)
@@ -41,6 +49,7 @@ NodeRuntime.runMain(
     const plan = yield* Effect.try({
       try: () =>
         makeTunePlan({
+          split,
           halves: Number(values.halves),
           model,
           grid: values.grid,
