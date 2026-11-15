@@ -46,3 +46,8 @@ __pycache__/
 node_modules/
 dist/
 *.tsbuildinfo
+
+# TypeScript source files are not MPEG transport-stream videos.
+!apps/**/*.ts
+!packages/**/*.ts
+!vitest.config.ts

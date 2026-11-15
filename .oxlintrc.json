@@ -1,0 +1,63 @@
+{
+  "plugins": [
+    "eslint",
+    "oxc",
+    "unicorn",
+    "typescript"
+  ],
+  "categories": {
+    "correctness": "warn",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "rules": {
+    "oxc/no-accumulating-spread": "error",
+    "eslint/no-control-regex": "off",
+    "typescript/no-this-alias": "off",
+    "unicorn/prefer-add-event-listener": "off",
+    "unicorn/prefer-string-starts-ends-with": "off",
+    "unicorn/prefer-set-has": "off",
+    "unicorn/prefer-array-find": "off",
+    "unicorn/no-new-array": "off",
+    "unicorn/no-array-reverse": "off",
+    "typescript/no-extraneous-class": "error",
+    "eslint/no-empty-pattern": "error",
+    "eslint/no-new": "error",
+    "unicorn/no-useless-spread": "error",
+    "eslint/no-unsafe-optional-chaining": "error",
+    "eslint/no-unneeded-ternary": "error",
+    "unicorn/no-useless-fallback-in-spread": "error",
+    "unicorn/require-module-specifiers": "error",
+    "unicorn/no-array-sort": "off",
+    "unicorn/consistent-function-scoping": "off",
+    "oxc/no-map-spread": "off",
+    "eslint/no-shadow": "off",
+    "eslint/no-await-in-loop": "off",
+    "eslint/no-underscore-dangle": "off",
+    "typescript/consistent-return": "off",
+    "typescript/no-base-to-string": "off",
+    "typescript/no-duplicate-type-constituents": "off",
+    "typescript/no-floating-promises": "off",
+    "typescript/no-implied-eval": "off",
+    "typescript/no-meaningless-void-operator": "off",
+    "typescript/no-redundant-type-constituents": "off",
+    "typescript/no-unnecessary-boolean-literal-compare": "off",
+    "typescript/no-unnecessary-type-conversion": "off",
+    "typescript/no-unnecessary-type-arguments": "off",
+    "typescript/no-unnecessary-type-assertion": "off",
+    "typescript/no-unnecessary-type-parameters": "off",
+    "typescript/no-unsafe-type-assertion": "off",
+    "typescript/await-thenable": "off",
+    "typescript/require-array-sort-compare": "off",
+    "typescript/restrict-template-expressions": "off",
+    "typescript/unbound-method": "off",
+    "eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+{"name":"@tcc/server","private":true,"type":"module","dependencies":{"@tcc/contracts":"workspace:*","effect":"4.1.1","@effect/platform-node":"4.1.1","@effect/sql-sqlite-node":"4.1.1"}}

@@ -1,0 +1,26 @@
+{
+  "name": "tcc-highlights",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "oxlint --report-unused-disable-directives apps packages vitest.config.ts",
+    "fmt": "oxfmt apps packages *.json *.jsonc *.ts mise.toml pnpm-workspace.yaml AGENTS.md",
+    "fmt:check": "pnpm fmt --check",
+    "typecheck": "effect-tsgo tsc --project tsconfig.json",
+    "test": "vitest run",
+    "start": "node apps/server/src/cli.ts"
+  },
+  "devDependencies": {
+    "@effect/tsgo": "0.63.0",
+    "@effect/vitest": "4.1.1",
+    "@types/node": "26.6.6",
+    "oxfmt": "0.75.0",
+    "oxlint": "1.90.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.0"
+  },
+  "engines": {
+    "node": "26.13.1"
+  },
+  "packageManager": "pnpm@12.14.0"
+}
