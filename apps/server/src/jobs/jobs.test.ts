@@ -414,3 +414,45 @@ it.effect("highlight cache rebuilds stale rows from its artifact without another
     );
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
 );
+
+it.effect("highlight cache separates local sources and SoccerNet halves", () =>
+  Effect.gen(function* () {
+    const { directory, path } = yield* setup;
+    yield* Effect.gen(function* () {
+      const repo = yield* Repository;
+      const local = yield* (yield* Sources).register({ _tag: "LocalFile", path });
+      const media = yield* (yield* Sources).check(local.id, "highlights");
+      const keys = [];
+      for (const half of [null, 1, 2] as const) {
+        const source =
+          half === null
+            ? local
+            : yield* repo.register(
+                {
+                  _tag: "SoccerNetHalf",
+                  league: "league",
+                  season: "season",
+                  game: "game",
+                  half,
+                  resolution: "224p",
+                },
+                local.mediaHash,
+                local.probe,
+                8,
+                0,
+              );
+        const job = yield* repo.create(source.id);
+        keys.push(
+          (yield* (yield* StageRuns).execute("highlights", {
+            job,
+            media,
+            inputs: [],
+            retryAmbiguous: false,
+            progress: () => Effect.void,
+          })).key,
+        );
+      }
+      assert.strictEqual(new Set(keys).size, 3);
+    }).pipe(Effect.provide(fixtureServices(directory)));
+  }).pipe(Effect.scoped, Effect.provide(NodeServices.layer)),
+);

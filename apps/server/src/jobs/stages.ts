@@ -11,7 +11,7 @@ import {
   type StageRunKey,
 } from "@tcc/contracts";
 import { BlobStore, type Device, type ProbedMedia } from "../services.ts";
-import { now, newId, persistence } from "./repository.ts";
+import { Repository, now, newId, persistence } from "./repository.ts";
 import { stageKey } from "./keys.ts";
 
 export const stages: ReadonlyArray<StageName> = [
@@ -71,10 +71,18 @@ export const makeStageRuns = Effect.gen(function* () {
   const blobs = yield* BlobStore;
   const fs = yield* FileSystem.FileSystem;
   const logic = yield* StageLogic;
+  const repo = yield* Repository;
   const llm = yield* LlmStep;
   const execute = Effect.fn("Stages.execute")(function* (stage: StageName, input: StageInput) {
     const params = {
       config: logic.params(stage, input.job),
+      ...(stage === "highlights"
+        ? {
+            half: ((source) => (source.ref._tag === "SoccerNetHalf" ? source.ref.half : null))(
+              yield* repo.source(input.job.sourceId),
+            ),
+          }
+        : {}),
     };
     const version = logic.version(stage);
     const key = yield* stageKey(stage, version, params, [
