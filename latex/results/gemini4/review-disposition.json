@@ -1,0 +1,82 @@
+{
+  "kind": "independent_review_disposition",
+  "reviewer": "claudeAgent/claude-opus-5-5",
+  "review_verdict": "ISSUES",
+  "parent": "codex/gpt-6.1-sol",
+  "status": "Reporting findings corrected and parent-verified; descriptive publication accepted.",
+  "findings": [
+    {
+      "id": "1",
+      "decision": "accept",
+      "change": "Rename canonical percentile fields and label ranges descriptive, not calibrated confidence intervals. Add per-match differences and descriptive-only verdicts. Preserve prior reports under review-before/.",
+      "evidence": [
+        "analyze.py",
+        "render_report.py",
+        "review-before/"
+      ]
+    },
+    {
+      "id": "2",
+      "decision": "accept",
+      "change": "Disclose literal pre-run formula selected one match, arithmetic amendment expanded to two at00:25:53UTC before Hydrogen scoring; freeze remains unchanged.",
+      "evidence": [
+        "README.md",
+        "execution-amendment.json",
+        "gate.json",
+        "PROTOCOL.md"
+      ]
+    },
+    {
+      "id": "3",
+      "decision": "accept measured counts and sign reversal; reject inference of identical visual representations",
+      "change": "Document all393accepted pairs have equal token counts. Exactly387accepted full windows per resolution have3829tokens; extra388th224p regular record is failed but billed. Equal billing counts do not reveal preprocessing. Report both per-match loose differences negative while pooled positive, no established resolution effect.",
+      "evidence": [
+        "resolution-tokens.json",
+        "analysis/results.json"
+      ]
+    },
+    {
+      "id": "4",
+      "decision": "accept",
+      "change": "Use preflight wording; identify protocol as immutable pre-run text. Disclose interrupted analysis log is retrospective and exact executed code missing. Require disposable copy for reruns and external media for request verification.",
+      "evidence": [
+        "README.md",
+        "render_report.py"
+      ]
+    },
+    {
+      "id": "5-cache",
+      "decision": "accept",
+      "change": "Archive excludes caches and campaign.lock; no credentials/media included.",
+      "evidence": [
+        "package_results.py"
+      ]
+    },
+    {
+      "id": "5-catalog",
+      "decision": "decline historical SQLite catalog mutation",
+      "reason": "experiments.json is version1 catalog for benchmark-history-20260905.tar.gz and database runs; scripts/benchmark_history.py requires SQLite run fields. As with prior official3.8study, discover this separate JSON-ledger study in research README with its own immutable archive manifest."
+    },
+    {
+      "id": "5-labels",
+      "decision": "retain local research evidence and source attribution",
+      "reason": "The staged annotations are public SoccerNet per-game labels and required for exact offline scoring. No external upload or publication service is being used. Public access does not itself establish redistribution rights; this review did not make such a legal determination. Gated media remain excluded.",
+      "sources": [
+        "https://github.com/SoccerNet/SoccerNet",
+        "https://www.soccer-net.org/faq"
+      ]
+    }
+  ],
+  "remaining_limitations": [
+    "Two exploratory match clusters; no calibrated interval or generalization estimate.",
+    "One accepted generation per cell; unknown generation variance.",
+    "Flex versus Standard, temperature omitted versus1.0, provider preprocessing unknown.",
+    "Retrospective interrupted-analysis log lacks exact executed code."
+  ],
+  "independent_recheck_after_corrections": false,
+  "checks": [
+    "verification-post-review.json",
+    "post-review-checks.json",
+    "report-post-review-checks.json"
+  ]
+}
