@@ -1,0 +1,832 @@
+{
+  "annotation_counts": {
+    "Ball out of play": 108,
+    "Clearance": 24,
+    "Corner": 14,
+    "Direct free-kick": 7,
+    "Foul": 60,
+    "Goal": 8,
+    "Indirect free-kick": 60,
+    "Kick-off": 12,
+    "Offside": 12,
+    "Penalty": 1,
+    "Red card": 1,
+    "Shots off target": 14,
+    "Shots on target": 26,
+    "Substitution": 12,
+    "Throw-in": 70,
+    "Yellow card": 12,
+    "Yellow->red card": 0
+  },
+  "bootstrap_interpretation": "With two clusters there are four ordered resamples and three count combinations. Percentile ranges are descriptive, not calibrated 95% confidence intervals.",
+  "comparisons": {
+    "hydrogen-720p-minus-224p-loose": {
+      "difference": 0.0013306289328250953,
+      "inference": "Descriptive only. Two match clusters do not establish a calibrated confidence interval or generalization.",
+      "metric": "loose",
+      "paired_bootstrap_2_5_to_97_5_percentile_range": [
+        -0.00738718672285954,
+        0.0013306289328250953
+      ],
+      "per_match_differences": {
+        "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen": -0.0022949464437921896,
+        "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina": -0.00738718672285954
+      },
+      "verdict": "no_resolution_effect_established"
+    },
+    "hydrogen-720p-minus-224p-tight": {
+      "difference": 0.008659686065770833,
+      "inference": "Descriptive only. Two match clusters do not establish a calibrated confidence interval or generalization.",
+      "metric": "tight",
+      "paired_bootstrap_2_5_to_97_5_percentile_range": [
+        -0.013292902085638159,
+        0.024425591766625065
+      ],
+      "per_match_differences": {
+        "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen": -0.013292902085638159,
+        "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina": 0.024425591766625065
+      },
+      "verdict": "no_resolution_effect_established"
+    },
+    "hydrogen-minus-gemini38-224p-loose": {
+      "difference": 0.055273686672595135,
+      "inference": "Descriptive only. Two match clusters do not establish a calibrated confidence interval or generalization.",
+      "metric": "loose",
+      "paired_bootstrap_2_5_to_97_5_percentile_range": [
+        0.044713747580199525,
+        0.06307385868647353
+      ],
+      "per_match_differences": {
+        "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen": 0.044713747580199525,
+        "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina": 0.06307385868647353
+      },
+      "verdict": "higher_on_observed_sample"
+    },
+    "hydrogen-minus-gemini38-224p-tight": {
+      "difference": 0.07269667719445216,
+      "inference": "Descriptive only. Two match clusters do not establish a calibrated confidence interval or generalization.",
+      "metric": "tight",
+      "paired_bootstrap_2_5_to_97_5_percentile_range": [
+        0.060900377294434316,
+        0.0764955597564243
+      ],
+      "per_match_differences": {
+        "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen": 0.0764955597564243,
+        "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina": 0.060900377294434316
+      },
+      "verdict": "higher_on_observed_sample"
+    },
+    "hydrogen-minus-gemini38-720p-loose": {
+      "difference": 0.04293111195725785,
+      "inference": "Descriptive only. Two match clusters do not establish a calibrated confidence interval or generalization.",
+      "metric": "loose",
+      "paired_bootstrap_2_5_to_97_5_percentile_range": [
+        0.04293111195725785,
+        0.04971496982453927
+      ],
+      "per_match_differences": {
+        "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen": 0.04689564281636793,
+        "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina": 0.04971496982453927
+      },
+      "verdict": "higher_on_observed_sample"
+    },
+    "hydrogen-minus-gemini38-720p-tight": {
+      "difference": 0.05339527720486792,
+      "inference": "Descriptive only. Two match clusters do not establish a calibrated confidence interval or generalization.",
+      "metric": "tight",
+      "paired_bootstrap_2_5_to_97_5_percentile_range": [
+        0.05339527720486792,
+        0.06023626301011098
+      ],
+      "per_match_differences": {
+        "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen": 0.05895045931041476,
+        "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina": 0.06023626301011098
+      },
+      "verdict": "higher_on_observed_sample"
+    }
+  },
+  "coverage": {
+    "224": {
+      "discarded": [
+        {
+          "attempt_id": "t000-h1-s25-224p-cfbb0a5a5-a2",
+          "confidence": 0.9,
+          "half": 1,
+          "label": "Foul",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 729000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h1-s25"
+        },
+        {
+          "attempt_id": "t000-h1-s26-224p-cfbb0a5a5-a2",
+          "confidence": 0.95,
+          "half": 1,
+          "label": "Direct free-kick",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 757000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h1-s26"
+        },
+        {
+          "attempt_id": "t000-h1-s35-224p-cfbb0a5a5-a1",
+          "confidence": 0.95,
+          "half": 1,
+          "label": "Indirect free-kick",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 1009000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h1-s35"
+        },
+        {
+          "attempt_id": "t000-h1-s57-224p-cfbb0a5a5-a1",
+          "confidence": 0.9,
+          "half": 1,
+          "label": "Throw-in",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 1625000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h1-s57"
+        },
+        {
+          "attempt_id": "t000-h1-s79-224p-cfbb0a5a5-a1",
+          "confidence": 0.99,
+          "half": 1,
+          "label": "Yellow card",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 2212500,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h1-s79"
+        },
+        {
+          "attempt_id": "t001-h1-s11-224p-cfbb0a5a5-a1",
+          "confidence": 0.75,
+          "half": 1,
+          "label": "Foul",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 337000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s11"
+        },
+        {
+          "attempt_id": "t001-h1-s26-224p-cfbb0a5a5-a1",
+          "confidence": 0.85,
+          "half": 1,
+          "label": "Direct free-kick",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 757000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s26"
+        },
+        {
+          "attempt_id": "t001-h1-s42-224p-cfbb0a5a5-a1",
+          "confidence": 0.9,
+          "half": 1,
+          "label": "Ball out of play",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 1205000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s42"
+        },
+        {
+          "attempt_id": "t001-h1-s63-224p-cfbb0a5a5-a1",
+          "confidence": 0.9,
+          "half": 1,
+          "label": "Direct free-kick",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 1793000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s63"
+        },
+        {
+          "attempt_id": "t001-h1-s66-224p-cfbb0a5a5-a1",
+          "confidence": 0.95,
+          "half": 1,
+          "label": "Red card",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 1848000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s66"
+        },
+        {
+          "attempt_id": "t001-h2-s65-224p-cfbb0a5a5-a1",
+          "confidence": 0.85,
+          "half": 2,
+          "label": "Shots on target",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 1849000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h2-s65"
+        }
+      ],
+      "intended_cells": 393,
+      "missing": [],
+      "valid_cells": 393
+    },
+    "720": {
+      "discarded": [
+        {
+          "attempt_id": "t000-h1-s35-720p-cfbb0a5a5-a1",
+          "confidence": 0.9,
+          "half": 1,
+          "label": "Indirect free-kick",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 1009000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h1-s35"
+        },
+        {
+          "attempt_id": "t000-h2-s54-720p-cfbb0a5a5-a1",
+          "confidence": 0.75,
+          "half": 2,
+          "label": "Foul",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 1512000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h2-s54"
+        },
+        {
+          "attempt_id": "t000-h2-s96-720p-cfbb0a5a5-a1",
+          "confidence": 0.9,
+          "half": 2,
+          "label": "Ball out of play",
+          "match": "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+          "position_ms": 2717000,
+          "reason": "outside_ownership",
+          "segment_id": "t000-h2-s96"
+        },
+        {
+          "attempt_id": "t001-h1-s11-720p-cfbb0a5a5-a1",
+          "confidence": 0.85,
+          "half": 1,
+          "label": "Foul",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 337000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s11"
+        },
+        {
+          "attempt_id": "t001-h1-s66-720p-cfbb0a5a5-a1",
+          "confidence": 0.99,
+          "half": 1,
+          "label": "Red card",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 1848000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h1-s66"
+        },
+        {
+          "attempt_id": "t001-h2-s65-720p-cfbb0a5a5-a1",
+          "confidence": 0.9,
+          "half": 2,
+          "label": "Shots on target",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 1849000,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h2-s65"
+        },
+        {
+          "attempt_id": "t001-h2-s96-720p-cfbb0a5a5-a1",
+          "confidence": 0.75,
+          "half": 2,
+          "label": "Yellow card",
+          "match": "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina",
+          "position_ms": 2688500,
+          "reason": "outside_ownership",
+          "segment_id": "t001-h2-s96"
+        }
+      ],
+      "intended_cells": 393,
+      "missing": [],
+      "valid_cells": 393
+    }
+  },
+  "draws": 10000,
+  "limitations": [
+    "Small number of match clusters.",
+    "One accepted generation per cell; generation variance unmeasured.",
+    "Hydrogen Flex compared with prior Gemini 3.8 Standard; service tier differs.",
+    "Hydrogen ignores custom sampling settings. Both use explicit low reasoning and 4096 output cap."
+  ],
+  "matches": [
+    "europe_uefa-champions-league/2014-2015/2014-11-04 - 20-00 Zenit Petersburg 1 - 2 Bayer Leverkusen",
+    "italy_serie-a/2015-2016/2015-09-27 - 21-45 Inter 1 - 4 Fiorentina"
+  ],
+  "missing_prediction_policy": "Retain every planned match and annotation; missing cells contribute no predictions.",
+  "observed": {
+    "gemini38-224p": {
+      "loose": {
+        "a_mAP": 0.5348973965010579,
+        "a_mAP_per_class": [
+          1.0,
+          0.5364387678437265,
+          0.8027892561983471,
+          0.6433367768595041,
+          0.6236490781945326,
+          0.4321827904715606,
+          0.276117821572367,
+          0.010566913775469923,
+          0.6006337097246189,
+          0.7096288278812748,
+          0.7446526455328862,
+          0.13109504132231406,
+          0.18452380952380956,
+          0.7232323232323231,
+          0.6744079783852512,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.5006887052341596,
+          0.0,
+          0.43801652892561976,
+          0.27272727272727265,
+          0.0,
+          0.0,
+          0.013541638065950963,
+          0.6105371900826445,
+          0.43805081511693084,
+          0.9669421487603306,
+          0.08471074380165289,
+          0.0,
+          0.5454545454545453,
+          0.5454545454545453,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.6545454545454544,
+          0.8027892561983471,
+          0.8454545454545456,
+          0.8774104683195595,
+          0.4321827904715606,
+          0.27903581267217636,
+          0.013025512037369746,
+          0.6020711718773069,
+          0.7923698202623821,
+          0.7379234401961674,
+          0.1912632821723731,
+          0.2163742690058479,
+          0.8076923076923077,
+          0.7480027548209365,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.3397018564325887,
+        "a_mAP_visible": 0.5882435815133138
+      },
+      "tight": {
+        "a_mAP": 0.4274745452076163,
+        "a_mAP_per_class": [
+          1.0,
+          0.3559458218549127,
+          0.771590909090909,
+          0.3633996212121212,
+          0.4746503496503497,
+          0.4270352252471237,
+          0.22392191142191145,
+          0.0009358288770053477,
+          0.3906085259346129,
+          0.49998514557338086,
+          0.5962382825365029,
+          0.045454545454545456,
+          0.1381222943722944,
+          0.6805555555555554,
+          0.2986232517482517,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.22727272727272727,
+          0.0,
+          0.1590909090909091,
+          0.24715909090909088,
+          0.0,
+          0.0,
+          0.0,
+          0.4420454545454545,
+          0.20334022038567495,
+          0.17045454545454544,
+          0.03693181818181818,
+          0.0,
+          0.5454545454545454,
+          0.3409090909090909,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.6204545454545453,
+          0.771590909090909,
+          0.6284090909090908,
+          0.6065340909090908,
+          0.4270352252471237,
+          0.2275757575757576,
+          0.0017292490118577073,
+          0.3937623096760877,
+          0.5898230557321466,
+          0.6103442751208941,
+          0.07305194805194805,
+          0.16214779372674107,
+          0.7556818181818181,
+          0.34356060606060607,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.18251218478491202,
+        "a_mAP_visible": 0.4830412161616833
+      }
+    },
+    "gemini38-720p": {
+      "loose": {
+        "a_mAP": 0.5485706001492203,
+        "a_mAP_per_class": [
+          1.0,
+          0.5834710743801653,
+          1.0,
+          0.6026170798898071,
+          0.8831168831168832,
+          0.41818181818181804,
+          0.31768231768231775,
+          0.00837553758945264,
+          0.6844514915765105,
+          0.598695369114733,
+          0.7296670579426039,
+          0.14600550964187328,
+          0.15062388591800355,
+          0.6457988980716254,
+          0.5570132794309546,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.4862258953168043,
+          0.0,
+          0.32396694214876026,
+          0.6666666666666669,
+          0.0,
+          0.0,
+          0.017061106937139994,
+          0.8005509641873279,
+          0.3721763085399449,
+          0.5454545454545453,
+          0.1615702479338843,
+          0.0,
+          0.5867768595041322,
+          0.5454545454545453,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.8181818181818182,
+          1.0,
+          0.909090909090909,
+          1.0,
+          0.41818181818181804,
+          0.35555555555555557,
+          0.006746806912096168,
+          0.7025204401820833,
+          0.6599710841490338,
+          0.7266414141414143,
+          0.1628099173553719,
+          0.17575757575757575,
+          0.6422668240850059,
+          0.5927078269324259,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.3466080063187501,
+        "a_mAP_visible": 0.5982607053250063
+      },
+      "tight": {
+        "a_mAP": 0.4554356312629714,
+        "a_mAP_per_class": [
+          1.0,
+          0.3577922077922078,
+          0.9744318181818181,
+          0.3570075757575758,
+          0.7045454545454546,
+          0.4165584415584416,
+          0.30506993006993016,
+          0.0,
+          0.49558598784972324,
+          0.4191325014854426,
+          0.5948772148303512,
+          0.025757575757575757,
+          0.13313279857397503,
+          0.6021780303030304,
+          0.3563361947649873,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.13636363636363635,
+          0.0,
+          0.022727272727272728,
+          0.45454545454545453,
+          0.0,
+          0.0,
+          0.0,
+          0.5246212121212122,
+          0.1590909090909091,
+          0.3409090909090909,
+          0.018181818181818184,
+          0.0,
+          0.5454545454545454,
+          0.47727272727272724,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.7537878787878789,
+          0.9744318181818181,
+          0.8262987012987013,
+          0.8267045454545454,
+          0.4165584415584416,
+          0.34219276094276097,
+          0.0,
+          0.49794154892028797,
+          0.4949664918414919,
+          0.6007169913419914,
+          0.06363636363636363,
+          0.1555555555555555,
+          0.598349567099567,
+          0.3799019607843137,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.20608974358974363,
+        "a_mAP_visible": 0.52535544855316
+      }
+    },
+    "hydrogen-224p": {
+      "loose": {
+        "a_mAP": 0.5901710831736531,
+        "a_mAP_per_class": [
+          1.0,
+          0.5927685950413222,
+          1.0,
+          0.6331125425376761,
+          0.8083916083916087,
+          0.2706611570247935,
+          0.4667832167832167,
+          0.004093702440809879,
+          0.6481866561326574,
+          0.6185792975411075,
+          0.8484848484848484,
+          0.1528925619834711,
+          0.39510489510489505,
+          0.8181818181818182,
+          0.7756675143038779,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.4648760330578512,
+          0.0,
+          0.48630460448642254,
+          0.9090909090909094,
+          0.0,
+          0.0,
+          0.013350286077558804,
+          0.6818181818181819,
+          0.18181818181818185,
+          0.9793388429752067,
+          0.09090909090909093,
+          0.0,
+          0.5454545454545453,
+          0.5454545454545453,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.8333333333333333,
+          1.0,
+          0.7954545454545453,
+          0.7159090909090909,
+          0.2706611570247935,
+          0.47727272727272746,
+          0.0014584346135148273,
+          0.6539559852828795,
+          0.789529423286046,
+          0.8475524475524476,
+          0.15151515151515155,
+          0.45002823263692837,
+          0.909090909090909,
+          0.8395316804407716,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.37680117085711495,
+        "a_mAP_visible": 0.6314878304948904
+      },
+      "tight": {
+        "a_mAP": 0.5001712224020685,
+        "a_mAP_per_class": [
+          1.0,
+          0.4985795454545454,
+          0.9701704545454546,
+          0.3020104895104895,
+          0.6900349650349651,
+          0.25542355371900827,
+          0.41411713286713286,
+          0.0,
+          0.5206469025236494,
+          0.5199568170572624,
+          0.6660691135958515,
+          0.09090909090909091,
+          0.3775131118881118,
+          0.706439393939394,
+          0.4910402097902098,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.33522727272727276,
+          0.0,
+          0.03116883116883117,
+          0.8261363636363638,
+          0.0,
+          0.0,
+          0.0,
+          0.4340909090909091,
+          0.18181818181818182,
+          0.47727272727272724,
+          0.09090909090909091,
+          0.0,
+          0.5454545454545454,
+          0.47727272727272724,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.7973484848484846,
+          0.9701704545454546,
+          0.7144886363636364,
+          0.6008522727272727,
+          0.25542355371900827,
+          0.4214015151515152,
+          0.0,
+          0.5225515452092305,
+          0.6006493506493507,
+          0.6651811837706618,
+          0.05871212121212121,
+          0.42998306041784307,
+          0.7778925619834711,
+          0.5303030303030303,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.2614885114885115,
+        "a_mAP_visible": 0.5497033982882988
+      }
+    },
+    "hydrogen-720p": {
+      "loose": {
+        "a_mAP": 0.5915017121064782,
+        "a_mAP_per_class": [
+          1.0,
+          0.5743801652892562,
+          0.9595959595959601,
+          0.5395513577331759,
+          0.872727272727273,
+          0.331095041322314,
+          0.4663101604278074,
+          0.002066115702479339,
+          0.6989459870407658,
+          0.6308834463384051,
+          0.8108643250688705,
+          0.10192837465564741,
+          0.4804040404040402,
+          0.8181818181818182,
+          0.7685950413223139,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.3305785123966942,
+          0.0,
+          0.3650137741046832,
+          0.9454545454545454,
+          0.0,
+          0.0,
+          0.00774793388429752,
+          0.643939393939394,
+          0.18181818181818185,
+          0.9793388429752067,
+          0.12107438016528928,
+          0.0,
+          0.5454545454545453,
+          0.5454545454545453,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          1.0,
+          0.9595959595959601,
+          0.75,
+          0.8415584415584416,
+          0.331095041322314,
+          0.4951048951048952,
+          0.0012714558169103624,
+          0.7457037911583366,
+          0.807690468748022,
+          0.809647354167902,
+          0.09090909090909093,
+          0.6062573789846518,
+          0.909090909090909,
+          0.827717736808646,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.3589134350497988,
+        "a_mAP_visible": 0.6573907366627105
+      },
+      "tight": {
+        "a_mAP": 0.5088309084678393,
+        "a_mAP_per_class": [
+          1.0,
+          0.5178571428571428,
+          0.936868686868687,
+          0.19886363636363635,
+          0.8250000000000002,
+          0.2869318181818182,
+          0.40922459893048135,
+          0.0,
+          0.5102616065596385,
+          0.4839482211471303,
+          0.5740088383838384,
+          0.0606060606060606,
+          0.4588383838383838,
+          0.7992424242424243,
+          0.588474025974026,
+          1.0,
+          0.0
+        ],
+        "a_mAP_per_class_unshown": [
+          0.0,
+          0.25,
+          0.0,
+          0.0037878787878787876,
+          0.8727272727272729,
+          0.0,
+          0.0,
+          0.0,
+          0.4147727272727272,
+          0.18181818181818182,
+          0.47727272727272724,
+          0.045454545454545456,
+          0.0,
+          0.5454545454545454,
+          0.47727272727272724,
+          0.0,
+          0.0
+        ],
+        "a_mAP_per_class_visible": [
+          1.0,
+          0.9568181818181818,
+          0.936868686868687,
+          0.6221590909090908,
+          0.809090909090909,
+          0.2869318181818182,
+          0.42902097902097897,
+          0.0,
+          0.550853150117856,
+          0.5717171717171716,
+          0.573518946806618,
+          0.09090909090909091,
+          0.5787337662337664,
+          0.8884297520661157,
+          0.6459790209790209,
+          1.0,
+          0.0
+        ],
+        "a_mAP_unshown": 0.25142773892773895,
+        "a_mAP_visible": 0.584766503807018
+      }
+    }
+  },
+  "sampling": "same ranked-prefix test matches as prior exploratory study; no untouched confirmatory holdout",
+  "scorer": {
+    "action_spotting_sha256": "f8cb0025b28d2ed736189fe4670b3a8d4291f4f23a4c0946dfa5db4d2ffa4850",
+    "package": "SoccerNet",
+    "utils_sha256": "ed49ba5755cd34ae4d0b8994e99eddc128ab74cb84e4a46d680654907f4d6382",
+    "version": "0.1.62"
+  },
+  "seed": 20261113,
+  "status": "complete",
+  "units": "fractions; multiply by 100 for percent and percentage points"
+}

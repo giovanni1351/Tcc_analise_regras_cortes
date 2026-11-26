@@ -1,0 +1,15 @@
+{
+  "docs/research/gemini-4-hydrogen-20261113-v1/README.md": "625b49b21591def35ffd2184977369f4582bca283674cc9d184638012145a0df",
+  "docs/research/gemini-4-hydrogen-20261113-v1/analysis/results.json": "a9d352ec1d5bedde6ca7604f094a7e7cf600009f3cac6fa42fcfa0a8bb315da5",
+  "docs/research/gemini-4-hydrogen-20261113-v1/final-audit.md": "8acc46a3940af8880caecf763b048a51c5705970e8a5a5b30fd3c82951ae0658",
+  "docs/research/gemini-4-hydrogen-20261113-v1/review-disposition.json": "0ee1cd80e896aa4afa950a89b8d663af7dc6bb1ef9296083aa09b8da3cb795be",
+  "docs/research/gemini-4-hydrogen-20261113-v1/PROTOCOL.md": "0ff83b4488da01339fcc58ae4acd60ec8bd9dde72f974170e4c27eab07f61034",
+  "docs/research/gemini-4-hydrogen-20261113-v1/gate.json": "c1489797e83fb8bdc0995f0af7e94a922581e89dd7539ad4a7cac74622279a56",
+  "docs/research/gemini-4-hydrogen-20261113-v1/execution-amendment.json": "7fecd657ebf2caa86acb69232303f3cc0966e619cded709c7d4e5f0d60878717",
+  "docs/research/gemini-4-hydrogen-20261113-v1/freeze.json": "d080a34b0bf70c747a53a935182027eae20ff2e3ee4ed0255188dcfea685ec3a",
+  "docs/research/gemini-4-hydrogen-20261113-v1/input-inventory.json": "2fad87a74c11cf2281b75dc37ac883a2eaf3b28f1466cf9e18b98dbec8f076b1",
+  "docs/research/gemini-4-hydrogen-20261113-v1/ledger.jsonl": "7dfdcdf43e41f9544dc306d94acc1bc935cf83022cafdaadcac748fe0bf89a7c",
+  "docs/research/gemini-4-hydrogen-20261113-v1/billing-before.json": "6ae4f2f099a89495f9a8e95362bbf97be9ed079e660b9a65588c7e7924e37ec5",
+  "docs/research/gemini-4-hydrogen-20261113-v1/billing-final-stable.json": "40c3e187cea94d01f14bd95be7198ff797133c5772c1665aa6fa9ed897dd4312",
+  "docs/research/gemini-4-hydrogen-20261113-v1/verification-post-review.json": "3f1cdbeb01cfc30dae7a056fbcb09c0b5885773ceec7930dbf53db737ca505be"
+}
